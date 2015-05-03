@@ -61,7 +61,7 @@ public class gWindow {
 	
 	public JFrame frame;
 	public JLabel imagelabel;
-	public BufferedImage buffimg;
+	private BufferedImage buffimg;
 	private ImageIcon image;
 	private Graphics2D g;
 	private JTextField txtCountinput;
@@ -307,12 +307,12 @@ public class gWindow {
 	    txtPoints.setPreferredSize(new Dimension(35, 25));
 	    panel_2.add(txtPoints);
 	    
-	    //   Zufällig Button
+	    //   Zufï¿½llig Button
 	    btnButton = new JButton("Zuf\u00E4llige Route");
 	    btnButton.setPreferredSize(new Dimension(120, 23));
 	    panel_2.add(btnButton);
 	    
-	   //   Zufällig Anzahl
+	   //   Zufï¿½llig Anzahl
 	   txtCountinput = new JTextField("10");
 	   txtCountinput.setHorizontalAlignment(SwingConstants.RIGHT);
 	   txtCountinput.setPreferredSize(new Dimension(35, 20));
@@ -324,13 +324,13 @@ public class gWindow {
 	   flowLayout_4.setVgap(2);
 	   panel_2.add(panel_3);
 	   
-	   //   Nächster NN Button
+	   //   Nï¿½chster NN Button
 	   btnNext = new JButton("N\u00E4chster");
 	   btnNext.setPreferredSize(new Dimension(85, 23));
 	   panel_2.add(btnNext);
 	   btnNext.setEnabled(false);
 	   
-	   //   Auflösen Button
+	   //   Auflï¿½sen Button
 	    btnAuflsen = new JButton("L\u00F6sen");
 	    btnAuflsen.setPreferredSize(new Dimension(70, 23));
 	    panel_2.add(btnAuflsen);
@@ -386,8 +386,8 @@ public class gWindow {
 	private void Reset() {
 		
 		DefaultListModel<String> blank = new DefaultListModel<String>();
-		blank.addElement("Über 'Neue Instanz'");
-		blank.addElement("Knoten hinzufügen.");
+		blank.addElement("ï¿½ber 'Neue Instanz'");
+		blank.addElement("Knoten hinzufï¿½gen.");
 		list.setModel(blank);
 		txtDebug.setText("");
 		
@@ -457,7 +457,7 @@ public class gWindow {
 
 	private void NN_Next(Instance inst) {
 		
-		if (list.getSelectedIndex() == -1) JOptionPane.showMessageDialog(null, "Zuerst einen Startknoten in der Liste auswählen");
+		if (list.getSelectedIndex() == -1) JOptionPane.showMessageDialog(null, "Zuerst einen Startknoten in der Liste auswï¿½hlen");
 		else {
 			boolean closed = chckbxGeschlossen.isSelected();
 			if (inst.isReady()) inst.setStart(list.getSelectedIndex());
@@ -474,7 +474,7 @@ public class gWindow {
 	
 	private void NN_Solve(Instance inst) {
 		
-		if (list.getSelectedIndex() == -1) JOptionPane.showMessageDialog(null, "Zuerst einen Startknoten in der Liste auswählen");
+		if (list.getSelectedIndex() == -1) JOptionPane.showMessageDialog(null, "Zuerst einen Startknoten in der Liste auswï¿½hlen");
 		else {
 			boolean closed = chckbxGeschlossen.isSelected();
 			if (inst.isReady()) inst.setStart(list.getSelectedIndex());
