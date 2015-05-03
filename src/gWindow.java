@@ -62,7 +62,7 @@ public class gWindow {
 	public JFrame frame;
 	public JLabel imagelabel;
 	public BufferedImage buffimg;
-	public ImageIcon image;
+	private ImageIcon image;
 	private Graphics2D g;
 	private JTextField txtCountinput;
 	private JLabel lblCanvas;
@@ -96,7 +96,6 @@ public class gWindow {
 	private JLabel lblFhKln;
 	private JPanel panel_2;
 	private JPanel panel_3;
-
 
 	/**
 	 * Launch the application.
