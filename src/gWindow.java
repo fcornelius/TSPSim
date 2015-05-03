@@ -60,7 +60,6 @@ public class gWindow {
 	public static final int frameHeightDebugPx = 744;
 	
 	private JFrame frame;
-	private JLabel imagelabel;
 	private BufferedImage buffimg;
 	private ImageIcon image;
 	private Graphics2D g;
@@ -161,7 +160,7 @@ public class gWindow {
 		lblLinie = new JLabel("Linie");
 		panel_1.add(lblLinie);
 		
-		//   Linie ComboBox
+		//   Linie ComboBox + mit Items 1 bis 4
 		comboBox_linie = new JComboBox<Integer>();
 		comboBox_linie.setPreferredSize(new Dimension(37,21));
 		for (int i = 1; i <= 4; i++) comboBox_linie.addItem(i);
@@ -178,7 +177,7 @@ public class gWindow {
 		comboBox_punkt.setSelectedItem(comboBox_punkt.getItemAt(4));
 		panel_1.add(comboBox_punkt);
 		
-		//   Color ComboBox
+		//   Color ComboBox mit Items aus Colors enum
 		comboBox = new JComboBox<String>();
 		comboBox.setPreferredSize(new Dimension(80,21));
 		for (Colors.ColorNames c : Colors.ColorNames.values()) comboBox.addItem(c.toString());
@@ -314,10 +313,15 @@ public class gWindow {
 	    btnButton.setPreferredSize(new Dimension(120, 23));
 	    panel_2.add(btnButton);
 	    
-	   //   Zufï¿½llig Anzahl
+	   //   Zufällig Anzahl
 	   txtCountinput = new JTextField("10");
 	   txtCountinput.setHorizontalAlignment(SwingConstants.RIGHT);
 	   txtCountinput.setPreferredSize(new Dimension(35, 20));
+	   btnButton.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent e) {
+	    		randRoute();
+	    	}
+	    });
 	   panel_2.add(txtCountinput);
 	   
 	   panel_3 = new JPanel();
@@ -326,13 +330,13 @@ public class gWindow {
 	   flowLayout_4.setVgap(2);
 	   panel_2.add(panel_3);
 	   
-	   //   Nï¿½chster NN Button
+	   //   Nächster NN Button
 	   btnNext = new JButton("N\u00E4chster");
 	   btnNext.setPreferredSize(new Dimension(85, 23));
 	   panel_2.add(btnNext);
 	   btnNext.setEnabled(false);
 	   
-	   //   Auflï¿½sen Button
+	   //   Auflösen Button
 	    btnAuflsen = new JButton("L\u00F6sen");
 	    btnAuflsen.setPreferredSize(new Dimension(70, 23));
 	    panel_2.add(btnAuflsen);
@@ -348,7 +352,7 @@ public class gWindow {
 	     panel_2.add(chckbxGeschlossen);
 	     chckbxGeschlossen.setSelected(true);
 	     
-		//   Debug Checkbox
+		//   Debug Checkbox mit Changehandler, ändert Framehöhe
 		chckbxDebug = new JCheckBox("Debug");
 		panel_2.add(chckbxDebug);
 		chckbxDebug.addChangeListener(new ChangeListener() {
@@ -362,34 +366,25 @@ public class gWindow {
 	   		NN_Next(instanz);
 	   	}
 	   });
-	    btnButton.addActionListener(new ActionListener() {
-	    	public void actionPerformed(ActionEvent e) {
-	    		button_Clicked();
-	    	}
-	    });
-	    
-	    
-	    
-	   
-	    
-	   
-	    
-	   
 	    
 
 	    //   Canvas Image
 		Reset();
-		
-		
-		btnPoints.grabFocus();
+
 		
 	}
 	
+	/**
+	 * Setzt sowohl die Instanz als auch das Canvas zurück:
+	 * Knotenliste wird überschrieben, Canvas wird mit weißem Rechteck übermalt (flushCanvas()),
+	 * Steuerelemente werden zurückgesetzt: Knotenliste wieder in voller Höhe, Lösen-Buttons deaktiviert,
+	 * Weiderholen-Button und Ergebnis-Label als unsichtbar gesetzt
+	 */
 	private void Reset() {
 		
 		DefaultListModel<String> blank = new DefaultListModel<String>();
-		blank.addElement("ï¿½ber 'Neue Instanz'");
-		blank.addElement("Knoten hinzufï¿½gen.");
+		blank.addElement("Über 'Neue Instanz'");
+		blank.addElement("Knoten hinzufügen.");
 		list.setModel(blank);
 		txtDebug.setText("");
 		
@@ -402,7 +397,12 @@ public class gWindow {
 		lblResult.setVisible(false);
 	}
 	
-	private void button_Clicked() {
+	/**
+	 * Erzeugt einen Startknoten {@link startKnot} und je nach Eingabe weitere Knoten {@link nextKnot}
+	 * Iteriert wird über {@link thisKnot}, welcher am Anfang auf {@link startKnot} zeigt.
+	 * Für jeden 
+	 */
+	private void randRoute() {
 		
 		int count = Integer.parseInt(txtCountinput.getText());
 		int radius = (int) comboBox_punkt.getSelectedItem();
