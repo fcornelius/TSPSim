@@ -398,9 +398,10 @@ public class gWindow {
 	}
 	
 	/**
-	 * Erzeugt einen Startknoten {@link startKnot} und je nach Eingabe weitere Knoten {@link nextKnot}
-	 * Iteriert wird über {@link thisKnot}, welcher am Anfang auf {@link startKnot} zeigt.
-	 * Für jeden 
+	 * Erzeugt einen Startknoten {@link startKnot} und je nach Eingabe weitere Knoten {@link nextKnot}<br>
+	 * Iteriert wird über {@link thisKnot}, welcher am Anfang auf {@link startKnot} zeigt.<br>
+	 * Für jeden erzeugten Knoten wird eine Linie zum jweils nächsten gezeichnet, es sei denn, es ist der 
+	 * letzte Knoten, dann verbindet die Linie diesem mit dem Startknoten
 	 */
 	private void randRoute() {
 		
@@ -427,6 +428,13 @@ public class gWindow {
 		g.dispose();
 	}
 
+	/**
+	 * Erzeugt ein neues Objekt der Klasse Instance und fügt diesem dei festgelegte Anzahl der Knoten hinzu.<br>
+	 * Jeder Knoten wird über das DefaultListModel in die JList aufgenommen und mit {@link  drawPoint} auf das 
+	 * BufferedImage, das zu g gehört gezeichnet. Das BufferedImage wird anschließend dem CanvasLabel zugeordnet.
+	 * 
+	 * @return den Verweis auf die erstellte Instanz
+	 */
 	private Instance createInstance() {
 		
 		Reset();
@@ -457,6 +465,17 @@ public class gWindow {
 		return inst;
 	}
 
+	/**
+	 * Zeigt den nächstgelenen Knoten zum ausgewählten in der JList an.
+	 * Über nearestNeighbour wird dieser auf das Graphics-Objekt g gezeichnet, 
+	 * welches anschließend durch drawToCanvas auf die Zeichenfläche angewandt wird
+	 * <br>Bedingunen:<br>
+	 * Ein Knoten ist ausgewählt und die Instanz ist bereit, also es wurde noch kein Neighbour der Liste entfernt.
+	 * @see isReady
+	 * @see nearestNeighbour
+	 * 
+	 * @param inst der Verweis auf die zu lösende Instanz
+	 */
 	private void NN_Next(Instance inst) {
 		
 		if (list.getSelectedIndex() == -1) JOptionPane.showMessageDialog(null, "Zuerst einen Startknoten in der Liste auswï¿½hlen");
