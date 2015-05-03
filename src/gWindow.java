@@ -98,7 +98,7 @@ public class gWindow {
 	private JPanel panel_3;
 
 	/**
-	 * Launch the application.
+	 * Launch the application. // Generiert durch WindowManager
 	 */
 	public static void main(String[] args) {
 		
@@ -124,13 +124,15 @@ public class gWindow {
 	}
 
 	/**
-	 * Initialize the contents of the frame.
+	 * Initialize the contents of the frame. //Generiert durch WindowManager
 	 */
 	private void initialize() {
 		try
 		{
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception exp) {}
+		
+		//Forms-Komponenten von Oben nach Unten
 		
 		//   Frame
 		frame = new JFrame();
@@ -307,7 +309,7 @@ public class gWindow {
 	    txtPoints.setPreferredSize(new Dimension(35, 25));
 	    panel_2.add(txtPoints);
 	    
-	    //   Zufï¿½llig Button
+	    //   Zufällig Button
 	    btnButton = new JButton("Zuf\u00E4llige Route");
 	    btnButton.setPreferredSize(new Dimension(120, 23));
 	    panel_2.add(btnButton);
