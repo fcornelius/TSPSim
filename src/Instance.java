@@ -18,43 +18,101 @@ public class Instance {
 	private Knot[] furthestKnots;
 	private double wayLenghth;
 	
+	/**
+	 * Konstruktor
+	 * Legt Knotenliste und Neighbourliste an
+	 */
 	public Instance() {
 		knots = new ArrayList<Knot>();
 		neighbours = new ArrayList<Knot>();
 		maxDist = 0;
 	}
-	
+	/**
+	 * Löscht alle verbeibenden Neighbour und füllt Neighbourliste neu mit Knoten aus knots
+	 * für Wiederholung der Instanz.<br>
+	 * Weglänge ({@link wayLenghth}) und größte Teilstrecke ({@link maxDist}) werden zurückgesetzt.
+	 */
 	public void resetInstance() {
 		neighbours.clear();
 		for (Knot k : knots) neighbours.add(k);
 		maxDist = 0;
 		wayLenghth = 0;
 	}
-	
+	/**
+	 * Zeichnet jeden Knoten in Knotenliste der Instanz ({@link knots}) neu.
+	 * @param g Graphics-Objekt zum Zeichnen
+	 * @param radius Radius der zu zeichnenden Punkte
+	 * @param withNumber true/false ob Nummern zu Punkten gezeichnet werden
+	 */
 	public void redrawInstance(Graphics2D g, int radius, boolean withNumber) {
 		for (Knot k : knots) k.drawPoint(g, radius, withNumber);
 	}
-	
+	/**
+	 * Fügt einer Instanz einen bestehenden Knoten hinzu.<br>
+	 * Knoten werden in Knotenliste ({@link knots}) und Neighbourliste ({@link neighbours}) abgelegt.
+	 * @param k Knoten zum hinzufügen
+	 */
 	public void addKnot(Knot k) {
 		knots.add(k);
 		neighbours.add(k);
 	}
+	/**
+	 * Gibt einen Knoten aus der Knotenliste an Position {@link index} wieder
+	 * @param index Position des Knotens ins Knotenliste (0-basiert)
+	 * @return Knoten
+	 */
 	public Knot getKnotByIndex(int index) {
 		return knots.get(index);
 	}
+	/**
+	 * Gibt an ob die Instanz erstellt und noch nicht gelöst wurde.<br>
+	 * Sobald über 'Nächster' ein Schritt des Lösens erfolgt ist, gibt die Instanz <b>false</b> zurück.
+	 * @return <b>true</b> wenn Neighbourliste noch voll,<br> <b>false</b> wenn bereits Einträge entfernt wurden
+	 */
 	public boolean isReady() {
 		return (knots.size()==neighbours.size());
 	}
+	/**
+	 * Gibt an ob die Instanz vollständig gelöst wurde, also ob alle Neighbours entfernt wurden.
+	 * @return <b>true</b> wenn Neighbourliste leer aber Knoten angelegt wurden,<br> <b>false</b> wenn noch Neighbours vorhanden sind
+	 */
 	public boolean isFinished() {
-		return (neighbours.isEmpty());
+		return (neighbours.isEmpty() && !knots.isEmpty());
 	}
+	/**
+	 * Setzt die Klassenvariable {@link startKnot} auf den angegebenen index,<br>
+	 * erfolgt <b>nur</b> im Zusammenhang mit {@link isReady}
+	 * @param index Der 0-basierte Index des Startknotens
+	 */
 	public void setStart(int index) {
 		startKnot = index;
 	}
+	/**
+	 * Nach Beendigung des Löseverfahrens ist der letzte Wert von {@link wayLenght} die Akkumulierte Weglänge
+	 * und in {@link furthestKnots} stehen die beiden, am weitesten entfernten Knoten.
+	 * @return ein String mit dem Ergebnis
+	 */
 	public String getResult() {
+		//TODO Länge der längsten Entfernung ausgeben (mayDist)
 		return "Länge des Weges: " + String.format("%.2f", wayLenghth) + "<br>Längste Teilstrecke zwischen:<br>" + furthestKnots[0] + "<br>und " + furthestKnots[1];
 	}
-	
+	/**
+	 * Gibt den Knoten zurück der am nähesten zum übergebenen {@link rootKnot} ist und zeichnet deren Verbindung.
+	 * <li> Der übergebene Knoten {@link rootKnot} wird aus der Liste möglicher NN entfernt.
+	 * <li> Für jeden der verbliebenden Knoten wird die Entfernung zum {@link rootKnot} in {@link thisDist} zwischen gespeichert.
+	 * <li> Der erste Knoten im Durchlauf wird als nähester ({@link nearest}) festgelegt und seine Entfernung zum {@link rootKnot} als kürzeste ({@link minDist})
+	 * <li> Wenn ein nachfolgender Knoten eine kürzere Entfernung zum {@link rootKnot} hat, gilt dieser als nähester.
+	 * <li> Bei geschlossendem Kreis wird für den letzten Knoten im Durchlauf der Startknoten als nähester zurück gegeben, bei offenem Kreis wird null zurückgegeben.
+	 * Die kürzesten Entfernungen werden in {@link wayLength} aufakkumuliert.<br>
+	 * Beim ersten Neighbour gilt maxDist=minDist, also die längste Teilstrecke ist die Entfernung vom Ausgangsknoten zum ersten Neighbour.
+	 * Danach werden rootKnot und nearest in {@link furthestKnots} abgelegt wenn ihre Entfernung größer ist als die bisher größte Teilstrecke ({@link maxDist})
+	 * @param rootKnot Der Ausgangsknoten
+	 * @param closed true/false ob geschlossener Kreis
+	 * @param debug true/false ob Zwischenergebnisse geloggt werden
+	 * @param g das zum zeichnen verwendete Graphics-Objekt
+	 * @param debugPane Ausgabe für den Debug-Log
+	 * @return nähester Knoten
+	 */
 	public Knot nearestNeighbour(Knot rootKnot, boolean closed, boolean debug, Graphics2D g, JTextPane debugPane) {
 		int knotId = 0;
 		double thisDist = 0;
@@ -62,13 +120,11 @@ public class Instance {
 		Knot nearest = null;
 		neighbours.remove(rootKnot);
 
-		if (neighbours.size() == 0) {
-			neighbours.clear();
+		if (neighbours.isEmpty()) {
 			if (closed) {
 				nearest = knots.get(startKnot);
 				minDist = Point.distance(rootKnot.x, rootKnot.y, nearest.x, nearest.y);
-			}
-			else return null;
+			} else return null;
 		} else {
 			for (Knot thisKnot : neighbours) {
 				thisDist = Point.distance(thisKnot.x, thisKnot.y, rootKnot.x, rootKnot.y);

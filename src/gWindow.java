@@ -279,7 +279,7 @@ public class gWindow {
 	    lblFh.setFont(new Font("Tahoma", Font.PLAIN, 12));
 	    panelLogo.add(lblFh);
 	    
-	    lblFhKln = new JLabel("FH K\u00F6ln");
+	    lblFhKln = new JLabel("FH Köln");
 	    lblFhKln.setFont(new Font("Tahoma", Font.PLAIN, 12));
 	    panelLogo.add(lblFhKln);
 	    
@@ -309,7 +309,7 @@ public class gWindow {
 	    panel_2.add(txtPoints);
 	    
 	    //   Zufällig Button
-	    btnButton = new JButton("Zuf\u00E4llige Route");
+	    btnButton = new JButton("Zufällige Route");
 	    btnButton.setPreferredSize(new Dimension(120, 23));
 	    panel_2.add(btnButton);
 	    
@@ -367,11 +367,9 @@ public class gWindow {
 	   	}
 	   });
 	    
-
 	    //   Canvas Image
 		Reset();
 
-		
 	}
 	
 	/**
