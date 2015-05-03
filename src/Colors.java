@@ -5,7 +5,7 @@ public class Colors {
 	
 	public enum ColorNames {
 		
-		Weiß,
+		WeiÃŸ,
 		HellGrau,
 		Grau,
 		DunkelGrau,
@@ -14,7 +14,7 @@ public class Colors {
 		Pink,
 		Orange,
 		Gelb,
-		Grün,
+		GrÃ¼n,
 		Magenta,
 		Cyan,
 		Blau;
