@@ -59,8 +59,8 @@ public class gWindow {
 	public static final int frameHeightPx = 578;
 	public static final int frameHeightDebugPx = 744;
 	
-	public JFrame frame;
-	public JLabel imagelabel;
+	private JFrame frame;
+	private JLabel imagelabel;
 	private BufferedImage buffimg;
 	private ImageIcon image;
 	private Graphics2D g;
