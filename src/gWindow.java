@@ -63,7 +63,7 @@ public class gWindow {
 	public JLabel imagelabel;
 	public BufferedImage buffimg;
 	public ImageIcon image;
-	public Graphics2D g;
+	private Graphics2D g;
 	private JTextField txtCountinput;
 	private JLabel lblCanvas;
 	private JPanel panel;
