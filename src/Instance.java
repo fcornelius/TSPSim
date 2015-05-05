@@ -138,8 +138,8 @@ public class Instance {
 						minDist = thisDist;
 					}
 				}
-				if (debug) debugPane.setText(debugPane.getText() +  "knotId: " + knotId + " rootKnot: " + rootKnot + " thisKnot: " + thisKnot + "\nthisDist: " + thisDist + " minDist: " + minDist + " nearest: " + nearest + "\n" + 
-						"-------------------------------------------------------------------------------------\n");
+				if (debug) debugPane.setText(debugPane.getText() +  String.format("knotId: %d rootKnot: %s thisKnot: %s \nthisDist: %f minDist: %f nearest: %s \n-------------------------------------------------------------------------------------\n", 
+				knotId, rootKnot, thisKnot, thisDist, minDist, nearest));
 				knotId++;
 			}
 		}
