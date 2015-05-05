@@ -93,8 +93,8 @@ public class Instance {
 	 * @return ein String mit dem Ergebnis
 	 */
 	public String getResult() {
-		//TODO Länge der längsten Entfernung ausgeben (mayDist)
-		return "Länge des Weges: " + String.format("%.2f", wayLenghth) + "<br>Längste Teilstrecke zwischen:<br>" + furthestKnots[0] + "<br>und " + furthestKnots[1];
+		//TODO Länge der längsten Entfernung ausgeben (maxDist)
+		return String.format("Länge des Weges: %.2f<br>Längste Teilstrecke zwischen:<br>%s<br>und %s", wayLenghth, furthestKnots[0], furthestKnots[1]);
 	}
 	/**
 	 * Gibt den Knoten zurück der am nähesten zum übergebenen {@link rootKnot} ist und zeichnet deren Verbindung.
