@@ -23,6 +23,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -59,7 +60,6 @@ public class gWindow {
 	private BufferedImage buffimg;
 	private ImageIcon image;
 	private Graphics2D g;
-	private JTextField txtCountinput;
 	private JLabel lblCanvas;
 	private JPanel panel;
 	private JButton btnPoints;
@@ -91,9 +91,14 @@ public class gWindow {
 	private JPanel panel_3;
 	private JList<String> list;
 	private JScrollPane sp_knots;
+	private JComboBox<String> comboBoxMode;
 	
 	private int frameHeightPx;
 	private int frameHeightDebugPx;
+	private int sp_knotsHeightPx;
+	private int sp_knotsHeightResultPx;
+	private int sp_knotsYPx;
+	private int sp_knotsYResultPx;
 
 	/**
 	 * Launch the application. // Generiert durch WindowManager
@@ -143,8 +148,18 @@ public class gWindow {
 		panel_1 = new JPanel();
 		FlowLayout flowLayout_1 = (FlowLayout) panel_1.getLayout();
 		flowLayout_1.setAlignment(FlowLayout.RIGHT);
-		panel_1.setBounds(278, 0, 545, 35);
+		panel_1.setBounds(202, 0, 621, 35);
 		frame.getContentPane().add(panel_1);
+		
+		//   Zufällig Button
+		btnButton = new JButton("Route");
+		panel_1.add(btnButton);
+		btnButton.setPreferredSize(new Dimension(70, 25));
+		btnButton.addActionListener(new ActionListener() {
+		 	public void actionPerformed(ActionEvent e) {
+		 		randRoute();
+		 	}
+		 });
 		
 		//   AntiAliasing Checkbox
 		chckbxAntia = new JCheckBox("AntiAliasing");
@@ -159,7 +174,7 @@ public class gWindow {
 		lblLinie = new JLabel("Linie");
 		panel_1.add(lblLinie);
 		
-		//   Linie ComboBox + mit Items 1 bis 4
+		//   Linie ComboBox mit Items 1 bis 4
 		comboBox_linie = new JComboBox<Integer>();
 		comboBox_linie.setPreferredSize(new Dimension(40, 25));
 		for (int i = 1; i <= 4; i++) comboBox_linie.addItem(i);
@@ -185,6 +200,7 @@ public class gWindow {
 		
 		//   Reset Button
 		btnReset = new JButton("Reset");
+		btnReset.setPreferredSize(new Dimension(70, 27));
 		panel_1.add(btnReset);
 		btnReset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -195,7 +211,7 @@ public class gWindow {
 		//   Result Label
 		lblResult = new JLabel("");
 	    lblResult.setVerticalAlignment(SwingConstants.TOP);
-	    lblResult.setBounds(10, 289, 201, 70);
+	    lblResult.setBounds(10, 262, 201, 97);
 	    frame.getContentPane().add(lblResult);
 	    
 		//   Wiederholen Button
@@ -241,7 +257,7 @@ public class gWindow {
 	    flowLayout_2.setAlignOnBaseline(true);
 	    flowLayout_2.setVgap(3);
 	    flowLayout_2.setAlignment(FlowLayout.LEFT);
-	    panelLogo.setBounds(10, 13, 169, 81);
+	    panelLogo.setBounds(21, 13, 169, 81);
 	    frame.getContentPane().add(panelLogo);
 	    
 	    lblLogo = new JLabel("TSPSim ");
@@ -270,13 +286,15 @@ public class gWindow {
 	    FlowLayout flowLayout_3 = (FlowLayout) panel_2.getLayout();
 	    flowLayout_3.setHgap(3);
 	    flowLayout_3.setVgap(3);
-	    panel_2.setBounds(0, 121, 201, 162);
+	    panel_2.setBounds(0, 121, 201, 139);
 	    frame.getContentPane().add(panel_2);
 	    
-	    JComboBox<String> comboBoxMode = new JComboBox<String>();
-	    comboBoxMode.setPreferredSize(new Dimension(156, 30));
+	    comboBoxMode = new JComboBox<String>();
+	    comboBoxMode.setPreferredSize(new Dimension(156, 25));
+	    comboBoxMode.addItem("BruteForce");
 	    comboBoxMode.addItem("NearestNeighbour");
 	    comboBoxMode.addItem("Best NearestNeighbour");
+	    comboBoxMode.setSelectedIndex(1);
 	    panel_2.add(comboBoxMode);
 	    
 	    panel_3 = new JPanel();
@@ -300,22 +318,6 @@ public class gWindow {
 	    txtPoints.setHorizontalAlignment(SwingConstants.RIGHT);
 	    txtPoints.setPreferredSize(new Dimension(35, 30));
 	    panel_2.add(txtPoints);
-	    
-	    //   Zufällig Button
-	    btnButton = new JButton("Zufällige Route");
-	    btnButton.setPreferredSize(new Dimension(120, 25));
-	    panel_2.add(btnButton);
-	    
-	   //   Zufällig Anzahl
-	   txtCountinput = new JTextField("10");
-	   txtCountinput.setHorizontalAlignment(SwingConstants.RIGHT);
-	   txtCountinput.setPreferredSize(new Dimension(35, 23));
-	   btnButton.addActionListener(new ActionListener() {
-	    	public void actionPerformed(ActionEvent e) {
-	    		randRoute();
-	    	}
-	    });
-	   panel_2.add(txtCountinput);
 	   
 	   //   Nächster NN Button
 	   btnNext = new JButton("N\u00E4chster");
@@ -329,7 +331,17 @@ public class gWindow {
 	    panel_2.add(btnAuflsen);
 	    btnAuflsen.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
-	    		NN_Solve(instanz);
+	    		switch (comboBoxMode.getSelectedIndex()) {
+	    		case 0:
+	    			//bruteForce(instanz)
+	    			break;
+	    		case 1:
+	    			NN_Solve(instanz);
+	    			break;
+	    		case 2:
+	    			bestNN(instanz);
+	    		}
+	    		
 	    	}
 	    });
 	    btnAuflsen.setEnabled(false);
@@ -346,13 +358,21 @@ public class gWindow {
 		list = new JList<String>();
 		list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		list.setBackground(Color.WHITE);
-		list.setBounds(243, 240, -59, 81);
+		list.setBounds(243, 240, 59, 81);
 		
 		
 		sp_knots = new JScrollPane(list);
 		sp_knots.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		sp_knots.setBounds(10, 303, 182, 335);
 		frame.getContentPane().add(sp_knots);
+		sp_knotsHeightPx = sp_knots.getHeight();
+		sp_knotsHeightResultPx = sp_knots.getY()-89;
+		sp_knotsYPx = sp_knots.getY();
+		sp_knotsYResultPx = sp_knots.getY() + 89;
+		
+		JLabel lblVerfahren = new JLabel("Verfahren:");
+		lblVerfahren.setBounds(22, 102, 83, 23);
+		frame.getContentPane().add(lblVerfahren);
 		
 		chckbxDebug.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
@@ -382,11 +402,11 @@ public class gWindow {
 		DefaultListModel<String> blank = new DefaultListModel<String>();
 		blank.addElement("Über 'Neue Instanz'");
 		blank.addElement("Knoten hinzufügen.");
-		//list.setModel(blank);
+		list.setModel(blank);
 		txtDebug.setText("");
 		
 		flushCanvas();
-		sp_knots.setBounds(10, 303, 182, 335);
+		sp_knots.setBounds(sp_knots.getX(), sp_knotsYPx, sp_knots.getWidth(), sp_knotsHeightPx);;
 		btnNext.setEnabled(false);
 		btnAuflsen.setEnabled(false);
 		btnRepeat.setVisible(false);
@@ -401,7 +421,7 @@ public class gWindow {
 	 */
 	private void randRoute() {
 		
-		int count = Integer.parseInt(txtCountinput.getText());
+		int count = Integer.parseInt(txtPoints.getText());
 		int radius = (int) comboBox_punkt.getSelectedItem();
 		boolean withNumbers = chckbxNummern.isSelected();
 
@@ -480,7 +500,7 @@ public class gWindow {
 			if (inst.isReady()) inst.setStart(list.getSelectedIndex());
 			g = makeGraphics();
 			
-			Knot nearest = inst.nearestNeighbour(inst.getKnotByIndex(list.getSelectedIndex()), closed, true, g, txtDebug);
+			Knot nearest = inst.nearestNeighbour(inst.getKnotByIndex(list.getSelectedIndex()), closed, true, true, g, txtDebug);
 			if (nearest != null) list.setSelectedIndex((nearest.getId()));
 			
 			showResult(inst);
@@ -498,13 +518,43 @@ public class gWindow {
 			g = makeGraphics();
 			
 			Knot knot = inst.getKnotByIndex(list.getSelectedIndex());
-			while (!inst.isFinished()) knot = inst.nearestNeighbour(knot, closed, false, g, txtDebug);
+			while (!inst.isFinished()) knot = inst.nearestNeighbour(knot, closed, false, true, g, txtDebug);
 
 			showResult(inst);
 			drawToCanvas(buffimg);
 			g.dispose();
 		}
 	
+	}
+	
+	private void bestNN(Instance inst) {
+		
+		Knot thisknot;
+		double thisLenghth = 0;
+		Knot bestStart = null;
+		boolean closed = chckbxGeschlossen.isSelected();
+		
+		
+		for (int i = 0; i<inst.getCount();i++) {
+			if (inst.isReady()) inst.setStart(i);
+			thisknot = inst.getKnotByIndex(i);
+			
+			while (!inst.isFinished()) thisknot = inst.nearestNeighbour(thisknot, closed, false, false, g, txtDebug);
+			if ((i==0) || (inst.getWaylenghth() < thisLenghth)) {
+				thisLenghth = inst.getWaylenghth();
+				bestStart = thisknot;
+			}
+			inst.resetInstance();
+		}
+		
+		g = makeGraphics();
+		if (inst.isReady()) inst.setStart(bestStart.getId());
+		list.setSelectedIndex(bestStart.getId());
+		while (!inst.isFinished()) bestStart = inst.nearestNeighbour(bestStart, closed, false, true, g, txtDebug);
+		showResult(inst);
+		drawToCanvas(buffimg);
+		g.dispose();
+		
 	}
 	
 	private void repeatInstance(Instance inst) {
@@ -544,13 +594,15 @@ public class gWindow {
 		
 		if (inst.isFinished()) {
 			
-			sp_knots.setBounds(sp_knots.getX(), sp_knots.getY()+89, sp_knots.getWidth(), sp_knots.getHeight()-89);
+			sp_knots.setBounds(sp_knots.getX(), sp_knotsYResultPx, sp_knots.getWidth(), sp_knotsHeightResultPx);
 			btnRepeat.setVisible(true);
 			lblResult.setVisible(true);
 			
 			btnNext.setEnabled(false);
 			btnAuflsen.setEnabled(false);
-			lblResult.setText("<html>" + inst.getResult() + "</html>");
+			String result = inst.getResult();
+			if (comboBoxMode.getSelectedIndex() == 2) result += ("<br>Bester Start: " + inst.getStartKnot());
+			lblResult.setText("<html>" + result + "</html>");
 		}
 	}
 	private void flushCanvas() {

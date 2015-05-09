@@ -26,6 +26,7 @@ public class Instance {
 		knots = new ArrayList<Knot>();
 		neighbours = new ArrayList<Knot>();
 		maxDist = 0;
+		wayLenghth = 0;
 	}
 	/**
 	 * Löscht alle verbeibenden Neighbour und füllt Neighbourliste neu mit Knoten aus knots
@@ -64,6 +65,13 @@ public class Instance {
 	public Knot getKnotByIndex(int index) {
 		return knots.get(index);
 	}
+	
+	public int getCount() {
+		return knots.size();
+	}
+	public double getWaylenghth() {
+		return wayLenghth;
+	}
 	/**
 	 * Gibt an ob die Instanz erstellt und noch nicht gelöst wurde.<br>
 	 * Sobald über 'Nächster' ein Schritt des Lösens erfolgt ist, gibt die Instanz <b>false</b> zurück.
@@ -86,6 +94,9 @@ public class Instance {
 	 */
 	public void setStart(int index) {
 		startKnot = index;
+	}
+	public Knot getStartKnot() {
+		return knots.get(startKnot);
 	}
 	/**
 	 * Nach Beendigung des Löseverfahrens ist der letzte Wert von {@link wayLenght} die Akkumulierte Weglänge
@@ -113,7 +124,7 @@ public class Instance {
 	 * @param debugPane Ausgabe für den Debug-Log
 	 * @return nähester Knoten
 	 */
-	public Knot nearestNeighbour(Knot rootKnot, boolean closed, boolean debug, Graphics2D g, JTextPane debugPane) {
+	public Knot nearestNeighbour(Knot rootKnot, boolean closed, boolean debug, boolean draw, Graphics2D g, JTextPane debugPane) {
 		int knotId = 0;
 		double thisDist = 0;
 		double minDist = 0;
@@ -139,14 +150,14 @@ public class Instance {
 					}
 				}
 				if (debug) debugPane.setText(debugPane.getText() +  String.format("knotId: %d rootKnot: %s thisKnot: %s \nthisDist: %f minDist: %f nearest: %s \n-------------------------------------------------------------------------------------\n", 
-				knotId, rootKnot, thisKnot, thisDist, minDist, nearest));
+							knotId, rootKnot, thisKnot, thisDist, minDist, nearest));
 				knotId++;
 			}
 		}
 		wayLenghth += minDist;
 		if (minDist > maxDist) { maxDist = minDist; furthestKnots = new Knot[]{rootKnot, nearest}; }
 		
-		rootKnot.drawLine(g, nearest);
+		if (draw) rootKnot.drawLine(g, nearest);
 		return nearest;
 	}
 
