@@ -46,14 +46,14 @@ import javax.swing.ListSelectionModel;
 import javax.swing.JTextPane;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.ScrollPaneConstants;
 
 
 public class gWindow {
 	
 	public Instance instanz;
-	public static final int dimensionPx = 500;
-	public static final int frameHeightPx = 578;
-	public static final int frameHeightDebugPx = 744;
+	public static final int dimensionPx = 600;
+	
 	
 	private JFrame frame;
 	private BufferedImage buffimg;
@@ -70,7 +70,6 @@ public class gWindow {
 	private JComboBox<Integer> comboBox_punkt;
 	private JComboBox<String> comboBox;
 	private JLabel lblLinie;
-	private JList<String> list;
 	private JButton btnNext;
 	private JTextPane txtDebug;
 	private JCheckBox chckbxDebug;
@@ -82,7 +81,6 @@ public class gWindow {
 	private JButton btnAuflsen;
 	private JLabel lblResult;
 	private JButton btnRepeat;
-	private JScrollPane sp_knots;
 	private JPanel panelLogo;
 	private JLabel lblLogo;
 	private JLabel lblUnterlogo;
@@ -91,6 +89,11 @@ public class gWindow {
 	private JLabel lblFhKln;
 	private JPanel panel_2;
 	private JPanel panel_3;
+	private JList<String> list;
+	private JScrollPane sp_knots;
+	
+	private int frameHeightPx;
+	private int frameHeightDebugPx;
 
 	/**
 	 * Launch the application. // Generiert durch WindowManager
@@ -107,8 +110,6 @@ public class gWindow {
 				}
 			}
 		});
-		
-		
 	}
 
 	/**
@@ -132,15 +133,17 @@ public class gWindow {
 		//   Frame
 		frame = new JFrame();
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 713, 578);
+		frame.setBounds(100, 100, 843, 687);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+		frameHeightPx = frame.getHeight();
+		frameHeightDebugPx = frame.getHeight() + 166;
 
 		//   Top Panel
 		panel_1 = new JPanel();
 		FlowLayout flowLayout_1 = (FlowLayout) panel_1.getLayout();
 		flowLayout_1.setAlignment(FlowLayout.RIGHT);
-		panel_1.setBounds(179, 0, 514, 33);
+		panel_1.setBounds(278, 0, 545, 35);
 		frame.getContentPane().add(panel_1);
 		
 		//   AntiAliasing Checkbox
@@ -158,7 +161,7 @@ public class gWindow {
 		
 		//   Linie ComboBox + mit Items 1 bis 4
 		comboBox_linie = new JComboBox<Integer>();
-		comboBox_linie.setPreferredSize(new Dimension(37,21));
+		comboBox_linie.setPreferredSize(new Dimension(40, 25));
 		for (int i = 1; i <= 4; i++) comboBox_linie.addItem(i);
 		panel_1.add(comboBox_linie);
 		
@@ -168,21 +171,20 @@ public class gWindow {
 		
 		//   Punkt ComboBox
 		comboBox_punkt = new JComboBox<Integer>();
-		comboBox_punkt.setPreferredSize(new Dimension(37,21));
+		comboBox_punkt.setPreferredSize(new Dimension(40, 25));
 		for (int i = 0; i <= 10; i++) comboBox_punkt.addItem(i);
 		comboBox_punkt.setSelectedItem(comboBox_punkt.getItemAt(4));
 		panel_1.add(comboBox_punkt);
 		
 		//   Color ComboBox mit Items aus Colors enum
 		comboBox = new JComboBox<String>();
-		comboBox.setPreferredSize(new Dimension(80,21));
+		comboBox.setPreferredSize(new Dimension(80, 25));
 		for (Colors.ColorNames c : Colors.ColorNames.values()) comboBox.addItem(c.toString());
 		comboBox.setSelectedItem(comboBox.getItemAt(12));
 		panel_1.add(comboBox);
 		
 		//   Reset Button
 		btnReset = new JButton("Reset");
-		btnReset.setPreferredSize(new Dimension(65,23));
 		panel_1.add(btnReset);
 		btnReset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -190,23 +192,10 @@ public class gWindow {
 			}
 		});
 		
-		//   Punkt Liste
-		list = new JList<String>();
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list.setBounds(10, 187, 140, 302);
-
-		//   Punkte Scrollbar
-		sp_knots = new JScrollPane(list,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		sp_knots.setPreferredSize(new Dimension(259, 100));
-		sp_knots.setMinimumSize(new Dimension(50, 50));
-		sp_knots.setOpaque(false);
-		sp_knots.setBounds(10, 215, 175, 324);
-		frame.getContentPane().add(sp_knots);
-		
 		//   Result Label
 		lblResult = new JLabel("");
 	    lblResult.setVerticalAlignment(SwingConstants.TOP);
-	    lblResult.setBounds(10, 215, 182, 70);
+	    lblResult.setBounds(10, 289, 201, 70);
 	    frame.getContentPane().add(lblResult);
 	    
 		//   Wiederholen Button
@@ -216,7 +205,7 @@ public class gWindow {
 				repeatInstance(instanz);
 			}
 		});
-		btnRepeat.setBounds(15, 285, 149, 23);
+		btnRepeat.setBounds(10, 362, 182, 23);
 		frame.getContentPane().add(btnRepeat);
 		
 		//   Canvas Panel
@@ -226,7 +215,7 @@ public class gWindow {
 		flowLayout.setHgap(2);
 		flowLayout.setAlignment(FlowLayout.LEFT);
 		panel.setBackground(Color.LIGHT_GRAY);
-		panel.setBounds(189, 35, dimensionPx+4, dimensionPx+4);
+		panel.setBounds(223, 38, 604, 604);
 		frame.getContentPane().add(panel);
 		
 		//   Canvas Label
@@ -243,10 +232,8 @@ public class gWindow {
 
 		//   Debug Scrollbar
 		JScrollPane sp = new JScrollPane(txtDebug,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-	    sp.setPreferredSize(new Dimension(250, 100));
-	    sp.setMinimumSize(new Dimension(50, 50));
-	    sp.setOpaque(false);
-	    sp.setBounds(10, 550, 687, 155);
+	    
+	    sp.setBounds(26, 677, 707, 155);
 	    frame.getContentPane().add(sp);
 	    
 	    panelLogo = new JPanel();
@@ -254,7 +241,7 @@ public class gWindow {
 	    flowLayout_2.setAlignOnBaseline(true);
 	    flowLayout_2.setVgap(3);
 	    flowLayout_2.setAlignment(FlowLayout.LEFT);
-	    panelLogo.setBounds(10, 0, 169, 81);
+	    panelLogo.setBounds(10, 13, 169, 81);
 	    frame.getContentPane().add(panelLogo);
 	    
 	    lblLogo = new JLabel("TSPSim ");
@@ -283,13 +270,23 @@ public class gWindow {
 	    FlowLayout flowLayout_3 = (FlowLayout) panel_2.getLayout();
 	    flowLayout_3.setHgap(3);
 	    flowLayout_3.setVgap(3);
-	    flowLayout_3.setAlignment(FlowLayout.LEFT);
-	    panel_2.setBounds(10, 87, 175, 117);
+	    panel_2.setBounds(0, 121, 201, 162);
 	    frame.getContentPane().add(panel_2);
+	    
+	    JComboBox<String> comboBoxMode = new JComboBox<String>();
+	    comboBoxMode.setPreferredSize(new Dimension(156, 30));
+	    comboBoxMode.addItem("NearestNeighbour");
+	    comboBoxMode.addItem("Best NearestNeighbour");
+	    panel_2.add(comboBoxMode);
+	    
+	    panel_3 = new JPanel();
+	    FlowLayout flowLayout_4 = (FlowLayout) panel_3.getLayout();
+	    flowLayout_4.setHgap(80);
+	    panel_2.add(panel_3);
 	    
 	    //   Punkte Button
 	    btnPoints = new JButton("Neue Instanz");
-	    btnPoints.setPreferredSize(new Dimension(120, 30));
+	    btnPoints.setPreferredSize(new Dimension(120, 35));
 	    panel_2.add(btnPoints);
 	    
 	    btnPoints.addActionListener(new ActionListener() {
@@ -301,30 +298,24 @@ public class gWindow {
 	    //   Punkte Anzahl
 	    txtPoints = new JTextField("10");
 	    txtPoints.setHorizontalAlignment(SwingConstants.RIGHT);
-	    txtPoints.setPreferredSize(new Dimension(35, 25));
+	    txtPoints.setPreferredSize(new Dimension(35, 30));
 	    panel_2.add(txtPoints);
 	    
 	    //   Zufällig Button
 	    btnButton = new JButton("Zufällige Route");
-	    btnButton.setPreferredSize(new Dimension(120, 23));
+	    btnButton.setPreferredSize(new Dimension(120, 25));
 	    panel_2.add(btnButton);
 	    
 	   //   Zufällig Anzahl
 	   txtCountinput = new JTextField("10");
 	   txtCountinput.setHorizontalAlignment(SwingConstants.RIGHT);
-	   txtCountinput.setPreferredSize(new Dimension(35, 20));
+	   txtCountinput.setPreferredSize(new Dimension(35, 23));
 	   btnButton.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
 	    		randRoute();
 	    	}
 	    });
 	   panel_2.add(txtCountinput);
-	   
-	   panel_3 = new JPanel();
-	   FlowLayout flowLayout_4 = (FlowLayout) panel_3.getLayout();
-	   flowLayout_4.setHgap(80);
-	   flowLayout_4.setVgap(2);
-	   panel_2.add(panel_3);
 	   
 	   //   Nächster NN Button
 	   btnNext = new JButton("N\u00E4chster");
@@ -351,9 +342,21 @@ public class gWindow {
 		//   Debug Checkbox mit Changehandler, ändert Framehöhe
 		chckbxDebug = new JCheckBox("Debug");
 		panel_2.add(chckbxDebug);
+		
+		list = new JList<String>();
+		list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+		list.setBackground(Color.WHITE);
+		list.setBounds(243, 240, -59, 81);
+		
+		
+		sp_knots = new JScrollPane(list);
+		sp_knots.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		sp_knots.setBounds(10, 303, 182, 335);
+		frame.getContentPane().add(sp_knots);
+		
 		chckbxDebug.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				if (chckbxDebug.isSelected()) frame.setBounds(frame.getX(), frame.getY(), 711, frameHeightDebugPx);
+				if (chckbxDebug.isSelected()) frame.setBounds(frame.getX(), frame.getY(), frame.getWidth(), frameHeightDebugPx);
 				else frame.setBounds(frame.getX(), frame.getY(), frame.getWidth(), frameHeightPx);
 			}
 		});
@@ -379,12 +382,11 @@ public class gWindow {
 		DefaultListModel<String> blank = new DefaultListModel<String>();
 		blank.addElement("Über 'Neue Instanz'");
 		blank.addElement("Knoten hinzufügen.");
-		list.setModel(blank);
+		//list.setModel(blank);
 		txtDebug.setText("");
 		
 		flushCanvas();
-		
-		sp_knots.setBounds(10, 215, 159, 324);
+		sp_knots.setBounds(10, 303, 182, 335);
 		btnNext.setEnabled(false);
 		btnAuflsen.setEnabled(false);
 		btnRepeat.setVisible(false);
@@ -541,7 +543,8 @@ public class gWindow {
 	private void showResult(Instance inst) {
 		
 		if (inst.isFinished()) {
-			sp_knots.setBounds(10, 318, 159, 221);
+			
+			sp_knots.setBounds(sp_knots.getX(), sp_knots.getY()+89, sp_knots.getWidth(), sp_knots.getHeight()-89);
 			btnRepeat.setVisible(true);
 			lblResult.setVisible(true);
 			

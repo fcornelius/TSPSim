@@ -22,19 +22,19 @@ public class Colors {
 	
 	public final static Color[] colors = new Color[] {
 		
-		new Color(255, 255, 255),
-		new Color(192, 192, 192),
-		new Color(128, 128, 128),
-		new Color(64, 64, 64),
-		new Color(0, 0, 0),
-		new Color(255, 0, 0),
-		new Color(255, 175, 175),
-		new Color(255, 200, 0),
-		new Color(255, 255, 0),
-		new Color(0, 255, 0),
-		new Color(255, 0, 255),
-		new Color(0, 255, 255),
-		new Color(0, 0, 255)
+		new Color(255, 255, 255), //Weiß
+		new Color(192, 192, 192), //HellGrau
+		new Color(128, 128, 128), //Grau
+		new Color(64, 64, 64),	  //DunkelGrau
+		new Color(0, 0, 0), 	  //Schwarz
+		new Color(255, 0, 0), 	  //Rot
+		new Color(255, 175, 175), //Pink
+		new Color(255, 200, 0),   //Orange
+		new Color(255, 255, 0),   //Gelb
+		new Color(0, 255, 0), 	  //Grün
+		new Color(255, 0, 255),   //Magenta
+		new Color(0, 255, 255),   //Cyan
+		new Color(0, 0, 255) 	  //Blau
 		};
 
 	
