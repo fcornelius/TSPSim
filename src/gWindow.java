@@ -48,12 +48,15 @@ import javax.swing.JTextPane;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.ScrollPaneConstants;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 
 public class gWindow {
 	
 	public Instance instanz;
 	public static final int dimensionPx = 600;
+	public static final int borderPx = 6;
 	
 	
 	private JFrame frame;
@@ -249,7 +252,7 @@ public class gWindow {
 		//   Debug Scrollbar
 		JScrollPane sp = new JScrollPane(txtDebug,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 	    
-	    sp.setBounds(26, 677, 707, 155);
+	    sp.setBounds(12, 663, 811, 142);
 	    frame.getContentPane().add(sp);
 	    
 	    panelLogo = new JPanel();
@@ -290,10 +293,12 @@ public class gWindow {
 	    frame.getContentPane().add(panel_2);
 	    
 	    comboBoxMode = new JComboBox<String>();
+	    
 	    comboBoxMode.setPreferredSize(new Dimension(156, 25));
 	    comboBoxMode.addItem("BruteForce");
 	    comboBoxMode.addItem("NearestNeighbour");
 	    comboBoxMode.addItem("Best NearestNeighbour");
+	    comboBoxMode.addItem("MST-Transform");
 	    comboBoxMode.setSelectedIndex(1);
 	    panel_2.add(comboBoxMode);
 	    
@@ -324,6 +329,18 @@ public class gWindow {
 	   btnNext.setPreferredSize(new Dimension(85, 23));
 	   panel_2.add(btnNext);
 	   btnNext.setEnabled(false);
+	   btnNext.addActionListener(new ActionListener() {
+		   	public void actionPerformed(ActionEvent e) {
+		   		switch (comboBoxMode.getSelectedIndex()) {
+	    		case 1:
+	    			NN_Next(instanz);
+	    			break;
+	    		case 3: 
+	    			MST(instanz);
+	    			break;
+		   		}
+		   	}
+		   });
 	   
 	   //   Auflösen Button
 	    btnAuflsen = new JButton("L\u00F6sen");
@@ -340,11 +357,38 @@ public class gWindow {
 	    			break;
 	    		case 2:
 	    			bestNN(instanz);
+	    		case 3:
+	    			
 	    		}
 	    		
 	    	}
 	    });
 	    btnAuflsen.setEnabled(false);
+	    
+	    // Verfahren ComboBox Listeners
+	    comboBoxMode.addItemListener(new ItemListener() {
+	    	public void itemStateChanged(ItemEvent e) {
+	    		switch (comboBoxMode.getSelectedIndex()) {
+	    		case 0: 
+	    			btnNext.setEnabled(false);
+	    			btnNext.setText("Nächster");
+	    			break;
+	    		case 1: 
+	    			btnNext.setEnabled(true);
+	    			btnNext.setText("Nächster");
+	    			break;
+	    		case 2:
+	    			btnNext.setEnabled(false);
+	    			btnNext.setText("Nächster");
+	    			break;
+	    		case 3:
+	    			btnNext.setText("MST");
+	    			btnNext.setEnabled(true);
+	    			btnAuflsen.setEnabled(false);
+	    		
+	    		}
+	    	}
+	    });
 	    
 	    //   geschlossen Checkbox
 	     chckbxGeschlossen = new JCheckBox("geschlossen");
@@ -363,7 +407,7 @@ public class gWindow {
 		
 		sp_knots = new JScrollPane(list);
 		sp_knots.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		sp_knots.setBounds(10, 303, 182, 335);
+		sp_knots.setBounds(20, 303, 172, 335);
 		frame.getContentPane().add(sp_knots);
 		sp_knotsHeightPx = sp_knots.getHeight();
 		sp_knotsHeightResultPx = sp_knots.getY()-89;
@@ -380,11 +424,7 @@ public class gWindow {
 				else frame.setBounds(frame.getX(), frame.getY(), frame.getWidth(), frameHeightPx);
 			}
 		});
-	   btnNext.addActionListener(new ActionListener() {
-	   	public void actionPerformed(ActionEvent e) {
-	   		NN_Next(instanz);
-	   	}
-	   });
+	 
 	    
 	    //   Canvas Image
 		Reset();
@@ -554,6 +594,15 @@ public class gWindow {
 		showResult(inst);
 		drawToCanvas(buffimg);
 		g.dispose();
+		
+	}
+	
+	private void MST(Instance inst) {
+		g = makeGraphics();
+		inst.makeMST(txtDebug,g);
+		drawToCanvas(buffimg);
+		g.dispose();
+		
 		
 	}
 	

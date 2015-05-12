@@ -2,7 +2,9 @@ import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -11,8 +13,14 @@ import javax.swing.JTextPane;
 
 public class Instance {
 	
+	private static final int floatingPointPrecision = 10;
+	
 	private ArrayList<Knot> knots;
 	private ArrayList<Knot> neighbours;
+	private ArrayList<Knot> spanningTreeKnots;
+	private ArrayList<Edge> edges;
+	private ArrayList<Edge> spanningTreeEdges;
+	
 	private int startKnot;
 	private double maxDist;
 	private Knot[] furthestKnots;
@@ -25,6 +33,9 @@ public class Instance {
 	public Instance() {
 		knots = new ArrayList<Knot>();
 		neighbours = new ArrayList<Knot>();
+		spanningTreeKnots = new ArrayList<Knot>();
+		edges = new ArrayList<Edge>();
+		spanningTreeEdges = new ArrayList<Edge>();
 		maxDist = 0;
 		wayLenghth = 0;
 	}
@@ -98,6 +109,12 @@ public class Instance {
 	public Knot getStartKnot() {
 		return knots.get(startKnot);
 	}
+	public void addEdgeToTree(Edge e) {
+		if (!spanningTreeKnots.contains(e.getStart())) spanningTreeKnots.add(e.getStart());
+		if (!spanningTreeKnots.contains(e.getEnd())) spanningTreeKnots.add(e.getEnd());
+		edges.remove(e);
+		spanningTreeEdges.add(e);
+	}
 	/**
 	 * Nach Beendigung des Löseverfahrens ist der letzte Wert von {@link wayLenght} die Akkumulierte Weglänge
 	 * und in {@link furthestKnots} stehen die beiden, am weitesten entfernten Knoten.
@@ -160,5 +177,35 @@ public class Instance {
 		if (draw) rootKnot.drawLine(g, nearest);
 		return nearest;
 	}
+	
+	public void makeMST(JTextPane debug, Graphics2D g) {
 
+		int n = knots.size();
+
+		for (int i = 0; i < n; i++) {
+			for (int j = 1; j < n-i; j++) {
+				edges.add(new Edge(getKnotByIndex(i), getKnotByIndex(i+j)));
+			}
+		}
+		Collections.sort(edges, new Comparator<Edge>() {
+			public int compare(Edge e1, Edge e2) {
+				return (int)((e1.getCost() - e2.getCost()) * Math.pow(10, floatingPointPrecision)); //Ab ... NKS kein eindeutiger Vergleich mehr möglich
+			}
+		});
+		
+		edges.get(0).drawLine(g);
+		addEdgeToTree(edges.get(0));
+		
+		while (spanningTreeKnots.size() < n) {
+
+			for (Edge thisEdge : edges) {
+				if (spanningTreeKnots.contains(thisEdge.getStart()) ^ spanningTreeKnots.contains(thisEdge.getEnd())) {
+
+					thisEdge.drawLine(g);
+					addEdgeToTree(thisEdge);
+					break;
+				} 
+			}
+		}
+	}
 }
