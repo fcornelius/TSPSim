@@ -1,4 +1,3 @@
-import java.awt.Graphics2D;
 
 
 public class Edge {
@@ -21,10 +20,6 @@ public class Edge {
 	}
 	public Knot getEnd() {
 		return k2;
-	}
-	
-	public void drawLine(Graphics2D g) {
-		k1.drawLine(g, k2);
 	}
 	
 	public String toString() {

@@ -1,92 +1,64 @@
-import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.LayoutManager;
-import java.awt.RenderingHints;
-
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
-
-import java.awt.Color;
-import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
-
-import javax.swing.JLabel;
-import javax.swing.JButton;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultListModel;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.ListModel;
-import javax.swing.SwingConstants;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.JTabbedPane;
-import javax.swing.JDesktopPane;
-
-import java.awt.Canvas;
-import java.awt.SystemColor;
 import java.awt.FlowLayout;
-import java.util.ArrayList;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.ListSelectionModel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
+import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 
 public class gWindow {
 	
 	public Instance instanz;
-	public static final int dimensionPx = 600;
-	public static final int borderPx = 6;
+	public static final int dimension = 600;
+	public static final int canvasSpacing = 6;
+	public static final int canvasBorder = 3;
 	
 	
 	private JFrame frame;
-	private BufferedImage buffimg;
-	private ImageIcon image;
-	private Graphics2D g;
-	private JLabel lblCanvas;
-	private JPanel panel;
+
 	private JButton btnPoints;
 	private JTextField txtPoints;
-	private JCheckBox chckbxAntia;
+	public JCheckBox chckbxAntia;
 	private JButton btnReset;
-	private JComboBox<Integer> comboBox_linie;
-	private JComboBox<Integer> comboBox_punkt;
-	private JComboBox<String> comboBox;
+	public JComboBox<Integer> comboBox_linie;
+	public JComboBox<Integer> comboBox_punkt;
+	public JComboBox<String> comboBox;
 	private JLabel lblLinie;
 	private JButton btnNext;
 	private JTextPane txtDebug;
 	private JCheckBox chckbxDebug;
 	private JPanel panel_1;
 	private JLabel lblPunkt;
-	private JButton btnButton;
-	private JCheckBox chckbxNummern;
+	public JCheckBox chckbxNummern;
 	private JCheckBox chckbxGeschlossen;
 	private JButton btnAuflsen;
 	private JLabel lblResult;
 	private JButton btnRepeat;
 	private JPanel panelLogo;
 	private JLabel lblLogo;
-	private JLabel lblUnterlogo;
 	private JLabel lblVersion;
 	private JLabel lblFh;
 	private JLabel lblFhKln;
@@ -95,6 +67,8 @@ public class gWindow {
 	private JList<String> list;
 	private JScrollPane sp_knots;
 	private JComboBox<String> comboBoxMode;
+	private SquareCanvas canvas;
+	private DefaultListModel<String> blank;
 	
 	private int frameHeightPx;
 	private int frameHeightDebugPx;
@@ -120,9 +94,6 @@ public class gWindow {
 		});
 	}
 
-	/**
-	 * Create the application.
-	 */
 	public gWindow() {
 		initialize();
 	}
@@ -134,14 +105,14 @@ public class gWindow {
 		try
 		{
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception exp) {}
+		} catch (Exception exp) { /* Fallback auf Metal LAF */ }
 		
 		//Forms-Komponenten von Oben nach Unten
 		
 		//   Frame
 		frame = new JFrame();
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 843, 687);
+		frame.setBounds(100, 100, 853, 694);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frameHeightPx = frame.getHeight();
@@ -154,23 +125,16 @@ public class gWindow {
 		panel_1.setBounds(202, 0, 621, 35);
 		frame.getContentPane().add(panel_1);
 		
-		//   Zufällig Button
-		btnButton = new JButton("Route");
-		panel_1.add(btnButton);
-		btnButton.setPreferredSize(new Dimension(70, 25));
-		btnButton.addActionListener(new ActionListener() {
-		 	public void actionPerformed(ActionEvent e) {
-		 		randRoute();
-		 	}
-		 });
 		
 		//   AntiAliasing Checkbox
 		chckbxAntia = new JCheckBox("AntiAliasing");
 		panel_1.add(chckbxAntia);
 		chckbxAntia.setSelected(true);
+		chckbxAntia.addChangeListener(new OptionListener());
 		
 		chckbxNummern = new JCheckBox("Nummern");
 		chckbxNummern.setSelected(true);
+		chckbxNummern.addChangeListener(new OptionListener());
 		panel_1.add(chckbxNummern);
 		
 		//   Linie Label
@@ -181,6 +145,7 @@ public class gWindow {
 		comboBox_linie = new JComboBox<Integer>();
 		comboBox_linie.setPreferredSize(new Dimension(40, 25));
 		for (int i = 1; i <= 4; i++) comboBox_linie.addItem(i);
+		comboBox_linie.addItemListener(new OptionListener());
 		panel_1.add(comboBox_linie);
 		
 		//   Punkt Label
@@ -192,6 +157,7 @@ public class gWindow {
 		comboBox_punkt.setPreferredSize(new Dimension(40, 25));
 		for (int i = 0; i <= 10; i++) comboBox_punkt.addItem(i);
 		comboBox_punkt.setSelectedItem(comboBox_punkt.getItemAt(4));
+		comboBox_punkt.addItemListener(new OptionListener());
 		panel_1.add(comboBox_punkt);
 		
 		//   Color ComboBox mit Items aus Colors enum
@@ -199,6 +165,7 @@ public class gWindow {
 		comboBox.setPreferredSize(new Dimension(80, 25));
 		for (Colors.ColorNames c : Colors.ColorNames.values()) comboBox.addItem(c.toString());
 		comboBox.setSelectedItem(comboBox.getItemAt(12));
+		comboBox.addItemListener(new OptionListener());
 		panel_1.add(comboBox);
 		
 		//   Reset Button
@@ -215,6 +182,7 @@ public class gWindow {
 		lblResult = new JLabel("");
 	    lblResult.setVerticalAlignment(SwingConstants.TOP);
 	    lblResult.setBounds(10, 262, 201, 97);
+	    lblResult.setVisible(false);
 	    frame.getContentPane().add(lblResult);
 	    
 		//   Wiederholen Button
@@ -225,24 +193,8 @@ public class gWindow {
 			}
 		});
 		btnRepeat.setBounds(10, 362, 182, 23);
+		btnRepeat.setVisible(false);
 		frame.getContentPane().add(btnRepeat);
-		
-		//   Canvas Panel
-		panel = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
-		flowLayout.setVgap(2);
-		flowLayout.setHgap(2);
-		flowLayout.setAlignment(FlowLayout.LEFT);
-		panel.setBackground(Color.LIGHT_GRAY);
-		panel.setBounds(223, 38, 604, 604);
-		frame.getContentPane().add(panel);
-		
-		//   Canvas Label
-		lblCanvas = new JLabel(image);
-		lblCanvas.setForeground(Color.WHITE);
-		lblCanvas.setBackground(Color.WHITE);
-		lblCanvas.setBounds(10, 10, dimensionPx, dimensionPx);
-		panel.add(lblCanvas);
 	
 		//   Debug Textpane
 		txtDebug = new JTextPane();
@@ -272,10 +224,6 @@ public class gWindow {
 	    lblVersion.setFont(new Font("Tahoma", Font.PLAIN, 10));
 	    lblVersion.setVerticalAlignment(SwingConstants.BOTTOM);
 	    panelLogo.add(lblVersion);
-	    
-	    lblUnterlogo = new JLabel("(Nearest-Neighbour-Verfahren)");
-	    lblUnterlogo.setFont(new Font("Tahoma", Font.PLAIN, 10));
-	    panelLogo.add(lblUnterlogo);
 	    
 	    lblFh = new JLabel("MA2 Projekt SoSe '15    ");
 	    lblFh.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -404,6 +352,10 @@ public class gWindow {
 		list.setBackground(Color.WHITE);
 		list.setBounds(243, 240, 59, 81);
 		
+		blank = new DefaultListModel<String>();
+		blank.addElement("Über 'Neue Instanz'");
+		blank.addElement("Knoten hinzufügen.");
+		list.setModel(blank);
 		
 		sp_knots = new JScrollPane(list);
 		sp_knots.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -425,10 +377,23 @@ public class gWindow {
 			}
 		});
 	 
-	    
-	    //   Canvas Image
-		Reset();
+		canvas = new SquareCanvas(dimension, canvasSpacing, canvasBorder, this);
+		canvas.setBounds(223, 38, canvas.getSideLength(), canvas.getSideLength());
+		canvas.setBorder(BorderFactory.createLineBorder(Color.gray, canvasBorder));
+		frame.getContentPane().add(canvas);
 
+	}
+	
+	class OptionListener implements ItemListener, ChangeListener {
+
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			canvas.updateGraphics();
+		}
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			canvas.updateGraphics();
+		}
 	}
 	
 	/**
@@ -439,49 +404,15 @@ public class gWindow {
 	 */
 	private void Reset() {
 		
-		DefaultListModel<String> blank = new DefaultListModel<String>();
-		blank.addElement("Über 'Neue Instanz'");
-		blank.addElement("Knoten hinzufügen.");
 		list.setModel(blank);
 		txtDebug.setText("");
 		
-		flushCanvas();
+		canvas.flushGraphics();
 		sp_knots.setBounds(sp_knots.getX(), sp_knotsYPx, sp_knots.getWidth(), sp_knotsHeightPx);;
 		btnNext.setEnabled(false);
 		btnAuflsen.setEnabled(false);
 		btnRepeat.setVisible(false);
 		lblResult.setVisible(false);
-	}
-	
-	/**
-	 * Erzeugt einen Startknoten {@link startKnot} und je nach Eingabe weitere Knoten {@link nextKnot}<br>
-	 * Iteriert wird über {@link thisKnot}, welcher am Anfang auf {@link startKnot} zeigt.<br>
-	 * Für jeden erzeugten Knoten wird eine Linie zum jweils nächsten gezeichnet, es sei denn, es ist der 
-	 * letzte Knoten, dann verbindet die Linie diesem mit dem Startknoten
-	 */
-	private void randRoute() {
-		
-		int count = Integer.parseInt(txtPoints.getText());
-		int radius = (int) comboBox_punkt.getSelectedItem();
-		boolean withNumbers = chckbxNummern.isSelected();
-
-		g = makeGraphics();
-
-		Knot startKnot = new Knot(0);
-		Knot thisKnot = startKnot;
-		Knot nextKnot;
-		
-		for (int i = 1; i<=count; i++) {
-			nextKnot = new Knot(i);
-			
-			thisKnot.drawPoint(g, radius, withNumbers);
-			if (nextKnot.getId() == count) thisKnot.drawLine(g, startKnot);
-			else thisKnot.drawLine(g, nextKnot);
-			
-			thisKnot = nextKnot;
-		}
-		drawToCanvas(buffimg);
-		g.dispose();
 	}
 
 	/**
@@ -495,26 +426,18 @@ public class gWindow {
 		
 		Reset();
 		Instance inst = new Instance();
-
 		int count = Integer.parseInt(txtPoints.getText());
-		int radius = (int) comboBox_punkt.getSelectedItem();
-		boolean withNumbers = chckbxNummern.isSelected();
-		
-		g = makeGraphics();
-		
 		DefaultListModel<String> knotenlist = new DefaultListModel<String>();
 
 		for (int i = 0; i<count; i++) {
 			Knot n = new Knot(i);
 			inst.addKnot(n);
-			knotenlist.addElement(n.toString());
-			
-			n.drawPoint(g, radius, withNumbers);
+			knotenlist.addElement(n.toString()); //TODO Setter von Instance-Klasse aus wäre schöner, dann erstellen der Instanz über new Instance(count)
+			canvas.drawKnot(n);
 		}
+		
+		canvas.repaint();
 		list.setModel(knotenlist);
-
-		drawToCanvas(buffimg);
-		g.dispose();
 		btnNext.setEnabled(true);
 		btnAuflsen.setEnabled(true);
 		
@@ -532,37 +455,33 @@ public class gWindow {
 	 * 
 	 * @param inst der Verweis auf die zu lösende Instanz
 	 */
-	private void NN_Next(Instance inst) {
+	private void NN_Next(Instance inst) {     //TODO NN Next und Solve zusammenführen, über Parameter step steuern
 		
-		if (list.getSelectedIndex() == -1) JOptionPane.showMessageDialog(null, "Zuerst einen Startknoten in der Liste auswï¿½hlen");
+		if (list.getSelectedIndex() == -1) JOptionPane.showMessageDialog(null, "Zuerst einen Startknoten in der Liste auswählen");
 		else {
 			boolean closed = chckbxGeschlossen.isSelected();
 			if (inst.isReady()) inst.setStart(list.getSelectedIndex());
-			g = makeGraphics();
-			
-			Knot nearest = inst.nearestNeighbour(inst.getKnotByIndex(list.getSelectedIndex()), closed, true, true, g, txtDebug);
+
+			Knot nearest = inst.nearestNeighbour(inst.getKnotByIndex(list.getSelectedIndex()), closed, true, true, canvas, txtDebug);
 			if (nearest != null) list.setSelectedIndex((nearest.getId()));
 			
 			showResult(inst);
-			drawToCanvas(buffimg);
-			g.dispose();
+			canvas.repaint();
 		}
 	}
 	
 	private void NN_Solve(Instance inst) {
 		
-		if (list.getSelectedIndex() == -1) JOptionPane.showMessageDialog(null, "Zuerst einen Startknoten in der Liste auswï¿½hlen");
+		if (list.getSelectedIndex() == -1) JOptionPane.showMessageDialog(null, "Zuerst einen Startknoten in der Liste auswählen");
 		else {
 			boolean closed = chckbxGeschlossen.isSelected();
 			if (inst.isReady()) inst.setStart(list.getSelectedIndex());
-			g = makeGraphics();
 			
 			Knot knot = inst.getKnotByIndex(list.getSelectedIndex());
-			while (!inst.isFinished()) knot = inst.nearestNeighbour(knot, closed, false, true, g, txtDebug);
+			while (!inst.isFinished()) knot = inst.nearestNeighbour(knot, closed, false, true, canvas, null);
 
 			showResult(inst);
-			drawToCanvas(buffimg);
-			g.dispose();
+			canvas.repaint();
 		}
 	
 	}
@@ -574,12 +493,12 @@ public class gWindow {
 		Knot bestStart = null;
 		boolean closed = chckbxGeschlossen.isSelected();
 		
-		
 		for (int i = 0; i<inst.getCount();i++) {
+			
 			if (inst.isReady()) inst.setStart(i);
 			thisknot = inst.getKnotByIndex(i);
 			
-			while (!inst.isFinished()) thisknot = inst.nearestNeighbour(thisknot, closed, false, false, g, txtDebug);
+			while (!inst.isFinished()) thisknot = inst.nearestNeighbour(thisknot, closed, false, false, null, null);
 			if ((i==0) || (inst.getWaylenghth() < thisLenghth)) {
 				thisLenghth = inst.getWaylenghth();
 				bestStart = thisknot;
@@ -587,57 +506,32 @@ public class gWindow {
 			inst.resetInstance();
 		}
 		
-		g = makeGraphics();
 		if (inst.isReady()) inst.setStart(bestStart.getId());
 		list.setSelectedIndex(bestStart.getId());
-		while (!inst.isFinished()) bestStart = inst.nearestNeighbour(bestStart, closed, false, true, g, txtDebug);
-		showResult(inst);
-		drawToCanvas(buffimg);
-		g.dispose();
+		while (!inst.isFinished()) bestStart = inst.nearestNeighbour(bestStart, closed, false, true, canvas, null);
 		
+		showResult(inst);
+		canvas.repaint();
 	}
 	
 	private void MST(Instance inst) {
-		g = makeGraphics();
-		inst.makeMST(txtDebug,g);
-		drawToCanvas(buffimg);
-		g.dispose();
 		
-		
+		inst.makeMST(canvas);
+		canvas.repaint();
 	}
 	
 	private void repeatInstance(Instance inst) {
 		
-		int radius = (int) comboBox_punkt.getSelectedItem();
-		boolean withNumbers = chckbxNummern.isSelected();
-		
-		flushCanvas();
-		g = makeGraphics();
+		canvas.flushGraphics();
 		inst.resetInstance();
-		inst.redrawInstance(g, radius, withNumbers);
-		drawToCanvas(buffimg);
-		g.dispose();
+		
+		canvas.redrawKnots(inst);
+		canvas.repaint();
 		
 		btnNext.setEnabled(true);
 		btnAuflsen.setEnabled(true);
 	}
 	
-	private Graphics2D makeGraphics() {
-		
-		Graphics2D graphics = buffimg.createGraphics();
-		int stroke = (int) comboBox_linie.getSelectedItem();
-		Color clr = Colors.colors[comboBox.getSelectedIndex()];
-		
-		if (chckbxAntia.isSelected()) 
-			graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		graphics.setFont(new Font("Arial",Font.BOLD,12));
-		graphics.setBackground(Color.white);
-		graphics.setStroke(new BasicStroke(stroke));
-		graphics.setColor(clr);
-		
-		return graphics;
-
-	}
 	
 	private void showResult(Instance inst) {
 		
@@ -654,20 +548,9 @@ public class gWindow {
 			lblResult.setText("<html>" + result + "</html>");
 		}
 	}
-	private void flushCanvas() {
-		
-		buffimg = new BufferedImage(dimensionPx,dimensionPx,BufferedImage.TYPE_BYTE_INDEXED);
-		g = buffimg.createGraphics();
-		g.setColor(Color.white);
-		g.fillRect(0, 0, dimensionPx, dimensionPx);
-		g.dispose();
-		drawToCanvas(buffimg);
-	}
-	private void drawToCanvas(BufferedImage bimg) {
-		lblCanvas.setIcon(new ImageIcon(bimg));
-	}
 	
 	public void logLines(String lines) {
 		txtDebug.setText(txtDebug.getText() + lines);
 	}
+	
 }

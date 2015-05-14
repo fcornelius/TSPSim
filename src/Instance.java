@@ -1,13 +1,9 @@
-import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JTextPane;
 
 
@@ -57,7 +53,7 @@ public class Instance {
 	 * @param withNumber true/false ob Nummern zu Punkten gezeichnet werden
 	 */
 	public void redrawInstance(Graphics2D g, int radius, boolean withNumber) {
-		for (Knot k : knots) k.drawPoint(g, radius, withNumber);
+//		for (Knot k : knots) k.drawPoint(g, radius, withNumber);
 	}
 	/**
 	 * Fügt einer Instanz einen bestehenden Knoten hinzu.<br>
@@ -141,7 +137,7 @@ public class Instance {
 	 * @param debugPane Ausgabe für den Debug-Log
 	 * @return nähester Knoten
 	 */
-	public Knot nearestNeighbour(Knot rootKnot, boolean closed, boolean debug, boolean draw, Graphics2D g, JTextPane debugPane) {
+	public Knot nearestNeighbour(Knot rootKnot, boolean closed, boolean debug, boolean draw, SquareCanvas canvas, JTextPane debugPane) {
 		int knotId = 0;
 		double thisDist = 0;
 		double minDist = 0;
@@ -151,11 +147,11 @@ public class Instance {
 		if (neighbours.isEmpty()) {
 			if (closed) {
 				nearest = knots.get(startKnot);
-				minDist = Point.distance(rootKnot.x, rootKnot.y, nearest.x, nearest.y);
+				minDist = Point.distance(rootKnot.X(), rootKnot.Y(), nearest.X(), nearest.Y());
 			} else return null;
 		} else {
 			for (Knot thisKnot : neighbours) {
-				thisDist = Point.distance(thisKnot.x, thisKnot.y, rootKnot.x, rootKnot.y);
+				thisDist = Point.distance(thisKnot.X(), thisKnot.Y(), rootKnot.X(), rootKnot.Y());
 				if (knotId==0) {
 					nearest = thisKnot;
 					minDist = thisDist;
@@ -174,11 +170,11 @@ public class Instance {
 		wayLenghth += minDist;
 		if (minDist > maxDist) { maxDist = minDist; furthestKnots = new Knot[]{rootKnot, nearest}; }
 		
-		if (draw) rootKnot.drawLine(g, nearest);
+		if (draw) canvas.drawEdge(rootKnot, nearest);
 		return nearest;
 	}
 	
-	public void makeMST(JTextPane debug, Graphics2D g) {
+	public void makeMST(SquareCanvas canvas) {   //TODO MST Step-Verfahren wie bei NN implementieren (in selber Methode)
 
 		int n = knots.size();
 
@@ -193,15 +189,14 @@ public class Instance {
 			}
 		});
 		
-		edges.get(0).drawLine(g);
+		canvas.drawEdge(edges.get(0));
 		addEdgeToTree(edges.get(0));
 		
 		while (spanningTreeKnots.size() < n) {
 
 			for (Edge thisEdge : edges) {
 				if (spanningTreeKnots.contains(thisEdge.getStart()) ^ spanningTreeKnots.contains(thisEdge.getEnd())) {
-
-					thisEdge.drawLine(g);
+					canvas.drawEdge(thisEdge);
 					addEdgeToTree(thisEdge);
 					break;
 				} 
