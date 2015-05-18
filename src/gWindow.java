@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -298,7 +299,7 @@ public class gWindow {
 	    	public void actionPerformed(ActionEvent e) {
 	    		switch (comboBoxMode.getSelectedIndex()) {
 	    		case 0:
-	    			//bruteForce(instanz)
+	    			bruteForce(instanz);
 	    			break;
 	    		case 1:
 	    			NN_Solve(instanz);
@@ -443,6 +444,24 @@ public class gWindow {
 		
 		return inst;
 	}
+	
+	private void bruteForce(Instance inst) {
+		
+		PermutationBuilder pb = new PermutationBuilder();
+		ArrayList<ArrayList<Integer>> routes = pb.BuildList(inst.getCount()-1,true);
+		ArrayList<Integer> minRoute = routes.get(0);		// Route: Der Pfad des Weges (die Permutation)
+		double minTour = inst.getTour(routes.get(0));       // Tour:  Die Länge einer Route
+		double thisTour;
+		
+		for (ArrayList<Integer> thisRoute : routes) {
+			
+			thisTour = inst.getTour(thisRoute);
+			if (thisTour < minTour) { minTour = thisTour; minRoute = thisRoute; }
+		}
+		canvas.drawRoute(inst, minRoute);
+		canvas.repaint();
+		System.out.println("kürzesete Tour: " + routes.indexOf(minRoute) + ": " + minTour );
+	}
 
 	/**
 	 * Zeigt den nächstgelenen Knoten zum ausgewählten in der JList an.
@@ -462,7 +481,7 @@ public class gWindow {
 			boolean closed = chckbxGeschlossen.isSelected();
 			if (inst.isReady()) inst.setStart(list.getSelectedIndex());
 
-			Knot nearest = inst.nearestNeighbour(inst.getKnotByIndex(list.getSelectedIndex()), closed, true, true, canvas, txtDebug);
+			Knot nearest = inst.nearestNeighbour(inst.getKnot(list.getSelectedIndex()), closed, true, true, canvas, txtDebug);
 			if (nearest != null) list.setSelectedIndex((nearest.getId()));
 			
 			showResult(inst);
@@ -477,7 +496,7 @@ public class gWindow {
 			boolean closed = chckbxGeschlossen.isSelected();
 			if (inst.isReady()) inst.setStart(list.getSelectedIndex());
 			
-			Knot knot = inst.getKnotByIndex(list.getSelectedIndex());
+			Knot knot = inst.getKnot(list.getSelectedIndex());
 			while (!inst.isFinished()) knot = inst.nearestNeighbour(knot, closed, false, true, canvas, null);
 
 			showResult(inst);
@@ -496,7 +515,7 @@ public class gWindow {
 		for (int i = 0; i<inst.getCount();i++) {
 			
 			if (inst.isReady()) inst.setStart(i);
-			thisknot = inst.getKnotByIndex(i);
+			thisknot = inst.getKnot(i);
 			
 			while (!inst.isFinished()) thisknot = inst.nearestNeighbour(thisknot, closed, false, false, null, null);
 			if ((i==0) || (inst.getWaylenghth() < thisLenghth)) {

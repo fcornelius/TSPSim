@@ -69,7 +69,7 @@ public class Instance {
 	 * @param index Position des Knotens ins Knotenliste (0-basiert)
 	 * @return Knoten
 	 */
-	public Knot getKnotByIndex(int index) {
+	public Knot getKnot(int index) {
 		return knots.get(index);
 	}
 	
@@ -180,7 +180,7 @@ public class Instance {
 
 		for (int i = 0; i < n; i++) {
 			for (int j = 1; j < n-i; j++) {
-				edges.add(new Edge(getKnotByIndex(i), getKnotByIndex(i+j)));
+				edges.add(new Edge(getKnot(i), getKnot(i+j)));
 			}
 		}
 		Collections.sort(edges, new Comparator<Edge>() {
@@ -202,5 +202,14 @@ public class Instance {
 				} 
 			}
 		}
+	}
+	
+	public double getTour(ArrayList<Integer> route) {
+		
+		double tourLength = getKnot(0).getDistance(getKnot(route.get(0)));
+		for (int i=0; i<route.size(); i++) {
+			if (i < route.size()-1) tourLength += getKnot(route.get(i)).getDistance(getKnot(route.get(i+1)));
+			else tourLength += getKnot(route.get(i)).getDistance(getKnot(0));
+		} return tourLength;
 	}
 }

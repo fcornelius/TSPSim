@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
@@ -67,9 +68,18 @@ public class SquareCanvas extends JPanel {
 	
 	public void redrawKnots(Instance inst) {
 		
-		for (int i=0; i<inst.getCount(); i++) { drawKnot(inst.getKnotByIndex(i)); }
+		for (int i=0; i<inst.getCount(); i++) { drawKnot(inst.getKnot(i)); }
 	}
 	
+	public void drawRoute(Instance inst, ArrayList<Integer> route) {
+		
+		drawEdge(inst.getKnot(0),inst.getKnot(route.get(0)));
+		
+		for (int i=0; i<route.size(); i++) {
+			if (i < route.size()-1) drawEdge(inst.getKnot(route.get(i)), inst.getKnot(route.get(i+1)));
+			else drawEdge(inst.getKnot(route.get(i)), inst.getKnot(0));
+		}
+	}
 	public void flushGraphics() {
 		
 		if (g2D != null) g2D.dispose();
