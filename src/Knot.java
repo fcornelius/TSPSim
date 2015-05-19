@@ -45,7 +45,7 @@ public class Knot {
 	}
 	
 	public String toString() {
-		return "Knoten " + (id + 1) + ": (" + x + ";" + y + ")";
+		return "Knoten " + (id + 1) + " (" + x + ";" + y + ")";
 	}
 	
 	

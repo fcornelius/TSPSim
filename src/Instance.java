@@ -1,5 +1,7 @@
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -16,11 +18,17 @@ public class Instance {
 	private ArrayList<Knot> spanningTreeKnots;
 	private ArrayList<Edge> completeGraph;
 	private ArrayList<Edge> edges;
+	private ArrayList<Integer> minRoute;
+	private ArrayList<ArrayList<Integer>> routes;
 	
 	private int startKnot;
 	private double maxDist;
 	private Knot[] furthestKnots;
-	private double wayLenghth;
+	private double wayLength;
+	private int calcTime;
+	private int permutTime;
+	
+	private Interval stopWatch;
 	
 	/**
 	 * Konstruktor
@@ -29,22 +37,26 @@ public class Instance {
 	public Instance() {
 		knots = new ArrayList<Knot>();
 		neighbours = new ArrayList<Knot>();
+		furthestKnots = new Knot[2];
 		spanningTreeKnots = new ArrayList<Knot>();
 		completeGraph = new ArrayList<Edge>();
 		edges = new ArrayList<Edge>();
+		stopWatch = new Interval();
 		maxDist = 0;
-		wayLenghth = 0;
+		wayLength = 0;
+		permutTime = 0;
+		calcTime = 0;
 	}
 	/**
 	 * Löscht alle verbeibenden Neighbour und füllt Neighbourliste neu mit Knoten aus knots
 	 * für Wiederholung der Instanz.<br>
-	 * Weglänge ({@link wayLenghth}) und größte Teilstrecke ({@link maxDist}) werden zurückgesetzt.
+	 * Weglänge ({@link wayLength}) und größte Teilstrecke ({@link maxDist}) werden zurückgesetzt.
 	 */
 	public void resetInstance() {
 		neighbours.clear();
 		for (Knot k : knots) neighbours.add(k);
 		maxDist = 0;
-		wayLenghth = 0;
+		wayLength = 0;
 	}
 	/**
 	 * Zeichnet jeden Knoten in Knotenliste der Instanz ({@link knots}) neu.
@@ -80,8 +92,8 @@ public class Instance {
 	public int getCount() {
 		return knots.size();
 	}
-	public double getWaylenghth() {
-		return wayLenghth;
+	public double getWaylength() {
+		return wayLength;
 	}
 	/**
 	 * Gibt an ob die Instanz erstellt und noch nicht gelöst wurde.<br>
@@ -115,9 +127,23 @@ public class Instance {
 	 * und in {@link furthestKnots} stehen die beiden, am weitesten entfernten Knoten.
 	 * @return ein String mit dem Ergebnis
 	 */
-	public String getResult() {
-		//TODO Länge der längsten Entfernung ausgeben (maxDist)
-		return String.format("Länge des Weges: %.2f<br>Längste Teilstrecke zwischen:<br>%s<br>und %s", wayLenghth, furthestKnots[0], furthestKnots[1]);
+	
+	
+	public void bruteForceSolve(SquareCanvas canvas) {
+		
+		PermutationBuilder pb = new PermutationBuilder();
+		routes = pb.BuildList(getCount()-1,true);
+		minRoute = routes.get(0);		// Route: Der Pfad des Weges (die Permutation)
+		double minTour = getTour(routes.get(0));      	    // Tour:  Die Länge einer Route
+		double thisTour;
+		
+		for (ArrayList<Integer> thisRoute : routes) {
+			
+			thisTour = getTour(thisRoute);
+			if (thisTour < minTour) { minTour = thisTour; minRoute = thisRoute; }
+		}
+		wayLength = minTour;
+		canvas.drawRoute(this, minRoute);
 	}
 	/**
 	 * Gibt den Knoten zurück der am nähesten zum übergebenen {@link rootKnot} ist und zeichnet deren Verbindung.
@@ -161,12 +187,12 @@ public class Instance {
 						minDist = thisDist;
 					}
 				}
-				if (debug) debugPane.setText(debugPane.getText() +  String.format("knotId: %d rootKnot: %s thisKnot: %s \nthisDist: %f minDist: %f nearest: %s \n-------------------------------------------------------------------------------------\n", 
+				if (debug) debugPane.setText(debugPane.getText() +  String.format("knotId: %d rootKnot: %s thisKnot: %s thisDist: %f minDist: %f nearest: %s \n", 
 							knotId, rootKnot, thisKnot, thisDist, minDist, nearest));
 				knotId++;
 			}
 		}
-		wayLenghth += minDist;
+		wayLength += minDist;
 		if (minDist > maxDist) { maxDist = minDist; furthestKnots = new Knot[]{rootKnot, nearest}; }
 		
 		if (draw) canvas.drawEdge(rootKnot, nearest);
@@ -207,7 +233,6 @@ public class Instance {
 		if (!spanningTreeKnots.contains(e.getStart())) spanningTreeKnots.add(e.getStart());
 		if (!spanningTreeKnots.contains(e.getEnd())) spanningTreeKnots.add(e.getEnd());
 		completeGraph.remove(e);
-//		edges.add(e);
 	}
 	
 	public double getTour(ArrayList<Integer> route) {
@@ -217,5 +242,32 @@ public class Instance {
 			if (i < route.size()-1) tourLength += getKnot(route.get(i)).getDistance(getKnot(route.get(i+1)));
 			else tourLength += getKnot(route.get(i)).getDistance(getKnot(0));
 		} return tourLength;
+	}
+	
+	public String getResult(int mode) {
+		
+		String result = String.format("[%s] Testinstanz mit %d Knoten wurde berechnet mittels ", LocalDateTime.now(), getCount());
+		switch (mode) {
+		case 0:
+			result += String.format("Brute-Force Verfahren.\n" +
+					"Kürzeste Tour ist %.5f PE lang (Tour %d von möglichen %d)\nRechenzeit: Permutationen %d ms, Routenlänge %d ms, Gesamt %d ms", 
+					wayLength, routes.indexOf(minRoute), routes.size(), permutTime, calcTime, permutTime + calcTime); 
+			break;
+		case 1: 
+			result += String.format("Nearest-Neighbour Verfahren.\n" +
+					"Länge des Weges: %.5f Gewählter Startknoten: %s Längste Teilstrecke zwischen: %s und %s, %.5f\nRechenzeit: %d ms", 
+					wayLength, knots.get(startKnot), furthestKnots[0], furthestKnots[1], maxDist,calcTime);
+			break;
+		case 2: 
+			result += String.format("Best-Nearest-Neighbour Verfahren.\n" +
+					"Länge des Weges: %.5f Bester Startknoten: %s Längste Teilstrecke zwischen: %s und %s, %.5f\nRechenzeit: %d ms", 
+					wayLength, knots.get(startKnot), furthestKnots[0], furthestKnots[1], maxDist,calcTime);
+			break;
+		case 3:
+			result += String.format("Minimum-Spanning-Tree Verfahren.\n" +
+					"Rechenzeit: %d ms", calcTime);
+			break;
+		}
+		return result;
 	}
 }

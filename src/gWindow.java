@@ -197,7 +197,7 @@ public class gWindow {
 	
 		//   Debug Textpane
 		txtDebug = new JTextPane();
-		txtDebug.setFont(new Font("Monospaced", Font.PLAIN, 12));
+		txtDebug.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		txtDebug.setBounds(168, 500, 258, 72);
 
 		//   Debug Scrollbar
@@ -522,20 +522,9 @@ public class gWindow {
 	
 	private void bruteForce(Instance inst) {
 		
-		PermutationBuilder pb = new PermutationBuilder();
-		ArrayList<ArrayList<Integer>> routes = pb.BuildList(inst.getCount()-1,true);
-		ArrayList<Integer> minRoute = routes.get(0);		// Route: Der Pfad des Weges (die Permutation)
-		double minTour = inst.getTour(routes.get(0));       // Tour:  Die Länge einer Route
-		double thisTour;
-		
-		for (ArrayList<Integer> thisRoute : routes) {
-			
-			thisTour = inst.getTour(thisRoute);
-			if (thisTour < minTour) { minTour = thisTour; minRoute = thisRoute; }
-		}
-		canvas.drawRoute(inst, minRoute);
+		inst.bruteForceSolve(canvas);
 		canvas.repaint();
-		System.out.println("kürzesete Tour: " + routes.indexOf(minRoute) + ": " + minTour );
+		logResult(inst);
 	}
 
 	/**
@@ -561,7 +550,10 @@ public class gWindow {
 			
 			canvas.repaint();
 		}
-		if (inst.isFinished()) btnNext.setEnabled(false);
+		if (inst.isFinished()) {
+			btnNext.setEnabled(false);
+			logResult(inst);
+		}
 	}
 	
 	private void NN_Solve(Instance inst) {
@@ -576,6 +568,7 @@ public class gWindow {
 
 			
 			canvas.repaint();
+			logResult(inst);
 		}
 	
 	}
@@ -593,8 +586,8 @@ public class gWindow {
 			thisknot = inst.getKnot(i);
 			
 			while (!inst.isFinished()) thisknot = inst.nearestNeighbour(thisknot, closed, false, false, null, null);
-			if ((i==0) || (inst.getWaylenghth() < thisLenghth)) {
-				thisLenghth = inst.getWaylenghth();
+			if ((i==0) || (inst.getWaylength() < thisLenghth)) {
+				thisLenghth = inst.getWaylength();
 				bestStart = thisknot;
 			}
 			inst.resetInstance();
@@ -606,16 +599,21 @@ public class gWindow {
 		
 		
 		canvas.repaint();
+		logResult(inst);
 	}
 	
 	private void MST(Instance inst) {
 		
 		inst.makeMST(canvas);
 		canvas.repaint();
+		logResult(inst);
 	}
 	
 	
-	public void logLines(String lines) {
-		txtDebug.setText(txtDebug.getText() + lines);
+	public void logResult(Instance inst) {
+		int mode = comboBoxMode.getSelectedIndex();
+		String result = inst.getResult(mode);
+		
+		txtDebug.setText(txtDebug.getText() + result + "\n\n");
 	}
 }
