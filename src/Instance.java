@@ -25,10 +25,10 @@ public class Instance {
 	private double maxDist;
 	private Knot[] furthestKnots;
 	private double wayLength;
-	private int calcTime;
-	private int permutTime;
+	private double calcTime;
+	private double permutTime;
 	
-	private Interval stopWatch;
+	public Interval stopWatch;
 	
 	/**
 	 * Konstruktor
@@ -131,17 +131,23 @@ public class Instance {
 	
 	public void bruteForceSolve(SquareCanvas canvas) {
 		
+		stopWatch.start();
 		PermutationBuilder pb = new PermutationBuilder();
 		routes = pb.BuildList(getCount()-1,true);
 		minRoute = routes.get(0);		// Route: Der Pfad des Weges (die Permutation)
 		double minTour = getTour(routes.get(0));      	    // Tour:  Die Länge einer Route
 		double thisTour;
+		permutTime = stopWatch.getMills();
 		
 		for (ArrayList<Integer> thisRoute : routes) {
 			
 			thisTour = getTour(thisRoute);
 			if (thisTour < minTour) { minTour = thisTour; minRoute = thisRoute; }
 		}
+		stopWatch.stop();
+		calcTime = stopWatch.getMills();
+		stopWatch.reset();
+		
 		wayLength = minTour;
 		canvas.drawRoute(this, minRoute);
 	}
@@ -202,7 +208,8 @@ public class Instance {
 	public void makeMST(SquareCanvas canvas) {   //TODO MST Step-Verfahren wie bei NN implementieren (in selber Methode)
 
 		int n = knots.size();
-
+		stopWatch.start();
+		
 		for (int i = 0; i < n; i++) {
 			for (int j = 1; j < n-i; j++) {
 				completeGraph.add(new Edge(getKnot(i), getKnot(i+j)));
@@ -227,6 +234,9 @@ public class Instance {
 				} 
 			}
 		}
+		stopWatch.stop();
+		calcTime = stopWatch.getMills();
+		stopWatch.reset();
 	}
 	
 	public void addEdgeToTree(Edge e) {
@@ -250,22 +260,23 @@ public class Instance {
 		switch (mode) {
 		case 0:
 			result += String.format("Brute-Force Verfahren.\n" +
-					"Kürzeste Tour ist %.5f PE lang (Tour %d von möglichen %d)\nRechenzeit: Permutationen %d ms, Routenlänge %d ms, Gesamt %d ms", 
-					wayLength, routes.indexOf(minRoute), routes.size(), permutTime, calcTime, permutTime + calcTime); 
+					"Kürzeste Tour ist %.5f PE lang (Route %d von möglichen %d)\nRechenzeit: Permutationen %.2f ms, Routenlänge %.2f ms, Gesamt %.2f ms\n" + 
+					"Das entspricht einer durchschnittlichen Rechenzeit von %.2f µs pro Route", 
+					wayLength, routes.indexOf(minRoute), routes.size(), permutTime, calcTime, permutTime + calcTime, (permutTime + calcTime)/(double)routes.size() * 1000); 
 			break;
 		case 1: 
 			result += String.format("Nearest-Neighbour Verfahren.\n" +
-					"Länge des Weges: %.5f Gewählter Startknoten: %s Längste Teilstrecke zwischen: %s und %s, %.5f\nRechenzeit: %d ms", 
+					"Länge des Weges: %.5f Gewählter Startknoten: %s Längste Teilstrecke zwischen: %s und %s, %.5f\nRechenzeit: %.2f ms", 
 					wayLength, knots.get(startKnot), furthestKnots[0], furthestKnots[1], maxDist,calcTime);
 			break;
 		case 2: 
 			result += String.format("Best-Nearest-Neighbour Verfahren.\n" +
-					"Länge des Weges: %.5f Bester Startknoten: %s Längste Teilstrecke zwischen: %s und %s, %.5f\nRechenzeit: %d ms", 
+					"Länge des Weges: %.5f Bester Startknoten: %s Längste Teilstrecke zwischen: %s und %s, %.5f\nRechenzeit: %.2f ms", 
 					wayLength, knots.get(startKnot), furthestKnots[0], furthestKnots[1], maxDist,calcTime);
 			break;
 		case 3:
 			result += String.format("Minimum-Spanning-Tree Verfahren.\n" +
-					"Rechenzeit: %d ms", calcTime);
+					"Rechenzeit: %.2f ms", calcTime);
 			break;
 		}
 		return result;

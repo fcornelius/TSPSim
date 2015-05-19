@@ -75,6 +75,7 @@ public class gWindow {
 	private JComboBox<String> comboBoxMode;
 	private SquareCanvas canvas;
 	private DefaultListModel<String> blank;
+	private JPanel panel_3;
 	private JLabel lblFarbe;
 	private JLabel lblMouseX;
 	private JLabel lblMouseY;
@@ -87,7 +88,6 @@ public class gWindow {
 	private int canvasPxHeight;
 	private int canvasSpacing;
 	private  int canvasBorder;
-	private JPanel panel_3;
 	
 
 	/**
@@ -482,10 +482,8 @@ public class gWindow {
 	private void Reset() {
 		
 		list.setModel(blank);
-		txtDebug.setText("");
 		
 		canvas.flushGraphics(true);
-//		sp_knots.setBounds(sp_knots.getX(), sp_knotsYPx, sp_knots.getWidth(), sp_knotsHeightPx);;
 		btnNext.setEnabled(false);
 		btnAuflsen.setEnabled(false);
 		

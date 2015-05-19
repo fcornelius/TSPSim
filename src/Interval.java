@@ -20,9 +20,9 @@ public class Interval {
 		}
 	}
 	
-	public long getMills() {
-		if (isRunning) return System.nanoTime() - startTime;
-		else return (endTime - startTime) * 1_000_000L;
+	public double getMills() {
+		if (isRunning) return (System.nanoTime() - startTime) / 1000000.0;
+		else return (endTime - startTime) / 1000000.0;
 	}
 	
 	public void reset() {
