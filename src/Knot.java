@@ -10,13 +10,17 @@ public class Knot {
 	
 	public Knot(int id) {
 		
-		x = newCoordinate();
-		y = newCoordinate();
+		x = newXCoordinate();
+		y = newYCoordinate();
 		this.id = id;
 	}
 	
-	private int newCoordinate() {
-		return (int)(Math.random()*(SquareCanvas.dimension));
+	private int newXCoordinate() {
+		return (int)(Math.random()*(SquareCanvas.pixelWidth));
+	}
+	
+	private int newYCoordinate() {
+		return (int)(Math.random()*(SquareCanvas.pixelHeight));
 	}
 	
 	public int X() {

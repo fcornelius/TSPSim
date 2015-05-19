@@ -3,10 +3,13 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -28,16 +31,19 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JToolBar;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 
 
 public class gWindow {
 	
 	public Instance instanz;
-	public static final int dimension = 600;
-	public static final int canvasSpacing = 6;
-	public static final int canvasBorder = 3;
-	
-	
+		
 	private JFrame frame;
 
 	private JButton btnPoints;
@@ -63,20 +69,26 @@ public class gWindow {
 	private JLabel lblVersion;
 	private JLabel lblFh;
 	private JLabel lblFhKln;
-	private JPanel panel_2;
-	private JPanel panel_3;
+	private JCheckBox chckbxAutoupdate;
 	private JList<String> list;
 	private JScrollPane sp_knots;
 	private JComboBox<String> comboBoxMode;
 	private SquareCanvas canvas;
 	private DefaultListModel<String> blank;
+	private JLabel lblFarbe;
+	private JLabel lblMouseX;
+	private JLabel lblMouseY;
 	
 	private int frameHeightPx;
 	private int frameHeightDebugPx;
-	private int sp_knotsHeightPx;
-	private int sp_knotsHeightResultPx;
-	private int sp_knotsYPx;
-	private int sp_knotsYResultPx;
+	private int canvasWidth;
+	private int canvasHeight;
+	private int canvasPxWidth;
+	private int canvasPxHeight;
+	private int canvasSpacing;
+	private  int canvasBorder;
+	private JPanel panel_3;
+	
 
 	/**
 	 * Launch the application. // Generiert durch WindowManager
@@ -113,33 +125,22 @@ public class gWindow {
 		//   Frame
 		frame = new JFrame();
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 853, 694);
+		frame.setBounds(100, 100, 1215, 804);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frameHeightPx = frame.getHeight();
-		frameHeightDebugPx = frame.getHeight() + 166;
+		frameHeightDebugPx = frame.getHeight() + 142;
 
 		//   Top Panel
-		panel_1 = new JPanel();
+		panel_1 = new TopBar("subbar.png");
 		FlowLayout flowLayout_1 = (FlowLayout) panel_1.getLayout();
-		flowLayout_1.setAlignment(FlowLayout.RIGHT);
-		panel_1.setBounds(202, 0, 621, 35);
+		flowLayout_1.setVgap(9);
+		flowLayout_1.setAlignment(FlowLayout.LEFT);
+		panel_1.setBounds(0, 50, 1209, 44);
 		frame.getContentPane().add(panel_1);
 		
-		
-		//   AntiAliasing Checkbox
-		chckbxAntia = new JCheckBox("AntiAliasing");
-		panel_1.add(chckbxAntia);
-		chckbxAntia.setSelected(true);
-		chckbxAntia.addChangeListener(new OptionListener());
-		
-		chckbxNummern = new JCheckBox("Nummern");
-		chckbxNummern.setSelected(true);
-		chckbxNummern.addChangeListener(new OptionListener());
-		panel_1.add(chckbxNummern);
-		
 		//   Linie Label
-		lblLinie = new JLabel("Linie");
+		lblLinie = new JLabel("Linienstärke: ");
 		panel_1.add(lblLinie);
 		
 		//   Linie ComboBox mit Items 1 bis 4
@@ -150,7 +151,7 @@ public class gWindow {
 		panel_1.add(comboBox_linie);
 		
 		//   Punkt Label
-		lblPunkt = new JLabel("Punkt");
+		lblPunkt = new JLabel("Punktradius: ");
 		panel_1.add(lblPunkt);
 		
 		//   Punkt ComboBox
@@ -167,24 +168,36 @@ public class gWindow {
 		for (Colors.ColorNames c : Colors.ColorNames.values()) comboBox.addItem(c.toString());
 		comboBox.setSelectedItem(comboBox.getItemAt(12));
 		comboBox.addItemListener(new OptionListener());
+		
+		lblFarbe = new JLabel("Farbe:");
+		panel_1.add(lblFarbe);
 		panel_1.add(comboBox);
 		
-		//   Reset Button
-		btnReset = new JButton("Reset");
-		btnReset.setPreferredSize(new Dimension(70, 27));
-		panel_1.add(btnReset);
-		btnReset.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Reset();
-			}
-		});
+		chckbxAutoupdate = new JCheckBox("AutoUpdate");
+		chckbxAutoupdate.setSelected(true);
+		chckbxAutoupdate.setOpaque(false);
+		panel_1.add(chckbxAutoupdate);
+		
+		
+		//   AntiAliasing Checkbox
+		chckbxAntia = new JCheckBox("AntiAliasing");
+		chckbxAntia.setOpaque(false);
+		panel_1.add(chckbxAntia);
+		chckbxAntia.setSelected(true);
+		
+		chckbxNummern = new JCheckBox("Nummern");
+		chckbxNummern.setOpaque(false);
+		chckbxNummern.setSelected(true);
+		chckbxNummern.addChangeListener(new OptionListener());
+		panel_1.add(chckbxNummern);
+		chckbxAntia.addChangeListener(new OptionListener());
 		
 		//   Result Label
 		lblResult = new JLabel("");
 	    lblResult.setVerticalAlignment(SwingConstants.TOP);
 	    lblResult.setBounds(10, 262, 201, 97);
 	    lblResult.setVisible(false);
-	    frame.getContentPane().add(lblResult);
+//	    frame.getContentPane().add(lblResult);
 	    
 		//   Wiederholen Button
 		btnRepeat = new JButton("Instanz wiederholen");
@@ -195,7 +208,7 @@ public class gWindow {
 		});
 		btnRepeat.setBounds(10, 362, 182, 23);
 		btnRepeat.setVisible(false);
-		frame.getContentPane().add(btnRepeat);
+//		frame.getContentPane().add(btnRepeat);
 	
 		//   Debug Textpane
 		txtDebug = new JTextPane();
@@ -205,150 +218,11 @@ public class gWindow {
 		//   Debug Scrollbar
 		JScrollPane sp = new JScrollPane(txtDebug,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 	    
-	    sp.setBounds(12, 663, 811, 142);
+	    sp.setBounds(0, 742, 1209, 141);
 	    frame.getContentPane().add(sp);
-	    
-	    panelLogo = new JPanel();
-	    FlowLayout flowLayout_2 = (FlowLayout) panelLogo.getLayout();
-	    flowLayout_2.setAlignOnBaseline(true);
-	    flowLayout_2.setVgap(3);
-	    flowLayout_2.setAlignment(FlowLayout.LEFT);
-	    panelLogo.setBounds(21, 13, 169, 81);
-	    frame.getContentPane().add(panelLogo);
-	    
-	    lblLogo = new JLabel("TSPSim ");
-	    lblLogo.setForeground(new Color(128, 0, 0));
-	    lblLogo.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 18));
-	    panelLogo.add(lblLogo);
-	    
-	    lblVersion = new JLabel("v0.2");
-	    lblVersion.setFont(new Font("Tahoma", Font.PLAIN, 10));
-	    lblVersion.setVerticalAlignment(SwingConstants.BOTTOM);
-	    panelLogo.add(lblVersion);
-	    
-	    lblFh = new JLabel("MA2 Projekt SoSe '15    ");
-	    lblFh.setFont(new Font("Tahoma", Font.PLAIN, 12));
-	    panelLogo.add(lblFh);
-	    
-	    lblFhKln = new JLabel("FH Köln");
-	    lblFhKln.setFont(new Font("Tahoma", Font.PLAIN, 12));
-	    panelLogo.add(lblFhKln);
-	    
-	    panel_2 = new JPanel();
-	    FlowLayout flowLayout_3 = (FlowLayout) panel_2.getLayout();
-	    flowLayout_3.setHgap(3);
-	    flowLayout_3.setVgap(3);
-	    panel_2.setBounds(0, 121, 201, 139);
-	    frame.getContentPane().add(panel_2);
-	    
-	    comboBoxMode = new JComboBox<String>();
-	    
-	    comboBoxMode.setPreferredSize(new Dimension(156, 25));
-	    comboBoxMode.addItem("BruteForce");
-	    comboBoxMode.addItem("NearestNeighbour");
-	    comboBoxMode.addItem("Best NearestNeighbour");
-	    comboBoxMode.addItem("MST-Transform");
-	    comboBoxMode.setSelectedIndex(1);
-	    panel_2.add(comboBoxMode);
-	    
-	    panel_3 = new JPanel();
-	    FlowLayout flowLayout_4 = (FlowLayout) panel_3.getLayout();
-	    flowLayout_4.setHgap(80);
-	    panel_2.add(panel_3);
-	    
-	    //   Punkte Button
-	    btnPoints = new JButton("Neue Instanz");
-	    btnPoints.setPreferredSize(new Dimension(120, 35));
-	    panel_2.add(btnPoints);
-	    
-	    btnPoints.addActionListener(new ActionListener() {
-	    	public void actionPerformed(ActionEvent e) {
-	    		instanz = createInstance();
-	    	}
-	    });
-	    
-	    //   Punkte Anzahl
-	    txtPoints = new JTextField("10");
-	    txtPoints.setHorizontalAlignment(SwingConstants.RIGHT);
-	    txtPoints.setPreferredSize(new Dimension(35, 30));
-	    panel_2.add(txtPoints);
-	   
-	   //   Nächster NN Button
-	   btnNext = new JButton("N\u00E4chster");
-	   btnNext.setPreferredSize(new Dimension(85, 23));
-	   panel_2.add(btnNext);
-	   btnNext.setEnabled(false);
-	   btnNext.addActionListener(new ActionListener() {
-		   	public void actionPerformed(ActionEvent e) {
-		   		switch (comboBoxMode.getSelectedIndex()) {
-	    		case 1:
-	    			NN_Next(instanz);
-	    			break;
-	    		case 3: 
-	    			MST(instanz);
-	    			break;
-		   		}
-		   	}
-		   });
-	   
-	   //   Auflösen Button
-	    btnAuflsen = new JButton("L\u00F6sen");
-	    btnAuflsen.setPreferredSize(new Dimension(70, 23));
-	    panel_2.add(btnAuflsen);
-	    btnAuflsen.addActionListener(new ActionListener() {
-	    	public void actionPerformed(ActionEvent e) {
-	    		switch (comboBoxMode.getSelectedIndex()) {
-	    		case 0:
-	    			bruteForce(instanz);
-	    			break;
-	    		case 1:
-	    			NN_Solve(instanz);
-	    			break;
-	    		case 2:
-	    			bestNN(instanz);
-	    		case 3:
-	    			
-	    		}
-	    		
-	    	}
-	    });
-	    btnAuflsen.setEnabled(false);
-	    
-	    // Verfahren ComboBox Listeners
-	    comboBoxMode.addItemListener(new ItemListener() {
-	    	public void itemStateChanged(ItemEvent e) {
-	    		switch (comboBoxMode.getSelectedIndex()) {
-	    		case 0: 
-	    			btnNext.setEnabled(false);
-	    			btnNext.setText("Nächster");
-	    			break;
-	    		case 1: 
-	    			btnNext.setEnabled(true);
-	    			btnNext.setText("Nächster");
-	    			break;
-	    		case 2:
-	    			btnNext.setEnabled(false);
-	    			btnNext.setText("Nächster");
-	    			break;
-	    		case 3:
-	    			btnNext.setText("MST");
-	    			btnNext.setEnabled(true);
-	    			btnAuflsen.setEnabled(false);
-	    		
-	    		}
-	    	}
-	    });
-	    
-	    //   geschlossen Checkbox
-	     chckbxGeschlossen = new JCheckBox("geschlossen");
-	     panel_2.add(chckbxGeschlossen);
-	     chckbxGeschlossen.setSelected(true);
-	     
-		//   Debug Checkbox mit Changehandler, ändert Framehöhe
-		chckbxDebug = new JCheckBox("Debug");
-		panel_2.add(chckbxDebug);
 		
 		list = new JList<String>();
+		list.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		list.setBackground(Color.WHITE);
 		list.setBounds(243, 240, 59, 81);
@@ -360,16 +234,163 @@ public class gWindow {
 		
 		sp_knots = new JScrollPane(list);
 		sp_knots.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		sp_knots.setBounds(20, 303, 172, 335);
+		sp_knots.setBounds(0, 96, 190, 618);
 		frame.getContentPane().add(sp_knots);
-		sp_knotsHeightPx = sp_knots.getHeight();
-		sp_knotsHeightResultPx = sp_knots.getY()-89;
-		sp_knotsYPx = sp_knots.getY();
-		sp_knotsYResultPx = sp_knots.getY() + 89;
+		
+		
+		JPanel panel = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
+		flowLayout.setAlignment(FlowLayout.LEFT);
+		flowLayout.setVgap(0);
+		flowLayout.setHgap(0);
+		panel.setBounds(191, 96, 1001, 600);
+		frame.getContentPane().add(panel);
+		
+		canvasPxWidth = 1000;
+		canvasPxHeight = 600;
+		canvasSpacing = 6;
+		canvasBorder = 3;
+		canvasWidth = canvasPxWidth + 2*(canvasSpacing + canvasBorder);
+		canvasHeight = canvasPxHeight + 2*(canvasSpacing + canvasBorder);
+		
+		canvas = new SquareCanvas(canvasPxWidth, canvasPxHeight, canvasSpacing, canvasBorder, this);
+	
+		canvas.setPreferredSize(new Dimension(canvasWidth,canvasHeight));
+		canvas.addMouseMotionListener(new MouseMotion());
+		panel.add(canvas);
+		panel.setBounds(panel.getX(), panel.getY(), canvasWidth, canvasHeight);
+		canvas.setBorder(BorderFactory.createLineBorder(Color.gray, canvasBorder));
+		
+		JPanel toolbar = new TopBar("topbar.png");
+		FlowLayout flowLayout_5 = (FlowLayout) toolbar.getLayout();
+		flowLayout_5.setAlignment(FlowLayout.LEFT);
+		toolbar.setBounds(0, 0, 1209, 50);
+		frame.getContentPane().add(toolbar);
+		
+		panelLogo = new JPanel();
+		toolbar.add(panelLogo);
+		panelLogo.setOpaque(false);
+		panelLogo.setPreferredSize(new Dimension(200, 40));
+		FlowLayout flowLayout_2 = (FlowLayout) panelLogo.getLayout();
+		flowLayout_2.setAlignOnBaseline(true);
+		flowLayout_2.setVgap(2);
+		flowLayout_2.setAlignment(FlowLayout.LEFT);
+		
+		lblLogo = new JLabel("TSPSim  ");
+		panelLogo.add(lblLogo);
+		lblLogo.setForeground(new Color(128, 0, 0));
+		lblLogo.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 18));
+		
+		lblVersion = new JLabel("v0.5");
+		lblVersion.setForeground(Color.GRAY);
+		lblVersion.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		lblVersion.setVerticalAlignment(SwingConstants.BOTTOM);
+		panelLogo.add(lblVersion);
+		
+		lblFh = new JLabel("MA2 Projekt SoSe '15");
+		lblFh.setForeground(Color.DARK_GRAY);
+		panelLogo.add(lblFh);
+		lblFh.setVerticalAlignment(SwingConstants.BOTTOM);
+		lblFh.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		
+		lblFhKln = new JLabel("FH Köln");
+		lblFhKln.setForeground(Color.DARK_GRAY);
+		lblFhKln.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panelLogo.add(lblFhKln);
+		
+		//   Punkte Button
+		btnPoints = new JButton("Neue Instanz");
+		btnPoints.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnPoints.setPreferredSize(new Dimension(140, 35));
+		toolbar.add(btnPoints);
+		
+		//   Punkte Anzahl
+		txtPoints = new JTextField("10");
+		toolbar.add(txtPoints);
+		txtPoints.setHorizontalAlignment(SwingConstants.RIGHT);
+		txtPoints.setPreferredSize(new Dimension(35, 30));
+		
+		panel_3 = new JPanel();
+		FlowLayout flowLayout_3 = (FlowLayout) panel_3.getLayout();
+		flowLayout_3.setAlignment(FlowLayout.RIGHT);
+		panel_3.setPreferredSize(new Dimension(780, 38));
+		panel_3.setOpaque(false);
+		toolbar.add(panel_3);
 		
 		JLabel lblVerfahren = new JLabel("Verfahren:");
-		lblVerfahren.setBounds(22, 102, 83, 23);
-		frame.getContentPane().add(lblVerfahren);
+		panel_3.add(lblVerfahren);
+		
+		comboBoxMode = new JComboBox<String>();
+		panel_3.add(comboBoxMode);
+		
+		comboBoxMode.setPreferredSize(new Dimension(156, 27));
+		comboBoxMode.addItem("BruteForce");
+		comboBoxMode.addItem("NearestNeighbour");
+		comboBoxMode.addItem("Best NearestNeighbour");
+		comboBoxMode.addItem("MST-Transform");
+		comboBoxMode.setSelectedIndex(1);
+		
+		//   Nächster NN Button
+		btnNext = new JButton("N\u00E4chster");
+		panel_3.add(btnNext);
+		btnNext.setPreferredSize(new Dimension(85, 27));
+		btnNext.setEnabled(false);
+		
+		//   Auflösen Button
+		 btnAuflsen = new JButton("L\u00F6sen");
+		 panel_3.add(btnAuflsen);
+		 btnAuflsen.setPreferredSize(new Dimension(70, 27));
+		 btnAuflsen.addActionListener(new ActionListener() {
+		 	public void actionPerformed(ActionEvent e) {
+		 		switch (comboBoxMode.getSelectedIndex()) {
+		 		case 0:
+		 			bruteForce(instanz);
+		 			break;
+		 		case 1:
+		 			NN_Solve(instanz);
+		 			break;
+		 		case 2:
+		 			bestNN(instanz);
+		 		case 3:
+		 			
+		 		}
+		 		
+		 	}
+		 });
+		 btnAuflsen.setEnabled(false);
+		 
+		 //   Reset Button
+		 btnReset = new JButton("Reset");
+		 panel_3.add(btnReset);
+		 btnReset.setPreferredSize(new Dimension(70, 27));
+		 
+		 //   geschlossen Checkbox
+		  chckbxGeschlossen = new JCheckBox("geschlossen");
+		  panel_3.add(chckbxGeschlossen);
+		  chckbxGeschlossen.setOpaque(false);
+		  chckbxGeschlossen.setSelected(true);
+		  
+		//   Debug Checkbox mit Changehandler, ändert Framehöhe
+		chckbxDebug = new JCheckBox("Debug");
+		panel_3.add(chckbxDebug);
+		chckbxDebug.setOpaque(false);
+		
+		JPanel panel_2 = new TopBar("subbar.png");
+		
+		FlowLayout flowLayout_4 = (FlowLayout) panel_2.getLayout();
+		flowLayout_4.setVgap(3);
+		flowLayout_4.setHgap(8);
+		flowLayout_4.setAlignment(FlowLayout.RIGHT);
+		panel_2.setBounds(0, 716, 1209, 25);
+		frame.getContentPane().add(panel_2);
+		
+		lblMouseX = new JLabel("");
+		lblMouseX.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		panel_2.add(lblMouseX);
+		
+		lblMouseY = new JLabel("");
+		lblMouseY.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		panel_2.add(lblMouseY);
 		
 		chckbxDebug.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
@@ -377,11 +398,64 @@ public class gWindow {
 				else frame.setBounds(frame.getX(), frame.getY(), frame.getWidth(), frameHeightPx);
 			}
 		});
-	 
-		canvas = new SquareCanvas(dimension, canvasSpacing, canvasBorder, this);
-		canvas.setBounds(223, 38, canvas.getSideLength(), canvas.getSideLength());
-		canvas.setBorder(BorderFactory.createLineBorder(Color.gray, canvasBorder));
-		frame.getContentPane().add(canvas);
+		 btnReset.addActionListener(new ActionListener() {
+		 	public void actionPerformed(ActionEvent e) {
+		 		Reset();
+		 	}
+		 });
+		btnNext.addActionListener(new ActionListener() {
+		   	public void actionPerformed(ActionEvent e) {
+		   		switch (comboBoxMode.getSelectedIndex()) {
+		 		case 1:
+		 			NN_Next(instanz);
+		 			break;
+		 		case 3: 
+		 			MST(instanz);
+		 			break;
+		   		}
+		   	}
+		   });
+		
+		// Verfahren ComboBox Listeners
+		comboBoxMode.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				switch (comboBoxMode.getSelectedIndex()) {
+				case 0: 
+					btnNext.setEnabled(false);
+					btnNext.setText("Nächster");
+					break;
+				case 1: 
+					btnNext.setEnabled(true);
+					btnNext.setText("Nächster");
+					break;
+				case 2:
+					btnNext.setEnabled(false);
+					btnNext.setText("Nächster");
+					break;
+				case 3:
+					btnNext.setText("MST");
+					btnNext.setEnabled(true);
+					btnAuflsen.setEnabled(false);
+				
+				}
+			}
+		});
+		
+		
+		btnPoints.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				instanz = createInstance();
+			}
+		});
+		
+		JMenuBar menuBar = new JMenuBar();
+		frame.setJMenuBar(menuBar);
+		
+		JMenu mnDatei = new JMenu("Datei");
+		menuBar.add(mnDatei);
+		
+		JMenu mnInstanz = new JMenu("Instanz");
+		menuBar.add(mnInstanz);
 
 	}
 	
@@ -390,10 +464,24 @@ public class gWindow {
 		@Override
 		public void itemStateChanged(ItemEvent e) {
 			canvas.updateGraphics();
+//			if (chckbxAutoupdate.isSelected()) //TODO canvas redraw
 		}
 		@Override
 		public void stateChanged(ChangeEvent e) {
 			canvas.updateGraphics();
+		}
+	}
+	
+	class MouseMotion implements MouseMotionListener {
+		
+		@Override
+		public void mouseMoved(MouseEvent e) {
+			lblMouseX.setText(e.getX() + " :");
+			lblMouseY.setText(e.getY()+"");
+			
+		}
+		@Override
+		public void mouseDragged(MouseEvent e) {
 		}
 	}
 	
@@ -409,7 +497,7 @@ public class gWindow {
 		txtDebug.setText("");
 		
 		canvas.flushGraphics();
-		sp_knots.setBounds(sp_knots.getX(), sp_knotsYPx, sp_knots.getWidth(), sp_knotsHeightPx);;
+//		sp_knots.setBounds(sp_knots.getX(), sp_knotsYPx, sp_knots.getWidth(), sp_knotsHeightPx);;
 		btnNext.setEnabled(false);
 		btnAuflsen.setEnabled(false);
 		btnRepeat.setVisible(false);
@@ -556,20 +644,19 @@ public class gWindow {
 		
 		if (inst.isFinished()) {
 			
-			sp_knots.setBounds(sp_knots.getX(), sp_knotsYResultPx, sp_knots.getWidth(), sp_knotsHeightResultPx);
-			btnRepeat.setVisible(true);
-			lblResult.setVisible(true);
+//			sp_knots.setBounds(sp_knots.getX(), sp_knotsYResultPx, sp_knots.getWidth(), sp_knotsHeightResultPx);
+//			btnRepeat.setVisible(true);
+//			lblResult.setVisible(true);
 			
 			btnNext.setEnabled(false);
-			btnAuflsen.setEnabled(false);
-			String result = inst.getResult();
-			if (comboBoxMode.getSelectedIndex() == 2) result += ("<br>Bester Start: " + inst.getStartKnot());
-			lblResult.setText("<html>" + result + "</html>");
+//			btnAuflsen.setEnabled(false);
+//			String result = inst.getResult();
+//			if (comboBoxMode.getSelectedIndex() == 2) result += ("<br>Bester Start: " + inst.getStartKnot());
+//			lblResult.setText("<html>" + result + "</html>");
 		}
 	}
 	
 	public void logLines(String lines) {
 		txtDebug.setText(txtDebug.getText() + lines);
 	}
-	
 }

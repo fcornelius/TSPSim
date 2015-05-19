@@ -13,7 +13,8 @@ import javax.swing.JPanel;
 public class SquareCanvas extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	static int dimension;
+	static int pixelWidth;
+	static int pixelHeight;
 	static int spacing;
 	static int border;
 	
@@ -21,18 +22,21 @@ public class SquareCanvas extends JPanel {
 	private Graphics2D g2D;
 	private gWindow mainFrame;
 	
-	private int sideLength;
+	
 	private int pointRadius;
 	private boolean withNumbers;
+	private int width;
+	private int height;
 	
-	public SquareCanvas(int dimension, int spacing, int border, gWindow owner) {
+	public SquareCanvas(int width, int height, int spacing, int border, gWindow owner) {
 		
 		mainFrame = owner;
-		SquareCanvas.dimension = dimension;
+		SquareCanvas.pixelWidth = width;
+		SquareCanvas.pixelHeight = height;
 		SquareCanvas.spacing = spacing;
 		SquareCanvas.border = border;
-		sideLength = dimension + 2 * (spacing + border);
-		
+		this.width = width + 2 * (spacing + border);
+		this.height = height + 2 * (spacing + border);
 		flushGraphics();
 	}
 	
@@ -41,10 +45,6 @@ public class SquareCanvas extends JPanel {
 		
 		super.paintComponent(g);
 		g.drawImage(bi, 0, 0, this);
-	}
-	
-	public int getSideLength() {
-		return sideLength;
 	}
 	
 	public void drawKnot(Knot k) {
@@ -84,11 +84,11 @@ public class SquareCanvas extends JPanel {
 		
 		if (g2D != null) g2D.dispose();
 		if (bi != null) bi.flush();
-		else bi = new BufferedImage(sideLength, sideLength, BufferedImage.TYPE_BYTE_INDEXED);  
+		else bi = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_INDEXED);  
 		
 		g2D = bi.createGraphics();
 		g2D.setColor(Color.white);
-		g2D.fillRect(0, 0, sideLength, sideLength);
+		g2D.fillRect(0, 0, width, height);
 		g2D.setColor(Colors.colors[mainFrame.comboBox.getSelectedIndex()]); //TODO Getter
 		
 		updateGraphics();
@@ -110,5 +110,7 @@ public class SquareCanvas extends JPanel {
 		g2D.setColor(clr);
 
 	}
+	
+	
 	
 }
