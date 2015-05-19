@@ -192,23 +192,8 @@ public class gWindow {
 		panel_1.add(chckbxNummern);
 		chckbxAntia.addChangeListener(new OptionListener());
 		
-		//   Result Label
-		lblResult = new JLabel("");
-	    lblResult.setVerticalAlignment(SwingConstants.TOP);
-	    lblResult.setBounds(10, 262, 201, 97);
-	    lblResult.setVisible(false);
-//	    frame.getContentPane().add(lblResult);
-	    
-		//   Wiederholen Button
-		btnRepeat = new JButton("Instanz wiederholen");
-		btnRepeat.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				repeatInstance(instanz);
-			}
-		});
-		btnRepeat.setBounds(10, 362, 182, 23);
-		btnRepeat.setVisible(false);
-//		frame.getContentPane().add(btnRepeat);
+ 
+		
 	
 		//   Debug Textpane
 		txtDebug = new JTextPane();
@@ -371,7 +356,7 @@ public class gWindow {
 		  chckbxGeschlossen.setSelected(true);
 		  
 		//   Debug Checkbox mit Changehandler, ändert Framehöhe
-		chckbxDebug = new JCheckBox("Debug");
+		chckbxDebug = new JCheckBox("Stats");
 		panel_3.add(chckbxDebug);
 		chckbxDebug.setOpaque(false);
 		
@@ -463,12 +448,15 @@ public class gWindow {
 
 		@Override
 		public void itemStateChanged(ItemEvent e) {
-			canvas.updateGraphics();
-//			if (chckbxAutoupdate.isSelected()) //TODO canvas redraw
+			
+			if (chckbxAutoupdate.isSelected()) canvas.redraw();
+			else canvas.updateGraphics();
 		}
 		@Override
 		public void stateChanged(ChangeEvent e) {
-			canvas.updateGraphics();
+
+			if (chckbxAutoupdate.isSelected()) canvas.redraw();
+			else canvas.updateGraphics();
 		}
 	}
 	
@@ -496,12 +484,11 @@ public class gWindow {
 		list.setModel(blank);
 		txtDebug.setText("");
 		
-		canvas.flushGraphics();
+		canvas.flushGraphics(true);
 //		sp_knots.setBounds(sp_knots.getX(), sp_knotsYPx, sp_knots.getWidth(), sp_knotsHeightPx);;
 		btnNext.setEnabled(false);
 		btnAuflsen.setEnabled(false);
-		btnRepeat.setVisible(false);
-		lblResult.setVisible(false);
+		
 	}
 
 	/**
@@ -572,9 +559,9 @@ public class gWindow {
 			Knot nearest = inst.nearestNeighbour(inst.getKnot(list.getSelectedIndex()), closed, true, true, canvas, txtDebug);
 			if (nearest != null) list.setSelectedIndex((nearest.getId()));
 			
-			showResult(inst);
 			canvas.repaint();
 		}
+		if (inst.isFinished()) btnNext.setEnabled(false);
 	}
 	
 	private void NN_Solve(Instance inst) {
@@ -587,7 +574,7 @@ public class gWindow {
 			Knot knot = inst.getKnot(list.getSelectedIndex());
 			while (!inst.isFinished()) knot = inst.nearestNeighbour(knot, closed, false, true, canvas, null);
 
-			showResult(inst);
+			
 			canvas.repaint();
 		}
 	
@@ -617,7 +604,7 @@ public class gWindow {
 		list.setSelectedIndex(bestStart.getId());
 		while (!inst.isFinished()) bestStart = inst.nearestNeighbour(bestStart, closed, false, true, canvas, null);
 		
-		showResult(inst);
+		
 		canvas.repaint();
 	}
 	
@@ -627,34 +614,6 @@ public class gWindow {
 		canvas.repaint();
 	}
 	
-	private void repeatInstance(Instance inst) {
-		
-		canvas.flushGraphics();
-		inst.resetInstance();
-		
-		canvas.redrawKnots(inst);
-		canvas.repaint();
-		
-		btnNext.setEnabled(true);
-		btnAuflsen.setEnabled(true);
-	}
-	
-	
-	private void showResult(Instance inst) {
-		
-		if (inst.isFinished()) {
-			
-//			sp_knots.setBounds(sp_knots.getX(), sp_knotsYResultPx, sp_knots.getWidth(), sp_knotsHeightResultPx);
-//			btnRepeat.setVisible(true);
-//			lblResult.setVisible(true);
-			
-			btnNext.setEnabled(false);
-//			btnAuflsen.setEnabled(false);
-//			String result = inst.getResult();
-//			if (comboBoxMode.getSelectedIndex() == 2) result += ("<br>Bester Start: " + inst.getStartKnot());
-//			lblResult.setText("<html>" + result + "</html>");
-		}
-	}
 	
 	public void logLines(String lines) {
 		txtDebug.setText(txtDebug.getText() + lines);

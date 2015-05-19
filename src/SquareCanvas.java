@@ -22,11 +22,13 @@ public class SquareCanvas extends JPanel {
 	private Graphics2D g2D;
 	private gWindow mainFrame;
 	
-	
 	private int pointRadius;
 	private boolean withNumbers;
 	private int width;
 	private int height;
+	
+	private ArrayList<Knot> knotBuffer;
+	private ArrayList<Edge> edgeBuffer;
 	
 	public SquareCanvas(int width, int height, int spacing, int border, gWindow owner) {
 		
@@ -37,7 +39,10 @@ public class SquareCanvas extends JPanel {
 		SquareCanvas.border = border;
 		this.width = width + 2 * (spacing + border);
 		this.height = height + 2 * (spacing + border);
-		flushGraphics();
+		
+		knotBuffer = new ArrayList<Knot>();
+		edgeBuffer = new ArrayList<Edge>();
+		flushGraphics(false);
 	}
 	
 	@Override
@@ -54,21 +59,35 @@ public class SquareCanvas extends JPanel {
 			if (k.getY() > 580) g2D.drawString(String.valueOf(k.getId()+1), k.X()-4, k.Y()-10);
 			else g2D.drawString(String.valueOf(k.getId()+1), k.X()-4, k.Y()+18);
 		}
+		if (!knotBuffer.contains(k)) knotBuffer.add(k);
 	}
 	
 	public void drawEdge(Edge e) {
 		
 		g2D.drawLine(e.getStart().X(), e.getStart().Y(), e.getEnd().X(), e.getEnd().Y());
+		if (!edgeBuffer.contains(e)) edgeBuffer.add(e);
 	}
 	
 	public void drawEdge(Knot start, Knot end) {
 		
-		g2D.drawLine(start.X(), start.Y(), end.X(), end.Y());
+		drawEdge(new Edge(start, end));
 	}
 	
-	public void redrawKnots(Instance inst) {
+	public void redraw() {
 		
-		for (int i=0; i<inst.getCount(); i++) { drawKnot(inst.getKnot(i)); }
+		flushGraphics(false);
+		redrawKnots(); redrawEdges();
+		repaint();
+	}
+	
+	public void redrawKnots() {
+		
+		for (Knot k : knotBuffer) drawKnot(k);
+	}
+	
+	public void redrawEdges() {
+		
+		for (Edge e : edgeBuffer) drawEdge(e);
 	}
 	
 	public void drawRoute(Instance inst, ArrayList<Integer> route) {
@@ -80,7 +99,7 @@ public class SquareCanvas extends JPanel {
 			else drawEdge(inst.getKnot(route.get(i)), inst.getKnot(0));
 		}
 	}
-	public void flushGraphics() {
+	public void flushGraphics(boolean clearBuffer) {
 		
 		if (g2D != null) g2D.dispose();
 		if (bi != null) bi.flush();
@@ -91,6 +110,7 @@ public class SquareCanvas extends JPanel {
 		g2D.fillRect(0, 0, width, height);
 		g2D.setColor(Colors.colors[mainFrame.comboBox.getSelectedIndex()]); //TODO Getter
 		
+		if (clearBuffer) { knotBuffer.clear(); edgeBuffer.clear(); }
 		updateGraphics();
 		repaint();
 	}

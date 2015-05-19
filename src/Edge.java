@@ -4,16 +4,14 @@ public class Edge {
 
 	private Knot k1;
 	private Knot k2;
-	private double cost;
 	
 	public Edge(Knot start, Knot end) {
 		k1 = start;
 		k2 = end;
-		cost = k1.getDistance(k2);
 	}
 	
 	public double getCost() {
-		return cost;
+		return k1.getDistance(k2);
 	}
 	public Knot getStart() {
 		return k1;

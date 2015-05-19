@@ -14,8 +14,8 @@ public class Instance {
 	private ArrayList<Knot> knots;
 	private ArrayList<Knot> neighbours;
 	private ArrayList<Knot> spanningTreeKnots;
+	private ArrayList<Edge> completeGraph;
 	private ArrayList<Edge> edges;
-	private ArrayList<Edge> spanningTreeEdges;
 	
 	private int startKnot;
 	private double maxDist;
@@ -30,8 +30,8 @@ public class Instance {
 		knots = new ArrayList<Knot>();
 		neighbours = new ArrayList<Knot>();
 		spanningTreeKnots = new ArrayList<Knot>();
+		completeGraph = new ArrayList<Edge>();
 		edges = new ArrayList<Edge>();
-		spanningTreeEdges = new ArrayList<Edge>();
 		maxDist = 0;
 		wayLenghth = 0;
 	}
@@ -63,6 +63,10 @@ public class Instance {
 	public void addKnot(Knot k) {
 		knots.add(k);
 		neighbours.add(k);
+	}
+	
+	public void addEdge(Edge e) {
+		edges.add(e);
 	}
 	/**
 	 * Gibt einen Knoten aus der Knotenliste an Position {@link index} wieder
@@ -105,12 +109,7 @@ public class Instance {
 	public Knot getStartKnot() {
 		return knots.get(startKnot);
 	}
-	public void addEdgeToTree(Edge e) {
-		if (!spanningTreeKnots.contains(e.getStart())) spanningTreeKnots.add(e.getStart());
-		if (!spanningTreeKnots.contains(e.getEnd())) spanningTreeKnots.add(e.getEnd());
-		edges.remove(e);
-		spanningTreeEdges.add(e);
-	}
+	
 	/**
 	 * Nach Beendigung des Löseverfahrens ist der letzte Wert von {@link wayLenght} die Akkumulierte Weglänge
 	 * und in {@link furthestKnots} stehen die beiden, am weitesten entfernten Knoten.
@@ -180,21 +179,21 @@ public class Instance {
 
 		for (int i = 0; i < n; i++) {
 			for (int j = 1; j < n-i; j++) {
-				edges.add(new Edge(getKnot(i), getKnot(i+j)));
+				completeGraph.add(new Edge(getKnot(i), getKnot(i+j)));
 			}
 		}
-		Collections.sort(edges, new Comparator<Edge>() {
+		Collections.sort(completeGraph, new Comparator<Edge>() {
 			public int compare(Edge e1, Edge e2) {
 				return (int)((e1.getCost() - e2.getCost()) * Math.pow(10, floatingPointPrecision)); //Ab ... NKS kein eindeutiger Vergleich mehr möglich
 			}
 		});
 		
-		canvas.drawEdge(edges.get(0));
-		addEdgeToTree(edges.get(0));
+		canvas.drawEdge(completeGraph.get(0));
+		addEdgeToTree(completeGraph.get(0));
 		
 		while (spanningTreeKnots.size() < n) {
 
-			for (Edge thisEdge : edges) {
+			for (Edge thisEdge : completeGraph) {
 				if (spanningTreeKnots.contains(thisEdge.getStart()) ^ spanningTreeKnots.contains(thisEdge.getEnd())) {
 					canvas.drawEdge(thisEdge);
 					addEdgeToTree(thisEdge);
@@ -202,6 +201,13 @@ public class Instance {
 				} 
 			}
 		}
+	}
+	
+	public void addEdgeToTree(Edge e) {
+		if (!spanningTreeKnots.contains(e.getStart())) spanningTreeKnots.add(e.getStart());
+		if (!spanningTreeKnots.contains(e.getEnd())) spanningTreeKnots.add(e.getEnd());
+		completeGraph.remove(e);
+//		edges.add(e);
 	}
 	
 	public double getTour(ArrayList<Integer> route) {
