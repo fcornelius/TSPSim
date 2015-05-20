@@ -5,7 +5,6 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-import javax.swing.JToolBar;
 
 public class TopBar extends JPanel {
 

@@ -3,23 +3,24 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -31,13 +32,6 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JToolBar;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 
 
 public class gWindow {
@@ -62,8 +56,6 @@ public class gWindow {
 	public JCheckBox chckbxNummern;
 	private JCheckBox chckbxGeschlossen;
 	private JButton btnAuflsen;
-	private JLabel lblResult;
-	private JButton btnRepeat;
 	private JPanel panelLogo;
 	private JLabel lblLogo;
 	private JLabel lblVersion;
@@ -129,7 +121,7 @@ public class gWindow {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frameHeightPx = frame.getHeight();
-		frameHeightDebugPx = frame.getHeight() + 142;
+		frameHeightDebugPx = frame.getHeight() + 140;
 
 		//   Top Panel
 		panel_1 = new TopBar("subbar.png");
@@ -219,7 +211,7 @@ public class gWindow {
 		
 		sp_knots = new JScrollPane(list);
 		sp_knots.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		sp_knots.setBounds(0, 96, 190, 618);
+		sp_knots.setBounds(0, 96, 190, 584);
 		frame.getContentPane().add(sp_knots);
 		
 		
@@ -366,7 +358,7 @@ public class gWindow {
 		flowLayout_4.setVgap(3);
 		flowLayout_4.setHgap(8);
 		flowLayout_4.setAlignment(FlowLayout.RIGHT);
-		panel_2.setBounds(0, 716, 1209, 25);
+		panel_2.setBounds(0, 715, 1209, 25);
 		frame.getContentPane().add(panel_2);
 		
 		lblMouseX = new JLabel("");
@@ -376,6 +368,33 @@ public class gWindow {
 		lblMouseY = new JLabel("");
 		lblMouseY.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		panel_2.add(lblMouseY);
+		
+		JPanel panel_4 = new JPanel();
+		FlowLayout flowLayout_6 = (FlowLayout) panel_4.getLayout();
+		flowLayout_6.setAlignment(FlowLayout.LEFT);
+		flowLayout_6.setVgap(0);
+		flowLayout_6.setHgap(-1);
+		panel_4.setBounds(0, 680, 191, 35);
+		frame.getContentPane().add(panel_4);
+		
+		JButton btnAddknot = new JButton("");
+		btnAddknot.setToolTipText("Knoten hinzuf\u00FCgen");
+		btnAddknot.setIcon(new ImageIcon(gWindow.class.getResource("/Icons/add_24.png")));
+		panel_4.add(btnAddknot);
+		btnAddknot.setPreferredSize(new Dimension(64, 35));
+		
+		JButton button = new JButton("");
+		button.setToolTipText("Knoten bearbeiten");
+		button.setIcon(new ImageIcon(gWindow.class.getResource("/Icons/edit_24.png")));
+		button.setPreferredSize(new Dimension(65, 35));
+		panel_4.add(button);
+		
+		JButton button_1 = new JButton("");
+		button_1.setToolTipText("Knoten l\u00F6schen");
+		button_1.setIcon(new ImageIcon(gWindow.class.getResource("/Icons/delete_24.png")));
+		button_1.setPreferredSize(new Dimension(65, 35));
+//		button_1.setIcon(arg0);
+		panel_4.add(button_1);
 		
 		chckbxDebug.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
