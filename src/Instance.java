@@ -133,7 +133,7 @@ public class Instance {
 		stopWatch.start();
 		PermutationBuilder pb = new PermutationBuilder();
 		routes = pb.BuildList(getCount()-1,true);
-		minRoute = routes.get(0);		// Route: Der Pfad des Weges (die Permutation)
+		minRoute = routes.get(0);							// Route: Der Pfad des Weges (die Permutation)
 		double minTour = getTour(routes.get(0));      	    // Tour:  Die Länge einer Route
 		double thisTour;
 		permutTime = stopWatch.getMills();
@@ -261,7 +261,7 @@ public class Instance {
 			result += String.format("Brute-Force Verfahren.\n" +
 					"Kürzeste Tour ist %.5f PE lang (Route %d von möglichen %d)\nRechenzeit: Permutationen %.2f ms, Routenlänge %.2f ms, Gesamt %.2f ms\n" + 
 					"Das entspricht einer durchschnittlichen Rechenzeit von %.2f µs pro Route", 
-					wayLength, routes.indexOf(minRoute), routes.size(), permutTime, calcTime, permutTime + calcTime, (permutTime + calcTime)/(double)routes.size() * 1000); 
+					wayLength, routes.indexOf(minRoute), routes.size(), permutTime, calcTime-permutTime, calcTime, ((calcTime)/(double)routes.size()) * 1000); 
 			break;
 		case 1: 
 			result += String.format("Nearest-Neighbour Verfahren.\n" +

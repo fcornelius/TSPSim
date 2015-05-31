@@ -9,7 +9,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -32,6 +31,8 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 
 
 public class gWindow {
@@ -69,8 +70,10 @@ public class gWindow {
 	private DefaultListModel<String> blank;
 	private JPanel panel_3;
 	private JLabel lblFarbe;
-	private JLabel lblMouseX;
-	private JLabel lblMouseY;
+	public JLabel lblMouseX;
+	public JLabel lblMouseY;
+	private JButton btnEdit;
+	private JButton btnRemove;
 	
 	private int frameHeightPx;
 	private int frameHeightDebugPx;
@@ -199,6 +202,9 @@ public class gWindow {
 	    frame.getContentPane().add(sp);
 		
 		list = new JList<String>();
+		list.addListSelectionListener(new SelectionListener());
+			
+		
 		list.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		list.setBackground(Color.WHITE);
@@ -233,7 +239,6 @@ public class gWindow {
 		canvas = new SquareCanvas(canvasPxWidth, canvasPxHeight, canvasSpacing, canvasBorder, this);
 	
 		canvas.setPreferredSize(new Dimension(canvasWidth,canvasHeight));
-		canvas.addMouseMotionListener(new MouseMotion());
 		panel.add(canvas);
 		panel.setBounds(panel.getX(), panel.getY(), canvasWidth, canvasHeight);
 		canvas.setBorder(BorderFactory.createLineBorder(Color.gray, canvasBorder));
@@ -383,18 +388,20 @@ public class gWindow {
 		panel_4.add(btnAddknot);
 		btnAddknot.setPreferredSize(new Dimension(64, 35));
 		
-		JButton button = new JButton("");
-		button.setToolTipText("Knoten bearbeiten");
-		button.setIcon(new ImageIcon(gWindow.class.getResource("/Icons/edit_24.png")));
-		button.setPreferredSize(new Dimension(65, 35));
-		panel_4.add(button);
+		btnEdit = new JButton("");
+		btnEdit.setEnabled(false);
+		btnEdit.setToolTipText("Knoten bearbeiten");
+		btnEdit.setIcon(new ImageIcon(gWindow.class.getResource("/Icons/edit_24.png")));
+		btnEdit.setPreferredSize(new Dimension(65, 35));
+		panel_4.add(btnEdit);
 		
-		JButton button_1 = new JButton("");
-		button_1.setToolTipText("Knoten l\u00F6schen");
-		button_1.setIcon(new ImageIcon(gWindow.class.getResource("/Icons/delete_24.png")));
-		button_1.setPreferredSize(new Dimension(65, 35));
+		btnRemove = new JButton("");
+		btnRemove.setEnabled(false);
+		btnRemove.setToolTipText("Knoten l\u00F6schen");
+		btnRemove.setIcon(new ImageIcon(gWindow.class.getResource("/Icons/delete_24.png")));
+		btnRemove.setPreferredSize(new Dimension(65, 35));
 //		button_1.setIcon(arg0);
-		panel_4.add(button_1);
+		panel_4.add(btnRemove);
 		
 		chckbxDebug.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
@@ -479,17 +486,21 @@ public class gWindow {
 		}
 	}
 	
-	class MouseMotion implements MouseMotionListener {
-		
+	
+	class SelectionListener implements ListSelectionListener {
+
 		@Override
-		public void mouseMoved(MouseEvent e) {
-			lblMouseX.setText(e.getX() + " :");
-			lblMouseY.setText(e.getY()+"");
+		public void valueChanged(ListSelectionEvent e) {
 			
+			if (list.getSelectedIndex() == -1) {
+				btnEdit.setEnabled(false);
+				btnRemove.setEnabled(false);
+			} else {
+				btnEdit.setEnabled(true);
+				btnRemove.setEnabled(true);
+			}
 		}
-		@Override
-		public void mouseDragged(MouseEvent e) {
-		}
+		
 	}
 	
 	/**
