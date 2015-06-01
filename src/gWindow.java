@@ -9,12 +9,19 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -33,6 +40,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.JMenuItem;
+import javax.swing.JCheckBoxMenuItem;
 
 
 public class gWindow {
@@ -74,6 +84,13 @@ public class gWindow {
 	public JLabel lblMouseY;
 	private JButton btnEdit;
 	private JButton btnRemove;
+	private JFileChooser dirDialog;
+	private JMenu mnImportieren;
+	private JMenu mnExportieren;
+	private JMenuItem mntmGrafikAlsPng;
+	private JMenu mnAnzeigen;
+	private JCheckBoxMenuItem chckbxmntmLineale;
+	private JCheckBoxMenuItem chckbxmntmKreuzcursor;
 	
 	private int frameHeightPx;
 	private int frameHeightDebugPx;
@@ -83,6 +100,7 @@ public class gWindow {
 	private int canvasPxHeight;
 	private int canvasSpacing;
 	private  int canvasBorder;
+	
 	
 
 	/**
@@ -467,6 +485,30 @@ public class gWindow {
 		
 		JMenu mnInstanz = new JMenu("Instanz");
 		menuBar.add(mnInstanz);
+		
+		mnImportieren = new JMenu("Importieren");
+		mnInstanz.add(mnImportieren);
+		
+		mnExportieren = new JMenu("Exportieren");
+		mnInstanz.add(mnExportieren);
+		
+		mntmGrafikAlsPng = new JMenuItem("Grafik als PNG");
+		mntmGrafikAlsPng.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { ExportPNG(); }
+		});
+		mnExportieren.add(mntmGrafikAlsPng);
+		
+		mnAnzeigen = new JMenu("Anzeigen");
+		menuBar.add(mnAnzeigen);
+		
+		chckbxmntmLineale = new JCheckBoxMenuItem("Lineale");
+		chckbxmntmLineale.setSelected(true);
+		chckbxmntmLineale.addItemListener(new OptionListener());
+		mnAnzeigen.add(chckbxmntmLineale);
+		
+		chckbxmntmKreuzcursor = new JCheckBoxMenuItem("Kreuz-Cursor");
+		chckbxmntmKreuzcursor.setSelected(true);
+		mnAnzeigen.add(chckbxmntmKreuzcursor);
 
 	}
 	
@@ -501,6 +543,14 @@ public class gWindow {
 			}
 		}
 		
+	}
+	
+	public boolean getWithRulers() {
+		if (chckbxmntmLineale==null) return true;
+		else return chckbxmntmLineale.isSelected();
+	}
+	public boolean getWithCursor() {
+		return chckbxmntmKreuzcursor.isSelected();
 	}
 	
 	/**
@@ -643,5 +693,27 @@ public class gWindow {
 		String result = inst.getResult(mode);
 		
 		txtDebug.setText(txtDebug.getText() + result + "\n\n");
+	}
+	
+	private void ExportPNG() {
+		
+		File exp = new File("TSPSim_n" + instanz.getCount() + "_" + 
+				new SimpleDateFormat("dd-MM-YY_HH-mm-ss").format(new Date()));
+		
+		dirDialog = new JFileChooser();
+		dirDialog.setSelectedFile(exp);
+		dirDialog.setAcceptAllFileFilterUsed(false);
+		dirDialog.addChoosableFileFilter(new FileNameExtensionFilter("PNG", "png"));
+		dirDialog.setCurrentDirectory(new File("."));
+		dirDialog.setDialogTitle("Instanz exportieren...");
+		if (dirDialog.showSaveDialog(mnExportieren) == JFileChooser.APPROVE_OPTION)
+			exp = dirDialog.getSelectedFile();
+		if (!exp.toString().endsWith(".png")) exp = new File(exp + ".png");
+		
+		try {
+			ImageIO.write(canvas.getImage(), "png", exp);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

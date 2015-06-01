@@ -1,8 +1,10 @@
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
@@ -54,7 +56,11 @@ public class SquareCanvas extends JPanel {
 		
 		knotBuffer = new ArrayList<Knot>();
 		edgeBuffer = new ArrayList<Edge>();
-		flushGraphics(false);
+		flushGraphics(false); 
+	}
+	
+	public BufferedImage getImage() {
+		return bi;
 	}
 	
 	@Override
@@ -120,7 +126,7 @@ public class SquareCanvas extends JPanel {
 		g2D = bi.createGraphics();
 		g2D.setColor(Color.white);
 		g2D.fillRect(0, 0, width, height);
-		drawCanvasBorder();
+		if (mainFrame.getWithRulers()) drawCanvasBorder();
 		
 		g2D.setColor(Colors.colors[mainFrame.comboBox.getSelectedIndex()]); //TODO Getter
 		
@@ -173,14 +179,14 @@ public class SquareCanvas extends JPanel {
 			mainFrame.lblMouseX.setText(e.getX()-(border+spacing) + " :");
 			mainFrame.lblMouseY.setText(e.getY()-(border+spacing)+"");
 			
-			
-			g2D_cursor.setColor(Color.lightGray);
-			g2D_cursor.drawImage(bi_overlay, 0, 0, null);
-			g2D_cursor.drawLine(e.getX(), border+spacing, e.getX(), height);
-			g2D_cursor.drawLine(border+spacing, e.getY(), width, e.getY());
-			
-			repaint();
-			
+			if (mainFrame.getWithCursor()) {
+				g2D_cursor.setColor(Color.lightGray);
+				g2D_cursor.drawImage(bi_overlay, 0, 0, null);
+				g2D_cursor.drawLine(e.getX(), border+spacing, e.getX(), height);
+				g2D_cursor.drawLine(border+spacing, e.getY(), width, e.getY());
+
+				repaint();
+			}
 		}
 		@Override
 		public void mouseDragged(MouseEvent e) {
@@ -192,15 +198,21 @@ public class SquareCanvas extends JPanel {
 		@Override
 		public void mouseEntered(MouseEvent e) {
 			super.mouseEntered(e);
-			bi_overlay = new BufferedImage(bi.getColorModel(),bi.copyData(null),false,null);
-			setCursor(getToolkit().createCustomCursor(new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB),new Point(0,0),""));
-			g2D_cursor = bi.createGraphics();
+			if (mainFrame.getWithCursor()) {
+				bi_overlay = new BufferedImage(bi.getColorModel(),bi.copyData(null),false,null);
+				g2D_cursor = bi.createGraphics();
+
+				// Mouse-Cursor ausblenden:
+				setCursor(getToolkit().createCustomCursor(new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB),new Point(0,0),""));
+			} else setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
 		@Override
 		public void mouseExited(MouseEvent e) {
 			super.mouseExited(e);
-			g2D.drawImage(bi_overlay, 0, 0, null);
-			repaint();
+			if (mainFrame.getWithCursor()) {
+				g2D.drawImage(bi_overlay, 0, 0, null);
+				repaint();
+			}
 			
 		}
 	}
