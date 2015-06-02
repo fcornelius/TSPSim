@@ -101,6 +101,8 @@ public class gWindow {
 	private int canvasSpacing;
 	private  int canvasBorder;
 	
+	private MySQLConnection mysql = new MySQLConnection();
+	
 	
 
 	/**
@@ -121,6 +123,7 @@ public class gWindow {
 	}
 
 	public gWindow() {
+		mysql.getTestVerbindungZuTestTable();
 		initialize();
 	}
 
