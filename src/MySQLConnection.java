@@ -15,7 +15,7 @@ import java.sql.Statement;
 
 class MySQLConnection{
 	
-  private static Connection con = null;
+  private static Connection con = null; //x
   private String dbHost = "localhost"; // Hostname
   private String dbPort = "3306";      // Port -- Standard: 3306
   private String dbName = "test";   // Datenbankname //Testtabelle
