@@ -101,7 +101,7 @@ public class gWindow {
 	private int canvasSpacing;
 	private  int canvasBorder;
 	
-	private MySQLConnection mysql = new MySQLConnection();
+	private MySQLConnection mysql;
 	
 	
 
@@ -123,6 +123,7 @@ public class gWindow {
 	}
 
 	public gWindow() {
+		mysql = new MySQLConnection();
 		mysql.getTestVerbindungZuTestTable();
 		initialize();
 	}
@@ -486,6 +487,8 @@ public class gWindow {
 		JMenu mnDatei = new JMenu("Datei");
 		menuBar.add(mnDatei);
 		
+		
+		
 		JMenu mnInstanz = new JMenu("Instanz");
 		menuBar.add(mnInstanz);
 		
@@ -707,7 +710,7 @@ public class gWindow {
 		dirDialog.setSelectedFile(exp);
 		dirDialog.setAcceptAllFileFilterUsed(false);
 		dirDialog.addChoosableFileFilter(new FileNameExtensionFilter("PNG", "png"));
-		dirDialog.setCurrentDirectory(new File("."));
+		dirDialog.setCurrentDirectory(new File("~"));
 		dirDialog.setDialogTitle("Instanz exportieren...");
 		if (dirDialog.showSaveDialog(mnExportieren) == JFileChooser.APPROVE_OPTION)
 			exp = dirDialog.getSelectedFile();
