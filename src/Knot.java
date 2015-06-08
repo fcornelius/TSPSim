@@ -15,6 +15,13 @@ public class Knot {
 		this.id = id;
 	}
 	
+public Knot(int id, int x, int y) {
+		
+		this.x = x;
+		this.y = y;
+		this.id = id;
+	}
+	
 	private int newXCoordinate() {
 		return (int)(Math.random()*(SquareCanvas.pixelWidth));
 	}

@@ -121,11 +121,39 @@ public class Instance {
 		return knots.get(startKnot);
 	}
 	
-	/**
-	 * Nach Beendigung des Löseverfahrens ist der letzte Wert von {@link wayLenght} die Akkumulierte Weglänge
-	 * und in {@link furthestKnots} stehen die beiden, am weitesten entfernten Knoten.
-	 * @return ein String mit dem Ergebnis
-	 */
+	public ArrayList<Knot> transformCoordinates(ArrayList<ArrayList<Double>> coords) {
+		
+		int x,y;
+		double xFactor;
+		double yFactor;
+		double xShift;
+		double yShift;
+		
+		ArrayList<Double> xList = coords.get(0);
+		ArrayList<Double> yList = coords.get(1);
+		ArrayList<Double> xsort = new ArrayList<Double>();
+		ArrayList<Double> ysort = new ArrayList<Double>();
+		xsort.addAll(xList); ysort.addAll(yList);
+		
+		Collections.sort(xsort);
+		Collections.sort(ysort);
+		
+		if (xsort.get(0) < 0) xShift = xsort.get(0); else xShift = 0;
+		if (ysort.get(0) < 0) yShift = ysort.get(0); else yShift = 0;
+		
+		xFactor = SquareCanvas.pixelWidth / (xsort.get(xList.size()-1) - xShift);
+		yFactor = SquareCanvas.pixelHeight / (ysort.get(yList.size()-1) - yShift);
+		double factor = Math.min(xFactor, yFactor);
+		
+		for (int i=0;i<xList.size();i++) {
+			x = (int) ((xList.get(i) - xShift) * factor) + SquareCanvas.spacing + SquareCanvas.border;
+			y = (int) ((yList.get(i) - yShift) * factor) + SquareCanvas.spacing + SquareCanvas.border;
+			
+			knots.add(new Knot(i,x,y));
+		}
+		
+		return knots;
+	}
 	
 	
 	public void bruteForceSolve(SquareCanvas canvas) {

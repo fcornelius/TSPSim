@@ -9,10 +9,17 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -43,6 +50,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JMenuItem;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JSeparator;
+
+import java.awt.SystemColor;
 
 
 public class gWindow {
@@ -74,6 +84,7 @@ public class gWindow {
 	private JLabel lblFhKln;
 	private JCheckBox chckbxAutoupdate;
 	private JList<String> list;
+	private DefaultListModel<String> knotenlist;
 	private JScrollPane sp_knots;
 	private JComboBox<String> comboBoxMode;
 	private SquareCanvas canvas;
@@ -85,12 +96,13 @@ public class gWindow {
 	private JButton btnEdit;
 	private JButton btnRemove;
 	private JFileChooser dirDialog;
-	private JMenu mnImportieren;
-	private JMenu mnExportieren;
 	private JMenuItem mntmGrafikAlsPng;
 	private JMenu mnAnzeigen;
 	private JCheckBoxMenuItem chckbxmntmLineale;
 	private JCheckBoxMenuItem chckbxmntmKreuzcursor;
+	private JMenu mnImportieren;
+	private JMenu mnExportieren;
+	private JSeparator separator_1;
 	
 	private int frameHeightPx;
 	private int frameHeightDebugPx;
@@ -102,6 +114,7 @@ public class gWindow {
 	private  int canvasBorder;
 	
 	private MySQLConnection mysql;
+	
 	
 	
 
@@ -123,8 +136,8 @@ public class gWindow {
 	}
 
 	public gWindow() {
-		mysql = new MySQLConnection();
-		mysql.getTestVerbindungZuTestTable();
+//		mysql = new MySQLConnection();
+//		mysql.getTestVerbindungZuTestTable();
 		initialize();
 	}
 
@@ -487,22 +500,50 @@ public class gWindow {
 		JMenu mnDatei = new JMenu("Datei");
 		menuBar.add(mnDatei);
 		
+		JMenuItem mntmNeueInstanz = new JMenuItem("Neue Instanz...");
+		mnDatei.add(mntmNeueInstanz);
 		
+		separator_1 = new JSeparator();
+		separator_1.setForeground(SystemColor.controlHighlight);
+		mnDatei.add(separator_1);
 		
-		JMenu mnInstanz = new JMenu("Instanz");
-		menuBar.add(mnInstanz);
 		
 		mnImportieren = new JMenu("Importieren");
-		mnInstanz.add(mnImportieren);
+		mnDatei.add(mnImportieren);
+		
+		JMenuItem mntmLokaleTspDatei = new JMenuItem("lokale TSP Datei...");
+		mntmLokaleTspDatei.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				loadTSPFromFile();
+			}
+		});
+		mnImportieren.add(mntmLokaleTspDatei);
+		
+		JMenuItem mntmAusTsplib = new JMenuItem("aus TSPLib...");
+		mnImportieren.add(mntmAusTsplib);
 		
 		mnExportieren = new JMenu("Exportieren");
-		mnInstanz.add(mnExportieren);
+		mnDatei.add(mnExportieren);
 		
-		mntmGrafikAlsPng = new JMenuItem("Grafik als PNG");
+		mntmGrafikAlsPng = new JMenuItem("Grafik als PNG...");
+		mnExportieren.add(mntmGrafikAlsPng);
+		
+		JMenuItem mntmKnotenLokal = new JMenuItem("Knoten lokal...");
+		mnExportieren.add(mntmKnotenLokal);
+		
+		JMenuItem mntmInstanzVerffentlichen = new JMenuItem("Instanz ver\u00F6ffentlichen...");
+		mnExportieren.add(mntmInstanzVerffentlichen);
+		
+		JSeparator separator = new JSeparator();
+		separator.setForeground(SystemColor.controlHighlight);
+		
+		mnDatei.add(separator);
+		
+		JMenuItem mntmBeenden = new JMenuItem("Beenden");
+		mnDatei.add(mntmBeenden);
 		mntmGrafikAlsPng.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { ExportPNG(); }
 		});
-		mnExportieren.add(mntmGrafikAlsPng);
 		
 		mnAnzeigen = new JMenu("Anzeigen");
 		menuBar.add(mnAnzeigen);
@@ -587,7 +628,7 @@ public class gWindow {
 		Reset();
 		Instance inst = new Instance();
 		int count = Integer.parseInt(txtPoints.getText());
-		DefaultListModel<String> knotenlist = new DefaultListModel<String>();
+		knotenlist = new DefaultListModel<String>();
 
 		for (int i = 0; i<count; i++) {
 			Knot n = new Knot(i);
@@ -603,6 +644,7 @@ public class gWindow {
 		
 		return inst;
 	}
+	
 	
 	private void bruteForce(Instance inst) {
 		
@@ -694,11 +736,85 @@ public class gWindow {
 	}
 	
 	
-	public void logResult(Instance inst) {
-		int mode = comboBoxMode.getSelectedIndex();
-		String result = inst.getResult(mode);
+	private void loadTSPFromFile() {
+		File tspFile=null;
+		dirDialog = new JFileChooser();
+		dirDialog.setAcceptAllFileFilterUsed(false);
+		dirDialog.addChoosableFileFilter(new FileNameExtensionFilter("TSP-Datei", "TSP"));
+		dirDialog.setDialogTitle("TSP Instanz laden...");
+		dirDialog.setCurrentDirectory(new File("C:/Users/Felix/Desktop/sourcesSymmetricTSP"));
 		
-		txtDebug.setText(txtDebug.getText() + result + "\n\n");
+		if (dirDialog.showOpenDialog(mnExportieren) == JFileChooser.APPROVE_OPTION)
+			tspFile = dirDialog.getSelectedFile();
+			logLine(String.format("Lade lokale TSP-Datei '%s' (%s) ...", tspFile.getName(),tspFile));
+		try {
+			instanz = newInstanceFromTSP(new FileInputStream(tspFile));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private Instance newInstanceFromTSP(InputStream stream) {
+		
+		String tspLine="",name="",comment="",dim="",type="";
+		String[] coordLine;
+		
+		Reset();
+		Instance inst = new Instance();
+		knotenlist = new DefaultListModel<String>();
+		ArrayList<ArrayList<Double>> preCoords = new ArrayList<ArrayList<Double>>();
+		ArrayList<Knot> knots;
+		preCoords.add(new ArrayList<Double>());
+		preCoords.add(new ArrayList<Double>());
+		
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+
+			while (!tspLine.trim().equals("EOF")) {
+				tspLine = br.readLine();
+				     if (tspLine.startsWith("NAME")) name = tspLine.substring(6);
+				else if (tspLine.startsWith("TYPE")) type = tspLine.substring(6);
+				else if (tspLine.startsWith("COMMENT")) comment = tspLine.substring(9);
+				else if (tspLine.startsWith("DIMENSION")) dim = tspLine.substring(11);
+				else if (tspLine.startsWith("NODE_COORD_SECTION")) break;
+				else if (tspLine.startsWith("DISPLAY_DATA_SECTION")) break;    
+			} 
+			System.out.println(name+"\n"+comment+"\n"+type+"\n"+dim);
+			tspLine = br.readLine();
+			
+			while (!tspLine.trim().equals("EOF")) {
+				
+				coordLine = (tspLine.trim().split(" +"));
+				preCoords.get(0).add(Double.parseDouble(coordLine[1]));
+				preCoords.get(1).add(Double.parseDouble(coordLine[2]));
+				
+				tspLine = br.readLine();
+				
+			}	
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			logLine(e.getMessage());
+		} catch (IOException e) {
+			e.printStackTrace();
+			logLine(e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			logLine(e.getMessage());
+		}
+		
+		knots = inst.transformCoordinates(preCoords);
+		for (Knot k : knots) {
+			knotenlist.addElement(k.toString());
+			canvas.drawKnot(k);
+		}
+		
+		logLine(String.format("%s wurde erfolgreich importiert und transformiert. (%s Knoten)",name,dim));
+		logLine(String.format("Beschreibung: %s, Typ: %s\n",comment,type));
+		
+		list.setModel(knotenlist);
+		return inst;
+		
 	}
 	
 	private void ExportPNG() {
@@ -721,5 +837,16 @@ public class gWindow {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void logResult(Instance inst) {
+		int mode = comboBoxMode.getSelectedIndex();
+		String result = inst.getResult(mode);
+		
+		txtDebug.setText(txtDebug.getText() + result + "\n\n");
+	}
+	
+	public void logLine(String l) {
+		txtDebug.setText(txtDebug.getText() + "["+LocalDateTime.now()+"]    "+l + "\n");
 	}
 }
