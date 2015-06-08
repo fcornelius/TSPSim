@@ -742,7 +742,7 @@ public class gWindow {
 		dirDialog.setAcceptAllFileFilterUsed(false);
 		dirDialog.addChoosableFileFilter(new FileNameExtensionFilter("TSP-Datei", "TSP"));
 		dirDialog.setDialogTitle("TSP Instanz laden...");
-		dirDialog.setCurrentDirectory(new File("C:/Users/Felix/Desktop/sourcesSymmetricTSP"));
+		dirDialog.setCurrentDirectory(new File("~"));
 		
 		if (dirDialog.showOpenDialog(mnExportieren) == JFileChooser.APPROVE_OPTION)
 			tspFile = dirDialog.getSelectedFile();
@@ -775,7 +775,7 @@ public class gWindow {
 				tspLine = br.readLine();
 				     if (tspLine.startsWith("NAME")) name = tspLine.substring(6);
 				else if (tspLine.startsWith("TYPE")) type = tspLine.substring(6);
-				else if (tspLine.startsWith("COMMENT")) comment = tspLine.substring(9);
+				else if (tspLine.startsWith("COMMENT")) comment += tspLine.substring(9)+" ";
 				else if (tspLine.startsWith("DIMENSION")) dim = tspLine.substring(11);
 				else if (tspLine.startsWith("NODE_COORD_SECTION")) break;
 				else if (tspLine.startsWith("DISPLAY_DATA_SECTION")) break;    
@@ -783,12 +783,15 @@ public class gWindow {
 			System.out.println(name+"\n"+comment+"\n"+type+"\n"+dim);
 			tspLine = br.readLine();
 			
-			while (!tspLine.trim().equals("EOF")) {
+			while (!tspLine.trim().equals("EOF") && tspLine.trim().length() > 0) {
 				
 				coordLine = (tspLine.trim().split(" +"));
+				try {
 				preCoords.get(0).add(Double.parseDouble(coordLine[1]));
 				preCoords.get(1).add(Double.parseDouble(coordLine[2]));
-				
+				} catch (Exception e) {
+					logLine("Fehler beim Lesen der Datei!");
+				}
 				tspLine = br.readLine();
 				
 			}	
@@ -813,6 +816,9 @@ public class gWindow {
 		logLine(String.format("Beschreibung: %s, Typ: %s\n",comment,type));
 		
 		list.setModel(knotenlist);
+		btnNext.setEnabled(true);
+		btnAuflsen.setEnabled(true);
+		
 		return inst;
 		
 	}

@@ -123,11 +123,15 @@ public class Instance {
 	
 	public ArrayList<Knot> transformCoordinates(ArrayList<ArrayList<Double>> coords) {
 		
+		int offset = 10; // Oberer linker Rand zum Ursprung	
+		
+		int width = SquareCanvas.pixelWidth;
+		int height = SquareCanvas.pixelHeight;
 		int x,y;
-		double xFactor;
-		double yFactor;
-		double xShift;
-		double yShift;
+		int xCentre,yCentre;
+		double maxX,maxY;
+		double xFactor,yFactor;
+		double xShift,yShift;
 		
 		ArrayList<Double> xList = coords.get(0);
 		ArrayList<Double> yList = coords.get(1);
@@ -138,18 +142,23 @@ public class Instance {
 		Collections.sort(xsort);
 		Collections.sort(ysort);
 		
-		if (xsort.get(0) < 0) xShift = xsort.get(0); else xShift = 0;
-		if (ysort.get(0) < 0) yShift = ysort.get(0); else yShift = 0;
-		
-		xFactor = SquareCanvas.pixelWidth / (xsort.get(xList.size()-1) - xShift);
-		yFactor = SquareCanvas.pixelHeight / (ysort.get(yList.size()-1) - yShift);
+		maxX = xsort.get((xList.size()-1));
+		maxY = ysort.get((yList.size()-1));
+		xShift = xsort.get(0);
+		yShift = ysort.get(0);
+	
+		xFactor = (width - 2*offset) / (maxX - xShift);
+		yFactor = (height -2*offset) / (maxY - yShift);
 		double factor = Math.min(xFactor, yFactor);
 		
+		xCentre = (int)((width - 2*offset - (maxX - xShift)*factor) / 2);
+		yCentre = (int)((height - 2*offset - (maxY - yShift)*factor) / 2);
+		
 		for (int i=0;i<xList.size();i++) {
-			x = (int) ((xList.get(i) - xShift) * factor) + SquareCanvas.spacing + SquareCanvas.border;
-			y = (int) ((yList.get(i) - yShift) * factor) + SquareCanvas.spacing + SquareCanvas.border;
+			x = (int) ((xList.get(i) - xShift) * factor) + offset + xCentre;
+			y = (int) ((yList.get(i) - yShift) * factor) + offset + yCentre;
 			
-			knots.add(new Knot(i,x,y));
+			addKnot(new Knot(i,x,y));
 		}
 		
 		return knots;
