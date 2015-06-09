@@ -1,0 +1,1002 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TSPLibIndex>
+  <TSPInstance name="A280">
+    <description>drilling problem (Ludwig)</description>
+    <knots>280</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/a280.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.a280.tsp.gif</img>
+    <size>3483</size>
+  </TSPInstance>
+  <TSPInstance name="Ali535">
+    <description>535 Airports around the globe (Padberg/Rinaldi)</description>
+    <knots>535</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/ali535.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.ali535.tsp.gif</img>
+    <size>9548</size>
+  </TSPInstance>
+  <TSPInstance name="Att48">
+    <description>48 capitals of the US (Padberg/Rinaldi)</description>
+    <knots>48</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/att48.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.att48.tsp.gif</img>
+    <size>738</size>
+  </TSPInstance>
+  <TSPInstance name="Att532">
+    <description>532-city problem (Padberg/Rinaldi)</description>
+    <knots>532</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/att532.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.att532.tsp.gif</img>
+    <size>7391</size>
+  </TSPInstance>
+  <TSPInstance name="Bayg29">
+    <description>29 Cities in Bavaria, geographical distances (Groetschel,Juenger,Reinelt)</description>
+    <knots>29</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/bayg29.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.bayg29.tsp.gif</img>
+    <size>2546</size>
+  </TSPInstance>
+  <TSPInstance name="Bays29">
+    <description>29 cities in Bavaria, street distances (Groetschel,Juenger,Reinelt)</description>
+    <knots>29</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/bays29.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.bays29.tsp.gif</img>
+    <size>4311</size>
+  </TSPInstance>
+  <TSPInstance name="Berlin52">
+    <description>52 locations in Berlin (Groetschel)</description>
+    <knots>52</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/berlin52.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.berlin52.tsp.gif</img>
+    <size>916</size>
+  </TSPInstance>
+  <TSPInstance name="Bier127">
+    <description>127 Biergaerten in Augsburg (Juenger/Reinelt)</description>
+    <knots>127</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/bier127.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.bier127.tsp.gif</img>
+    <size>2560</size>
+  </TSPInstance>
+  <TSPInstance name="Brazil58">
+    <description>58 cities in Brazil (Ferreira)</description>
+    <knots>58</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/brazil58.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.brazil58.tsp.gif</img>
+    <size>8041</size>
+  </TSPInstance>
+  <TSPInstance name="Brd14051">
+    <description>BR Deutschland in den Grenzen von 1989 (Bachem/Wottawa)</description>
+    <knots>14051</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/brd14051.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.brd14051.tsp.gif</img>
+    <size>309282</size>
+  </TSPInstance>
+  <TSPInstance name="Brg180">
+    <description>Bridge tournament problem (Rinaldi)</description>
+    <knots>180</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/brg180.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.brg180.tsp.gif</img>
+    <size>98436</size>
+  </TSPInstance>
+  <TSPInstance name="Burma14">
+    <description>14-Staedte in Burma (Zaw Win)</description>
+    <knots>14</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/burma14.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.burma14.tsp.gif</img>
+    <size>524</size>
+  </TSPInstance>
+  <TSPInstance name="Ch130">
+    <description>130 city problem (Churritz)</description>
+    <knots>130</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/ch130.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.ch130.tsp.gif</img>
+    <size>4386</size>
+  </TSPInstance>
+  <TSPInstance name="Ch150">
+    <description>150 city Problem (churritz)</description>
+    <knots>150</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/ch150.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.ch150.tsp.gif</img>
+    <size>5070</size>
+  </TSPInstance>
+  <TSPInstance name="D1291">
+    <description>Drilling problem (Reinelt)</description>
+    <knots>1291</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/d1291.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.d1291.tsp.gif</img>
+    <size>36459</size>
+  </TSPInstance>
+  <TSPInstance name="D15112">
+    <description>Deutschland-Problem (A.Rohe)</description>
+    <knots>15112</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/d15112.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.d15112.tsp.gif</img>
+    <size>247044</size>
+  </TSPInstance>
+  <TSPInstance name="D1655">
+    <description>Drilling problem (Reinelt)</description>
+    <knots>1655</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/d1655.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.d1655.tsp.gif</img>
+    <size>47015</size>
+  </TSPInstance>
+  <TSPInstance name="D18512">
+    <description>Bundesrepublik Deutschland (mit Ex-DDR) (Bachem/Wottawa)</description>
+    <knots>18512</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/d18512.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.d18512.tsp.gif</img>
+    <size>407423</size>
+  </TSPInstance>
+  <TSPInstance name="D198">
+    <description>Drilling problem (Reinelt)</description>
+    <knots>198</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/d198.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.d198.tsp.gif</img>
+    <size>5561</size>
+  </TSPInstance>
+  <TSPInstance name="D2103">
+    <description>Drilling problem (Reinelt)</description>
+    <knots>2103</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/d2103.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.d2103.tsp.gif</img>
+    <size>60007</size>
+  </TSPInstance>
+  <TSPInstance name="D493">
+    <description>Drilling problem (Reinelt)</description>
+    <knots>493</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/d493.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.d493.tsp.gif</img>
+    <size>13821</size>
+  </TSPInstance>
+  <TSPInstance name="D657">
+    <description>Drilling problem (Reinelt)</description>
+    <knots>657</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/d657.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.d657.tsp.gif</img>
+    <size>18413</size>
+  </TSPInstance>
+  <TSPInstance name="Dantzig42">
+    <description>42 cities (Dantzig)</description>
+    <knots>42</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/dantzig42.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.dantzig42.tsp.gif</img>
+    <size>4739</size>
+  </TSPInstance>
+  <TSPInstance name="Dsj1000">
+    <description>Clustered random problem (Johnson)</description>
+    <knots>1000</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/dsj1000.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.dsj1000.tsp.gif</img>
+    <size>18972</size>
+  </TSPInstance>
+  <TSPInstance name="Eil101">
+    <description>101-city problem (Christofides/Eilon)</description>
+    <knots>101</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/eil101.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.eil101.tsp.gif</img>
+    <size>1026</size>
+  </TSPInstance>
+  <TSPInstance name="Eil51">
+    <description>51-city problem (Christofides/Eilon)</description>
+    <knots>51</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/eil51.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.eil51.tsp.gif</img>
+    <size>579</size>
+  </TSPInstance>
+  <TSPInstance name="Eil76">
+    <description>76-city problem (Christofides/Eilon)</description>
+    <knots>76</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/eil76.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.eil76.tsp.gif</img>
+    <size>801</size>
+  </TSPInstance>
+  <TSPInstance name="Fl1400">
+    <description>Drilling problem (Reinelt)</description>
+    <knots>1400</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/fl1400.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.fl1400.tsp.gif</img>
+    <size>39621</size>
+  </TSPInstance>
+  <TSPInstance name="Fl1577">
+    <description>Drilling problem (Reinelt)</description>
+    <knots>1577</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/fl1577.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.fl1577.tsp.gif</img>
+    <size>44754</size>
+  </TSPInstance>
+  <TSPInstance name="Fl3795">
+    <description>Drilling problem (Reinelt)</description>
+    <knots>3795</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/fl3795.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.fl3795.tsp.gif</img>
+    <size>109076</size>
+  </TSPInstance>
+  <TSPInstance name="Fl417">
+    <description>Drilling problem (Reinelt)</description>
+    <knots>417</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/fl417.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.fl417.tsp.gif</img>
+    <size>11694</size>
+  </TSPInstance>
+  <TSPInstance name="Fnl4461">
+    <description>Die 5 neuen Laender Deutschlands (Ex-DDR) (Bachem/Wottawa)</description>
+    <knots>4461</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/fnl4461.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.fnl4461.tsp.gif</img>
+    <size>98303</size>
+  </TSPInstance>
+  <TSPInstance name="Fri26">
+    <description>26 Staedte (Fricker)</description>
+    <knots>26</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/fri26.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.fri26.tsp.gif</img>
+    <size>1325</size>
+  </TSPInstance>
+  <TSPInstance name="Gil262">
+    <description>262-city problem (Gillet/Johnson)</description>
+    <knots>262</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/gil262.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.gil262.tsp.gif</img>
+    <size>2841</size>
+  </TSPInstance>
+  <TSPInstance name="Gr120">
+    <description>120 cities in Germany (Groetschel)</description>
+    <knots>120</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/gr120.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.gr120.tsp.gif</img>
+    <size>30909</size>
+  </TSPInstance>
+  <TSPInstance name="Gr137">
+    <description>America-Subproblem of 666-city TSP (Groetschel)</description>
+    <knots>137</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/gr137.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.gr137.tsp.gif</img>
+    <size>2579</size>
+  </TSPInstance>
+  <TSPInstance name="Gr17">
+    <description>17-city problem (Groetschel)</description>
+    <knots>17</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/gr17.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.gr17.tsp.gif</img>
+    <size>730</size>
+  </TSPInstance>
+  <TSPInstance name="Gr202">
+    <description>Europe-Subproblem of 666-city TSP (Groetschel)</description>
+    <knots>202</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/gr202.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.gr202.tsp.gif</img>
+    <size>3439</size>
+  </TSPInstance>
+  <TSPInstance name="Gr21">
+    <description>21-city problem (Groetschel)</description>
+    <knots>21</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/gr21.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.gr21.tsp.gif</img>
+    <size>1912</size>
+  </TSPInstance>
+  <TSPInstance name="Gr229">
+    <description>Asia/Australia-Subproblem of 666-city TSP (Groetschel)</description>
+    <knots>229</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/gr229.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.gr229.tsp.gif</img>
+    <size>4091</size>
+  </TSPInstance>
+  <TSPInstance name="Gr24">
+    <description>24-city problem (Groetschel)</description>
+    <knots>24</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/gr24.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.gr24.tsp.gif</img>
+    <size>1250</size>
+  </TSPInstance>
+  <TSPInstance name="Gr431">
+    <description>Europe/Asia/Australia-Subproblem of 666-city TSP (Groetschel)</description>
+    <knots>431</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/gr431.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.gr431.tsp.gif</img>
+    <size>7504</size>
+  </TSPInstance>
+  <TSPInstance name="Gr48">
+    <description>48-city problem (Groetschel)</description>
+    <knots>48</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/gr48.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.gr48.tsp.gif</img>
+    <size>4849</size>
+  </TSPInstance>
+  <TSPInstance name="Gr666">
+    <description>666 cities around the world (Groetschel)</description>
+    <knots>666</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/gr666.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.gr666.tsp.gif</img>
+    <size>11746</size>
+  </TSPInstance>
+  <TSPInstance name="Gr96">
+    <description>Africa-Subproblem of 666-city TSP (Groetschel)</description>
+    <knots>96</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/gr96.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.gr96.tsp.gif</img>
+    <size>1701</size>
+  </TSPInstance>
+  <TSPInstance name="Hk48">
+    <description>48-city problem (Held/Karp)</description>
+    <knots>48</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/hk48.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.hk48.tsp.gif</img>
+    <size>6123</size>
+  </TSPInstance>
+  <TSPInstance name="KroA100">
+    <description>100-city problem A (Krolak/Felts/Nelson)</description>
+    <knots>100</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/kroA100.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.kroA100.tsp.gif</img>
+    <size>1345</size>
+  </TSPInstance>
+  <TSPInstance name="KroA150">
+    <description>150-city problem A (Krolak/Felts/Nelson)</description>
+    <knots>150</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/kroA150.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.kroA150.tsp.gif</img>
+    <size>2001</size>
+  </TSPInstance>
+  <TSPInstance name="KroA200">
+    <description>200-city problem A (Krolak/Felts/Nelson)</description>
+    <knots>200</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/kroA200.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.kroA200.tsp.gif</img>
+    <size>2656</size>
+  </TSPInstance>
+  <TSPInstance name="KroB100">
+    <description>100-city problem B (Krolak/Felts/Nelson)</description>
+    <knots>100</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/kroB100.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.kroB100.tsp.gif</img>
+    <size>1352</size>
+  </TSPInstance>
+  <TSPInstance name="KroB150">
+    <description>150-city problem B (Krolak/Felts/Nelson)</description>
+    <knots>150</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/kroB150.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.kroB150.tsp.gif</img>
+    <size>1997</size>
+  </TSPInstance>
+  <TSPInstance name="KroB200">
+    <description>200-city problem B (Krolak/Felts/Nelson)</description>
+    <knots>200</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/kroB200.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.kroB200.tsp.gif</img>
+    <size>2663</size>
+  </TSPInstance>
+  <TSPInstance name="KroC100">
+    <description>100-city problem C (Krolak/Felts/Nelson)</description>
+    <knots>100</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/kroC100.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.kroC100.tsp.gif</img>
+    <size>1341</size>
+  </TSPInstance>
+  <TSPInstance name="KroD100">
+    <description>100-city problem D (Krolak/Felts/Nelson)</description>
+    <knots>100</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/kroD100.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.kroD100.tsp.gif</img>
+    <size>1341</size>
+  </TSPInstance>
+  <TSPInstance name="KroE100">
+    <description>100-city problem E (Krolak/Felts/Nelson)</description>
+    <knots>100</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/kroE100.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.kroE100.tsp.gif</img>
+    <size>1342</size>
+  </TSPInstance>
+  <TSPInstance name="Lin105">
+    <description>105-city problem (Subproblem of lin318)</description>
+    <knots>105</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/lin105.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.lin105.tsp.gif</img>
+    <size>1358</size>
+  </TSPInstance>
+  <TSPInstance name="Lin318">
+    <description>318-city problem (Lin/Kernighan)</description>
+    <knots>318</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/lin318.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.lin318.tsp.gif</img>
+    <size>4253</size>
+  </TSPInstance>
+  <TSPInstance name="Lin318">
+    <description>Original 318-city problem (Lin/Kernighan)</description>
+    <knots>318</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/linhp318.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.linhp318.tsp.gif</img>
+    <size>4291</size>
+  </TSPInstance>
+  <TSPInstance name="Nrw1379">
+    <description>1379 Orte in Nordrhein-Westfalen (Bachem/Wottawa)</description>
+    <knots>1379</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/nrw1379.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.nrw1379.tsp.gif</img>
+    <size>30490</size>
+  </TSPInstance>
+  <TSPInstance name="P654">
+    <description>Drilling problem (Reinelt)</description>
+    <knots>654</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/p654.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.p654.tsp.gif</img>
+    <size>18329</size>
+  </TSPInstance>
+  <TSPInstance name="Pa561.tsp">
+    <description>561-city problem (Kleinschmidt)</description>
+    <knots>561</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/pa561.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.pa561.tsp.gif</img>
+    <size>501721</size>
+  </TSPInstance>
+  <TSPInstance name="Pcb1173">
+    <description>Drilling problem (Juenger/Reinelt)</description>
+    <knots>1173</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/pcb1173.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.pcb1173.tsp.gif</img>
+    <size>33047</size>
+  </TSPInstance>
+  <TSPInstance name="Pcb3038">
+    <description>Drilling problem (Junger/Reinelt)</description>
+    <knots>3038</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/pcb3038.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.pcb3038.tsp.gif</img>
+    <size>87139</size>
+  </TSPInstance>
+  <TSPInstance name="Pcb442">
+    <description>Drilling problem (Groetschel/Juenger/Reinelt)</description>
+    <knots>442</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/pcb442.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.pcb442.tsp.gif</img>
+    <size>12414</size>
+  </TSPInstance>
+  <TSPInstance name="Pla33810">
+    <description>Programmed logic array (Johnson)</description>
+    <knots>33810</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/pla33810.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.pla33810.tsp.gif</img>
+    <size>660340</size>
+  </TSPInstance>
+  <TSPInstance name="Pla7397">
+    <description>Programmed logic array (Johnson)</description>
+    <knots>7397</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/pla7397.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.pla7397.tsp.gif</img>
+    <size>133699</size>
+  </TSPInstance>
+  <TSPInstance name="Pla85900">
+    <description>Programmed logic array (Johnson)</description>
+    <knots>85900</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/pla85900.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.pla85900.tsp.gif</img>
+    <size>1789674</size>
+  </TSPInstance>
+  <TSPInstance name="Pr1002">
+    <description>1002-city problem (Padberg/Rinaldi)</description>
+    <knots>1002</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/pr1002.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.pr1002.tsp.gif</img>
+    <size>14744</size>
+  </TSPInstance>
+  <TSPInstance name="Pr107">
+    <description>107-city problem (Padberg/Rinaldi)</description>
+    <knots>107</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/pr107.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.pr107.tsp.gif</img>
+    <size>1600</size>
+  </TSPInstance>
+  <TSPInstance name="Pr124">
+    <description>124-city problem (Padberg/Rinaldi)</description>
+    <knots>124</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/pr124.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.pr124.tsp.gif</img>
+    <size>1851</size>
+  </TSPInstance>
+  <TSPInstance name="Pr136">
+    <description>136-city problem (Padberg/Rinaldi)</description>
+    <knots>136</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/pr136.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.pr136.tsp.gif</img>
+    <size>2020</size>
+  </TSPInstance>
+  <TSPInstance name="Pr144">
+    <description>144-city problem (Padberg/Rinaldi)</description>
+    <knots>144</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/pr144.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.pr144.tsp.gif</img>
+    <size>2128</size>
+  </TSPInstance>
+  <TSPInstance name="Pr152">
+    <description>152-city problem (Padberg/Rinaldi)</description>
+    <knots>152</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/pr152.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.pr152.tsp.gif</img>
+    <size>2206</size>
+  </TSPInstance>
+  <TSPInstance name="Pr226">
+    <description>226-city problem (Padberg/Rinaldi)</description>
+    <knots>226</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/pr226.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.pr226.tsp.gif</img>
+    <size>3367</size>
+  </TSPInstance>
+  <TSPInstance name="Pr2392">
+    <description>2392-city problem (Padberg/Rinaldi)</description>
+    <knots>2392</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/pr2392.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.pr2392.tsp.gif</img>
+    <size>68398</size>
+  </TSPInstance>
+  <TSPInstance name="Pr264">
+    <description>264-city problem (Padberg/Rinaldi)</description>
+    <knots>264</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/pr264.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.pr264.tsp.gif</img>
+    <size>3787</size>
+  </TSPInstance>
+  <TSPInstance name="Pr299">
+    <description>299-city problem (Padberg/Rinaldi)</description>
+    <knots>299</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/pr299.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.pr299.tsp.gif</img>
+    <size>4212</size>
+  </TSPInstance>
+  <TSPInstance name="Pr439">
+    <description>439-city problem (Padberg/Rinaldi)</description>
+    <knots>439</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/pr439.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.pr439.tsp.gif</img>
+    <size>6540</size>
+  </TSPInstance>
+  <TSPInstance name="Pr76">
+    <description>76-city problem (Padberg/Rinaldi)</description>
+    <knots>76</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/pr76.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.pr76.tsp.gif</img>
+    <size>1172</size>
+  </TSPInstance>
+  <TSPInstance name="Rat195">
+    <description>Rattled grid (Pulleyblank)</description>
+    <knots>195</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/rat195.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.rat195.tsp.gif</img>
+    <size>2319</size>
+  </TSPInstance>
+  <TSPInstance name="Rat575">
+    <description>Rattled grid (Pulleyblank)</description>
+    <knots>575</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/rat575.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.rat575.tsp.gif</img>
+    <size>7097</size>
+  </TSPInstance>
+  <TSPInstance name="Rat783">
+    <description>Rattled grid (Pulleyblank)</description>
+    <knots>783</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/rat783.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.rat783.tsp.gif</img>
+    <size>9739</size>
+  </TSPInstance>
+  <TSPInstance name="Rat99">
+    <description>Rattled grid (Pulleyblank)</description>
+    <knots>99</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/rat99.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.rat99.tsp.gif</img>
+    <size>1169</size>
+  </TSPInstance>
+  <TSPInstance name="Rd100">
+    <description>100-city random TSP (Reinelt)</description>
+    <knots>100</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/rd100.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.rd100.tsp.gif</img>
+    <size>2821</size>
+  </TSPInstance>
+  <TSPInstance name="Rd400">
+    <description>400-city random TSP (Reinelt)</description>
+    <knots>400</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/rd400.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.rd400.tsp.gif</img>
+    <size>11221</size>
+  </TSPInstance>
+  <TSPInstance name="Rl11849">
+    <description>11849-city TSP (Reinelt)</description>
+    <knots>11849</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/rl11849.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.rl11849.tsp.gif</img>
+    <size>344492</size>
+  </TSPInstance>
+  <TSPInstance name="Rl1304">
+    <description>1304-city TSP (Reinelt)</description>
+    <knots>1304</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/rl1304.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.rl1304.tsp.gif</img>
+    <size>36834</size>
+  </TSPInstance>
+  <TSPInstance name="Rl1323">
+    <description>1323-city TSP (Reinelt)</description>
+    <knots>1323</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/rl1323.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.rl1323.tsp.gif</img>
+    <size>37385</size>
+  </TSPInstance>
+  <TSPInstance name="Rl1889">
+    <description>1889-city TSP (Reinelt)</description>
+    <knots>1889</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/rl1889.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.rl1889.tsp.gif</img>
+    <size>53799</size>
+  </TSPInstance>
+  <TSPInstance name="Rl5915">
+    <description>5915-city TSP (Reinelt)</description>
+    <knots>5915</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/rl5915.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.rl5915.tsp.gif</img>
+    <size>170553</size>
+  </TSPInstance>
+  <TSPInstance name="Rl5934">
+    <description>5934-city TSP (Reinelt)</description>
+    <knots>5934</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/rl5934.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.rl5934.tsp.gif</img>
+    <size>171104</size>
+  </TSPInstance>
+  <TSPInstance name="Si1032">
+    <description />
+    <knots>1032</knots>
+    <type>TSP (M.~Hofmeister)</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/si1032.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.si1032.tsp.gif</img>
+    <size>2162350</size>
+  </TSPInstance>
+  <TSPInstance name="Si175">
+    <description />
+    <knots>175</knots>
+    <type>TSP (M.~Hofmeister)</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/si175.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.si175.tsp.gif</img>
+    <size>62351</size>
+  </TSPInstance>
+  <TSPInstance name="Si535">
+    <description />
+    <knots>535</knots>
+    <type>TSP (M.~Hofmeister)</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/si535.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.si535.tsp.gif</img>
+    <size>579782</size>
+  </TSPInstance>
+  <TSPInstance name="St70">
+    <description>70-city problem (Smith/Thompson)</description>
+    <knots>70</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/st70.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.st70.tsp.gif</img>
+    <size>734</size>
+  </TSPInstance>
+  <TSPInstance name="Swiss42">
+    <description>42 Staedte Schweiz (Fricker)</description>
+    <knots>42</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/swiss42.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.swiss42.tsp.gif</img>
+    <size>7258</size>
+  </TSPInstance>
+  <TSPInstance name="Ts225">
+    <description>225-city problem (Juenger,Raecke,Tschoecke)</description>
+    <knots>225</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/ts225.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.ts225.tsp.gif</img>
+    <size>3485</size>
+  </TSPInstance>
+  <TSPInstance name="Tsp225">
+    <description>A TSP problem (Reinelt)</description>
+    <knots>225</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/tsp225.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.tsp225.tsp.gif</img>
+    <size>4174</size>
+  </TSPInstance>
+  <TSPInstance name="U1060">
+    <description>Drilling problem problem (Reinelt)</description>
+    <knots>1060</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/u1060.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.u1060.tsp.gif</img>
+    <size>29768</size>
+  </TSPInstance>
+  <TSPInstance name="U1432">
+    <description>Drilling problem (Reinelt)</description>
+    <knots>1432</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/u1432.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.u1432.tsp.gif</img>
+    <size>40548</size>
+  </TSPInstance>
+  <TSPInstance name="U159">
+    <description>Drilling problem (Reinelt)</description>
+    <knots>159</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/u159.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.u159.tsp.gif</img>
+    <size>4469</size>
+  </TSPInstance>
+  <TSPInstance name="U1817">
+    <description>Drilling problem (Reinelt)</description>
+    <knots>1817</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/u1817.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.u1817.tsp.gif</img>
+    <size>51713</size>
+  </TSPInstance>
+  <TSPInstance name="U2152">
+    <description>Drilling problem (Reinelt)</description>
+    <knots>2152</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/u2152.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.u2152.tsp.gif</img>
+    <size>61428</size>
+  </TSPInstance>
+  <TSPInstance name="U2319">
+    <description>Drilling problem (Reinelt)</description>
+    <knots>2319</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/u2319.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.u2319.tsp.gif</img>
+    <size>66271</size>
+  </TSPInstance>
+  <TSPInstance name="U574">
+    <description>Drilling problem (Reinelt)</description>
+    <knots>574</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/u574.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.u574.tsp.gif</img>
+    <size>16089</size>
+  </TSPInstance>
+  <TSPInstance name="U724">
+    <description>Drilling problem (Reinelt)</description>
+    <knots>724</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/u724.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.u724.tsp.gif</img>
+    <size>20289</size>
+  </TSPInstance>
+  <TSPInstance name="Ulysses16.tsp">
+    <description>Odyssey of Ulysses (Groetschel/Padberg)</description>
+    <knots>16</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/ulysses16.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.ulysses16.tsp.gif</img>
+    <size>419</size>
+  </TSPInstance>
+  <TSPInstance name="Ulysses22.tsp">
+    <description>Odyssey of Ulysses (Groetschel/Padberg)</description>
+    <knots>22</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/ulysses22.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.ulysses22.tsp.gif</img>
+    <size>514</size>
+  </TSPInstance>
+  <TSPInstance name="Usa13509">
+    <description>Cities with population at least 500 in the continental US.  Contributed by David Applegate and Andre Rohe, based on the  data set "US.lat-long" from the ftp site ftp.cs.toronto.edu.  The file US.lat-long.Z can be found in the directory /doc/geography.</description>
+    <knots>13509</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/usa13509.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.usa13509.tsp.gif</img>
+    <size>369592</size>
+  </TSPInstance>
+  <TSPInstance name="Vm1084">
+    <description>1084-city problem (Reinelt)</description>
+    <knots>1084</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/vm1084.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.vm1084.tsp.gif</img>
+    <size>30458</size>
+  </TSPInstance>
+  <TSPInstance name="Vm1748">
+    <description>1784-city problem (Reinelt)</description>
+    <knots>1748</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/vm1748.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.vm1748.tsp.gif</img>
+    <size>49714</size>
+  </TSPInstance>
+</TSPLibIndex>

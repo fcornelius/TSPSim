@@ -16,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.text.SimpleDateFormat;
@@ -139,6 +140,7 @@ public class gWindow {
 //		mysql = new MySQLConnection();
 //		mysql.getTestVerbindungZuTestTable();
 		initialize();
+		
 	}
 
 	/**
@@ -520,6 +522,7 @@ public class gWindow {
 		mnImportieren.add(mntmLokaleTspDatei);
 		
 		JMenuItem mntmAusTsplib = new JMenuItem("aus TSPLib...");
+		mntmAusTsplib.addActionListener(new ImportListener());
 		mnImportieren.add(mntmAusTsplib);
 		
 		mnExportieren = new JMenu("Exportieren");
@@ -591,6 +594,16 @@ public class gWindow {
 		}
 		
 	}
+	
+	class ImportListener implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+			TSPLibIndex tspImport = new TSPLibIndex(gWindow.this);
+			
+		}
+		
+	}
+	
 	
 	public boolean getWithRulers() {
 		if (chckbxmntmLineale==null) return true;
@@ -755,7 +768,15 @@ public class gWindow {
 		
 	}
 	
-	private Instance newInstanceFromTSP(InputStream stream) {
+	public void loadTSPFromLib(URL url) {
+		try {
+			InputStream tspStream = url.openStream();
+			instanz = newInstanceFromTSP(tspStream);
+			
+		} catch (Exception e) { logLine(e.getMessage()); }
+	}
+	
+	public Instance newInstanceFromTSP(InputStream stream) {
 		
 		String tspLine="",name="",comment="",dim="",type="";
 		String[] coordLine;
@@ -807,6 +828,16 @@ public class gWindow {
 		}
 		
 		knots = inst.transformCoordinates(preCoords);
+		
+		if (knots.size() > 300) chckbxNummern.setSelected(false);
+		else chckbxNummern.setSelected(true);
+		
+		if ((knots.size() > 400) && knots.size() <= 600) comboBox_punkt.setSelectedIndex(3);
+		else if ((knots.size() > 600) && knots.size() <= 2000) comboBox_punkt.setSelectedIndex(2);
+		else if (knots.size() > 2000) comboBox_punkt.setSelectedIndex(1);
+		else comboBox_punkt.setSelectedIndex(4);
+		
+		
 		for (Knot k : knots) {
 			knotenlist.addElement(k.toString());
 			canvas.drawKnot(k);
