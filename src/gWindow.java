@@ -3,6 +3,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -104,6 +105,12 @@ public class gWindow {
 	private JMenu mnImportieren;
 	private JMenu mnExportieren;
 	private JSeparator separator_1;
+	private JMenu mnInstanz;
+	private JMenu mnTransformieren;
+	private JMenuItem mntmGreAnpassen;
+	private JMenuItem mntmZentrieren;
+	private JMenuItem mntmDrehen;
+	private JMenuItem mntmZurcksetzen;
 	
 	private int frameHeightPx;
 	private int frameHeightDebugPx;
@@ -114,17 +121,10 @@ public class gWindow {
 	private int canvasSpacing;
 	private  int canvasBorder;
 	
+	private TSPLibIndex tspImport; 
+	
 	private MySQLConnection mysql;
-	private JMenu mnInstanz;
-	private JMenu mnTransformieren;
-	private JMenuItem mntmGreAnpassen;
-	private JMenuItem mntmZentrieren;
-	private JMenuItem mntmDrehen;
-	private JMenuItem mntmZurcksetzen;
 	
-	
-	
-
 	/**
 	 * Launch the application. // Generiert durch WindowManager
 	 */
@@ -135,6 +135,7 @@ public class gWindow {
 				try {
 					gWindow window = new gWindow();
 					window.frame.setVisible(true);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -146,6 +147,7 @@ public class gWindow {
 //		mysql = new MySQLConnection();
 //		mysql.getTestVerbindungZuTestTable();
 		initialize();
+		tspImport = new TSPLibIndex(this);
 		
 	}
 
@@ -155,7 +157,7 @@ public class gWindow {
 	private void initialize() {
 		try
 		{
-		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception exp) { /* Fallback auf Metal LAF */ }
 		
 		//Forms-Komponenten von Oben nach Unten
@@ -661,13 +663,15 @@ public class gWindow {
 	class ImportListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
-			TSPLibIndex tspImport = new TSPLibIndex(gWindow.this);
+			tspImport.setVisible(true);
 			
 		}
 		
 	}
 	
-	
+	public JFrame getFrame() {
+		return frame;
+	}
 	public boolean getWithRulers() {
 		if (chckbxmntmLineale==null) return true;
 		else return chckbxmntmLineale.isSelected();
@@ -915,6 +919,8 @@ public class gWindow {
 			knotenlist.addElement(k.toString());
 			canvas.drawKnot(k);
 		}
+		
+		canvas.repaint();
 		
 		logLine(String.format("%s wurde erfolgreich importiert und transformiert. (%s Knoten)",name,dim));
 		logLine(String.format("Beschreibung: %s, Typ: %s\n",comment,type));

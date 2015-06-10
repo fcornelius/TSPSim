@@ -9,12 +9,15 @@ import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingWorker;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -22,9 +25,14 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 
-public class TSPLibIndex extends JFrame {
+
+public class TSPLibIndex extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
@@ -38,16 +46,23 @@ public class TSPLibIndex extends JFrame {
 	private DefaultListModel<String> listm;
 	private JList<String> list;
 	private JLabel lblInstInfo;
+	private JButton btnImportieren;
 
 	private gWindow owner;
 
 	public TSPLibIndex(gWindow owner) {
+		addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				TSPLibIndex.this.setLocationRelativeTo(owner.getFrame());
+			}
+			
+		});
 
 		this.owner = owner;
 
 		initializeGUI();
 		readIndexToList();
-		setVisible(true);
 
 		list.setSelectedIndex(0);
 
@@ -105,14 +120,16 @@ public class TSPLibIndex extends JFrame {
 			e.printStackTrace(); 
 			 }
 
-		this.setVisible(false);
+		
 	}
 
 	private void initializeGUI() {
 
 		setTitle("Importieren...");
 		setBounds(100, 100, 571, 404);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		setAlwaysOnTop(true);
+		setModalityType(ModalityType.APPLICATION_MODAL);
+		setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
 		getContentPane().setLayout(null);
 
 		JLabel lblImportierenAusTsplib = new JLabel("Importieren aus TSPLib");
@@ -138,6 +155,12 @@ public class TSPLibIndex extends JFrame {
 		scrollPane.setBounds(12, 47, 175, 221);
 
 		list = new JList<String>();
+		list.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) btnImportieren.doClick();
+			}
+		});
 		list.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				getTSPInfo(((JList)e.getSource()).getSelectedIndex()); 
@@ -147,16 +170,25 @@ public class TSPLibIndex extends JFrame {
 
 
 
-		JButton btnImportieren = new JButton("Importieren");
+		btnImportieren = new JButton("Importieren");
 		btnImportieren.setBounds(105, 307, 153, 37);
 		getContentPane().add(btnImportieren);
 		btnImportieren.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				btnImportieren.setText("Lade...");
+				
+				new AnswerWorker().execute();
+				
+				int knots = Integer.parseInt(selectedInst.getChildText("knots"));
+				String name = selectedInst.getAttributeValue("name");
+				btnImportieren.setText("Lade..");
 				btnImportieren.setEnabled(false);
-
-				loadInstance(list.getSelectedIndex());
+				
+				ProgressLoader pr;
+				if (knots > 400) 
+					pr = new ProgressLoader((int)(knots/70.0), name, TSPLibIndex.this);
+				
+				
 			}
 		});
 
@@ -164,4 +196,23 @@ public class TSPLibIndex extends JFrame {
 		btnInTsplibAnzeigen.setBounds(261, 307, 153, 37);
 		getContentPane().add(btnInTsplibAnzeigen);
 	}
+	
+	class AnswerWorker extends SwingWorker<Integer,Integer> {
+
+		@Override
+		protected Integer doInBackground() throws Exception {
+			loadInstance(list.getSelectedIndex());
+			return null;
+		}
+		@Override
+		protected void done() {
+			btnImportieren.setText("Importieren");
+			btnImportieren.setEnabled(true);
+			TSPLibIndex.this.setVisible(false);
+			super.done();
+		}
+		
+	}
+	
+	
 }
