@@ -25,39 +25,39 @@ import org.jdom2.input.SAXBuilder;
 
 
 public class TSPLibIndex extends JFrame {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private SAXBuilder builder;
 	private File tspIndex;
 	private Document doc;
 	private Element root;
 	private List<Element> instIndex;
 	private Element selectedInst;
-	
+
 	private DefaultListModel<String> listm;
 	private JList<String> list;
 	private JLabel lblInstInfo;
-	
+
 	private gWindow owner;
 
 	public TSPLibIndex(gWindow owner) {
-		
+
 		this.owner = owner;
-		
+
 		initializeGUI();
 		readIndexToList();
 		setVisible(true);
-		
+
 		list.setSelectedIndex(0);
-		
-		
+
+
 	}
-	
+
 	private void readIndexToList() {
-		
+
 		listm = new DefaultListModel<String>();
-		
+
 		try {
 			builder = new SAXBuilder();
 			tspIndex = new File("TSPLibIndex.xml");
@@ -65,19 +65,21 @@ public class TSPLibIndex extends JFrame {
 			doc = builder.build(tspIndex);
 			root = doc.getRootElement();
 			instIndex = root.getChildren("TSPInstance");
-			
+
 			for (Element inst : instIndex) 
 				listm.addElement(inst.getAttributeValue("name"));
-			
+
 			list.setModel(listm);
-			
-		} catch (Exception e) {}
+
+		} catch (Exception e) { 
+			e.printStackTrace(); 
+			owner.logLine("TSPLibIndex.xml konnte nicht eingelesen werden. " + e.getMessage()); }
 	}
-	
+
 	private void getTSPInfo(int index) {
-		
+
 		selectedInst = instIndex.get(index);
-		
+
 		lblInstInfo.setText(String.format("<html>"
 				+ "<b>Name: </b> <span>%s</span><br><br>"
 				+ "<b>Beschreibung: </b>%s<br><br>"
@@ -94,23 +96,25 @@ public class TSPLibIndex extends JFrame {
 				));
 	}
 	private void  loadInstance(int index) {
-		
+
 		try {
 			URL src = new URL(selectedInst.getChildText("url"));
 			owner.loadTSPFromLib(src);
-			
-		} catch (Exception e) {}
-		
+
+		} catch (Exception e) { 
+			e.printStackTrace(); 
+			 }
+
 		this.setVisible(false);
 	}
 
 	private void initializeGUI() {
-		
+
 		setTitle("Importieren...");
 		setBounds(100, 100, 571, 404);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
-		
+
 		JLabel lblImportierenAusTsplib = new JLabel("Importieren aus TSPLib");
 		lblImportierenAusTsplib.setBounds(12, 13, 219, 28);
 		getContentPane().add(lblImportierenAusTsplib);
@@ -122,17 +126,17 @@ public class TSPLibIndex extends JFrame {
 		panel.setBackground(Color.WHITE);
 		panel.setBounds(199, 43, 342, 225);
 		getContentPane().add(panel);
-		
+
 		lblInstInfo = new JLabel("New label");
 		panel.add(lblInstInfo);
 		lblInstInfo.setBackground(Color.WHITE);
 		lblInstInfo.setForeground(Color.BLACK);
-				
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		getContentPane().add(scrollPane);
 		scrollPane.setBounds(12, 47, 175, 221);
-				
+
 		list = new JList<String>();
 		list.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
@@ -140,22 +144,22 @@ public class TSPLibIndex extends JFrame {
 			}
 		});
 		scrollPane.setViewportView(list);
-		
-		
-		
+
+
+
 		JButton btnImportieren = new JButton("Importieren");
 		btnImportieren.setBounds(105, 307, 153, 37);
 		getContentPane().add(btnImportieren);
 		btnImportieren.addActionListener(new ActionListener() {
-			
+
 			public void actionPerformed(ActionEvent e) {
 				btnImportieren.setText("Lade...");
 				btnImportieren.setEnabled(false);
-				
+
 				loadInstance(list.getSelectedIndex());
 			}
 		});
-		
+
 		JButton btnInTsplibAnzeigen = new JButton("in TSPLib anzeigen");
 		btnInTsplibAnzeigen.setBounds(261, 307, 153, 37);
 		getContentPane().add(btnInTsplibAnzeigen);

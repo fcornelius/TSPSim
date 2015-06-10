@@ -27,6 +27,9 @@ public class SquareCanvas extends JPanel {
 	static int spacing;
 	static int border;
 	
+	public static final int REDRAW_ALL = 0;
+	public static final int REDRAW_KNOTS = 1;
+	
 	private BufferedImage bi;
 	private BufferedImage bi_overlay;
 	private Graphics2D g2D;
@@ -91,10 +94,17 @@ public class SquareCanvas extends JPanel {
 		drawEdge(new Edge(start, end));
 	}
 	
-	public void redraw() {
+	public void redraw(int mode) {
 		
 		flushGraphics(false);
-		redrawKnots(); redrawEdges();
+		
+		switch (mode) {
+		case REDRAW_ALL:
+			redrawEdges();
+		case REDRAW_KNOTS:
+			redrawKnots();
+		}
+		
 		repaint();
 	}
 	

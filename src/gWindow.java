@@ -115,6 +115,12 @@ public class gWindow {
 	private  int canvasBorder;
 	
 	private MySQLConnection mysql;
+	private JMenu mnInstanz;
+	private JMenu mnTransformieren;
+	private JMenuItem mntmGreAnpassen;
+	private JMenuItem mntmZentrieren;
+	private JMenuItem mntmDrehen;
+	private JMenuItem mntmZurcksetzen;
 	
 	
 	
@@ -503,7 +509,20 @@ public class gWindow {
 		menuBar.add(mnDatei);
 		
 		JMenuItem mntmNeueInstanz = new JMenuItem("Neue Instanz...");
+		mntmNeueInstanz.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				instanz = createInstance();
+			}
+		});
 		mnDatei.add(mntmNeueInstanz);
+		
+		JMenuItem mntmffnen = new JMenuItem("\u00D6ffnen...");
+		mntmffnen.setEnabled(false);
+		mnDatei.add(mntmffnen);
+		
+		JMenuItem mntmSpeichern = new JMenuItem("Speichern");
+		mntmSpeichern.setEnabled(false);
+		mnDatei.add(mntmSpeichern);
 		
 		separator_1 = new JSeparator();
 		separator_1.setForeground(SystemColor.controlHighlight);
@@ -532,9 +551,11 @@ public class gWindow {
 		mnExportieren.add(mntmGrafikAlsPng);
 		
 		JMenuItem mntmKnotenLokal = new JMenuItem("Knoten lokal...");
+		mntmKnotenLokal.setEnabled(false);
 		mnExportieren.add(mntmKnotenLokal);
 		
 		JMenuItem mntmInstanzVerffentlichen = new JMenuItem("Instanz ver\u00F6ffentlichen...");
+		mntmInstanzVerffentlichen.setEnabled(false);
 		mnExportieren.add(mntmInstanzVerffentlichen);
 		
 		JSeparator separator = new JSeparator();
@@ -543,6 +564,11 @@ public class gWindow {
 		mnDatei.add(separator);
 		
 		JMenuItem mntmBeenden = new JMenuItem("Beenden");
+		mntmBeenden.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
 		mnDatei.add(mntmBeenden);
 		mntmGrafikAlsPng.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { ExportPNG(); }
@@ -559,6 +585,43 @@ public class gWindow {
 		chckbxmntmKreuzcursor = new JCheckBoxMenuItem("Kreuz-Cursor");
 		chckbxmntmKreuzcursor.setSelected(true);
 		mnAnzeigen.add(chckbxmntmKreuzcursor);
+		
+		mnInstanz = new JMenu("Instanz");
+		menuBar.add(mnInstanz);
+		
+		mnTransformieren = new JMenu("Transformieren");
+		mnInstanz.add(mnTransformieren);
+		
+		mntmGreAnpassen = new JMenuItem("Gr\u00F6\u00DFe anpassen");
+		mntmGreAnpassen.setEnabled(false);
+		mnTransformieren.add(mntmGreAnpassen);
+		
+		mntmZentrieren = new JMenuItem("Zentrieren");
+		mntmZentrieren.setEnabled(false);
+		mnTransformieren.add(mntmZentrieren);
+		
+		mntmDrehen = new JMenuItem("Drehen...");
+		mntmDrehen.setEnabled(false);
+		mnTransformieren.add(mntmDrehen);
+		
+		mntmZurcksetzen = new JMenuItem("Zur\u00FCcksetzen");
+		mntmZurcksetzen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				canvas.redraw(SquareCanvas.REDRAW_KNOTS);
+			}
+		});
+		mnInstanz.add(mntmZurcksetzen);
+		
+		JMenu mnExtras = new JMenu("Extras");
+		menuBar.add(mnExtras);
+		
+		JMenuItem mntmGrafikUntermalen = new JMenuItem("Grafik untermalen...");
+		mntmGrafikUntermalen.setEnabled(false);
+		mnExtras.add(mntmGrafikUntermalen);
+		
+		JMenuItem mntmImporteinstellungen = new JMenuItem("Import-Einstellungen...");
+		mntmImporteinstellungen.setEnabled(false);
+		mnExtras.add(mntmImporteinstellungen);
 
 	}
 	
@@ -567,13 +630,13 @@ public class gWindow {
 		@Override
 		public void itemStateChanged(ItemEvent e) {
 			
-			if (chckbxAutoupdate.isSelected()) canvas.redraw();
+			if (chckbxAutoupdate.isSelected()) canvas.redraw(SquareCanvas.REDRAW_ALL);
 			else canvas.updateGraphics();
 		}
 		@Override
 		public void stateChanged(ChangeEvent e) {
 
-			if (chckbxAutoupdate.isSelected()) canvas.redraw();
+			if (chckbxAutoupdate.isSelected()) canvas.redraw(SquareCanvas.REDRAW_ALL);
 			else canvas.updateGraphics();
 		}
 	}
@@ -773,7 +836,7 @@ public class gWindow {
 			InputStream tspStream = url.openStream();
 			instanz = newInstanceFromTSP(tspStream);
 			
-		} catch (Exception e) { logLine(e.getMessage()); }
+		} catch (Exception e) { logLine("Konnte keine Verbindung aufbauen. " + e.getMessage()); }
 	}
 	
 	public Instance newInstanceFromTSP(InputStream stream) {
@@ -801,6 +864,16 @@ public class gWindow {
 				else if (tspLine.startsWith("NODE_COORD_SECTION")) break;
 				else if (tspLine.startsWith("DISPLAY_DATA_SECTION")) break;    
 			} 
+			
+			if (tspLine.trim().equals("EOF") || (tspLine.trim().length() == 0)) {
+					JOptionPane.showMessageDialog(null, "Fehler beim Laden der TSP Datei. Für Details Log einsehen.");
+					logLine("Fehler beim Laden von " + name + ".tsp");
+					logLine("  Es wurde keine Koordinatenliste gefunden (NODE_COORD_SECTION/DISPLAY_DATA_SECTION)");
+					logLine("  Vermutlich handelt es sich um eine Entfernungsdefinierte Instanz (EDGE_WEIGHT_SECTION)");
+					logLine("  Der Import dieser Art von TSP ist nicht imlementiert.\n");
+					return null;
+			}
+			
 			System.out.println(name+"\n"+comment+"\n"+type+"\n"+dim);
 			tspLine = br.readLine();
 			
