@@ -51,13 +51,13 @@ public class TSPLibIndex extends JDialog {
 	private gWindow owner;
 
 	public TSPLibIndex(gWindow owner) {
-		addComponentListener(new ComponentAdapter() {
-			@Override
-			public void componentShown(ComponentEvent e) {
-				TSPLibIndex.this.setLocationRelativeTo(owner.getFrame());
-			}
-			
-		});
+//		addComponentListener(new ComponentAdapter() {
+//			@Override
+//			public void componentShown(ComponentEvent e) {
+//				TSPLibIndex.this.setLocationRelativeTo(owner.getFrame());
+//			}
+//			
+//		});
 
 		this.owner = owner;
 
@@ -128,6 +128,7 @@ public class TSPLibIndex extends JDialog {
 		setTitle("Importieren...");
 		setBounds(100, 100, 571, 404);
 //		setAlwaysOnTop(true);
+		setLocationRelativeTo(owner.getFrame());
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
 		getContentPane().setLayout(null);

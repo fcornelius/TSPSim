@@ -149,6 +149,7 @@ public class gWindow {
 		initialize();
 		tspImport = new TSPLibIndex(this);
 		
+		
 	}
 
 	/**
@@ -172,7 +173,7 @@ public class gWindow {
 		frameHeightDebugPx = frame.getHeight() + 140;
 
 		//   Top Panel
-		panel_1 = new TopBar("subbar.png");
+		panel_1 = new ImagePanel("UIElements/subbar.png");
 		FlowLayout flowLayout_1 = (FlowLayout) panel_1.getLayout();
 		flowLayout_1.setVgap(9);
 		flowLayout_1.setAlignment(FlowLayout.LEFT);
@@ -288,7 +289,7 @@ public class gWindow {
 		panel.setBounds(panel.getX(), panel.getY(), canvasWidth, canvasHeight);
 		canvas.setBorder(BorderFactory.createLineBorder(Color.gray, canvasBorder));
 		
-		JPanel toolbar = new TopBar("topbar.png");
+		JPanel toolbar = new ImagePanel("UIElements/topbar.png");
 		FlowLayout flowLayout_5 = (FlowLayout) toolbar.getLayout();
 		flowLayout_5.setAlignment(FlowLayout.LEFT);
 		toolbar.setBounds(0, 0, 1209, 50);
@@ -402,7 +403,7 @@ public class gWindow {
 		panel_3.add(chckbxDebug);
 		chckbxDebug.setOpaque(false);
 		
-		JPanel panel_2 = new TopBar("subbar.png");
+		JPanel panel_2 = new ImagePanel("UIElements/subbar.png");
 		
 		FlowLayout flowLayout_4 = (FlowLayout) panel_2.getLayout();
 		flowLayout_4.setVgap(3);
@@ -619,6 +620,13 @@ public class gWindow {
 		
 		JMenuItem mntmGrafikUntermalen = new JMenuItem("Grafik untermalen...");
 		mntmGrafikUntermalen.setEnabled(false);
+		mntmGrafikUntermalen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				ImageDialog im = new ImageDialog(canvas);
+				
+			}
+		});
 		mnExtras.add(mntmGrafikUntermalen);
 		
 		JMenuItem mntmImporteinstellungen = new JMenuItem("Import-Einstellungen...");
@@ -840,7 +848,13 @@ public class gWindow {
 			InputStream tspStream = url.openStream();
 			instanz = newInstanceFromTSP(tspStream);
 			
-		} catch (Exception e) { logLine("Konnte keine Verbindung aufbauen. " + e.getMessage()); }
+		} catch (Exception e) { 
+			logLine("Konnte keine Verbindung aufbauen zu " + e.getMessage());
+			logLine(e.getClass() +" in " +  e.getStackTrace()[0]); 
+			JOptionPane.showMessageDialog(null, "Konnte keine Verbindung zu TSPLib aufbauen.\n"
+					+ "Prüfen Sie ob eine Netzwerkverbindung besteht und TSPSim über lokale Firewalls freigegeben ist.\n"
+					+ "Für Details Log einsehen");}
+		
 	}
 	
 	public Instance newInstanceFromTSP(InputStream stream) {
@@ -935,7 +949,7 @@ public class gWindow {
 	
 	private void ExportPNG() {
 		
-		File exp = new File("TSPSim_n" + instanz.getCount() + "_" + 
+		File exp = new File("TSPSim_k" + instanz.getCount() + "_" + 
 				new SimpleDateFormat("dd-MM-YY_HH-mm-ss").format(new Date()));
 		
 		dirDialog = new JFileChooser();

@@ -32,6 +32,7 @@ public class SquareCanvas extends JPanel {
 	
 	private BufferedImage bi;
 	private BufferedImage bi_overlay;
+	private BufferedImage biBack;
 	private Graphics2D g2D;
 	private Graphics2D g2D_cursor;
 	private gWindow mainFrame;
@@ -70,6 +71,8 @@ public class SquareCanvas extends JPanel {
 	protected void paintComponent(Graphics g) {
 		
 		super.paintComponent(g);
+		if (biBack != null)
+			g.drawImage(biBack, 0, 0, null);
 		g.drawImage(bi, 0, 0, this);
 	}
 	
@@ -127,6 +130,12 @@ public class SquareCanvas extends JPanel {
 			else drawEdge(inst.getKnot(route.get(i)), inst.getKnot(0));
 		}
 	}
+	
+	public void setBackground(BufferedImage back) {
+		biBack = back;
+	}
+	
+	
 	public void flushGraphics(boolean clearBuffer) {
 		
 		if (g2D != null) g2D.dispose();
@@ -136,6 +145,7 @@ public class SquareCanvas extends JPanel {
 		g2D = bi.createGraphics();
 		g2D.setColor(Color.white);
 		g2D.fillRect(0, 0, width, height);
+		
 		if (mainFrame.getWithRulers()) drawCanvasBorder();
 		
 		g2D.setColor(Colors.colors[mainFrame.comboBox.getSelectedIndex()]); //TODO Getter
