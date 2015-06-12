@@ -1,5 +1,7 @@
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -13,6 +15,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.ImageObserver;
+import java.awt.image.RescaleOp;
 import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 
@@ -34,7 +37,9 @@ public class SquareCanvas extends JPanel {
 	private BufferedImage bi_overlay;
 	private BufferedImage biBack;
 	private Graphics2D g2D;
+	private Graphics2D g2DBack;
 	private Graphics2D g2D_cursor;
+	private boolean drawCursor;
 	private gWindow mainFrame;
 	
 	private int pointRadius;
@@ -60,7 +65,20 @@ public class SquareCanvas extends JPanel {
 		
 		knotBuffer = new ArrayList<Knot>();
 		edgeBuffer = new ArrayList<Edge>();
-		flushGraphics(false); 
+		
+		bi = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_ARGB);  
+		g2D = bi.createGraphics();
+		g2D.setBackground(new Color(0,true));
+		
+		biBack = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_ARGB); 
+		g2DBack = biBack.createGraphics();
+		
+		bi_overlay = new BufferedImage(this.width,this.height,BufferedImage.TYPE_INT_ARGB);
+		g2D_cursor = bi_overlay.createGraphics();
+		g2D_cursor.setColor(Color.lightGray);
+		g2D_cursor.setBackground(new Color(0,true));
+		
+		flushGraphics(false,true); 
 	}
 	
 	public BufferedImage getImage() {
@@ -71,9 +89,10 @@ public class SquareCanvas extends JPanel {
 	protected void paintComponent(Graphics g) {
 		
 		super.paintComponent(g);
-		if (biBack != null)
-			g.drawImage(biBack, 0, 0, null);
+		
+		g.drawImage(biBack, 0, 0, null);
 		g.drawImage(bi, 0, 0, this);
+		g.drawImage(bi_overlay,0,0,null);
 	}
 	
 	public void drawKnot(Knot k) {
@@ -99,7 +118,7 @@ public class SquareCanvas extends JPanel {
 	
 	public void redraw(int mode) {
 		
-		flushGraphics(false);
+		flushGraphics(false,false);
 		
 		switch (mode) {
 		case REDRAW_ALL:
@@ -110,6 +129,8 @@ public class SquareCanvas extends JPanel {
 		
 		repaint();
 	}
+	
+
 	
 	public void redrawKnots() {
 		
@@ -131,24 +152,44 @@ public class SquareCanvas extends JPanel {
 		}
 	}
 	
-	public void setBackground(BufferedImage back) {
-		biBack = back;
+	public void setBackground(BufferedImage back, float scale, int offsetX, int offsetY, float alpha) {
+
+		Composite orig = g2DBack.getComposite();
+		AlphaComposite ac1
+        = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1-alpha);
+		
+		g2DBack.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		
+		g2DBack.fillRect(0, 0, width, height);
+		g2DBack.drawImage(back,  offsetX, offsetY, 
+						 (int)(scale * back.getWidth()),
+						 (int)(scale * back.getHeight()),null);
+		g2DBack.setComposite(ac1);
+		g2DBack.setColor(Color.white);
+		g2DBack.fillRect(0,0, width, height);
+		g2DBack.setComposite(orig);
+		repaint();
 	}
 	
+	public void resetBackground() {
+		
+	}
 	
-	public void flushGraphics(boolean clearBuffer) {
+	public void flushGraphics(boolean clearBuffer, boolean clearBack) {
 		
-		if (g2D != null) g2D.dispose();
-		if (bi != null) bi.flush();
-		else bi = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_INDEXED);  
 		
-		g2D = bi.createGraphics();
-		g2D.setColor(Color.white);
-		g2D.fillRect(0, 0, width, height);
+		g2D.clearRect(0, 0,width, height);
+		
+		if (clearBack) {
+			g2DBack = biBack.createGraphics();
+			g2DBack.setColor(Color.white);
+			g2DBack.fillRect(0, 0, width, height);
+		}
 		
 		if (mainFrame.getWithRulers()) drawCanvasBorder();
 		
-		g2D.setColor(Colors.colors[mainFrame.comboBox.getSelectedIndex()]); //TODO Getter
+//		g2D.setColor(Colors.colors[mainFrame.comboBox.getSelectedIndex()]); //TODO Getter
 		
 		if (clearBuffer) { knotBuffer.clear(); edgeBuffer.clear(); }
 		updateGraphics();
@@ -165,7 +206,6 @@ public class SquareCanvas extends JPanel {
 		if (mainFrame.chckbxAntia.isSelected()) g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		else g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 		g2D.setFont(new Font("Arial",Font.BOLD,12));
-		g2D.setBackground(Color.white);
 		g2D.setStroke(new BasicStroke(stroke));
 		g2D.setColor(clr);
 
@@ -200,8 +240,10 @@ public class SquareCanvas extends JPanel {
 			mainFrame.lblMouseY.setText(e.getY()-(border+spacing)+"");
 			
 			if (mainFrame.getWithCursor()) {
-				g2D_cursor.setColor(Color.lightGray);
-				g2D_cursor.drawImage(bi_overlay, 0, 0, null);
+				
+				g2D_cursor.clearRect(0, 0, width, height);
+				
+
 				g2D_cursor.drawLine(e.getX(), border+spacing, e.getX(), height);
 				g2D_cursor.drawLine(border+spacing, e.getY(), width, e.getY());
 
@@ -210,6 +252,7 @@ public class SquareCanvas extends JPanel {
 		}
 		@Override
 		public void mouseDragged(MouseEvent e) {
+			mouseMoved(e);
 		}
 	}
 	
@@ -219,10 +262,7 @@ public class SquareCanvas extends JPanel {
 		public void mouseEntered(MouseEvent e) {
 			super.mouseEntered(e);
 			if (mainFrame.getWithCursor()) {
-				bi_overlay = new BufferedImage(bi.getColorModel(),bi.copyData(null),false,null);
-				g2D_cursor = bi.createGraphics();
-
-				// Mouse-Cursor ausblenden:
+				
 				setCursor(getToolkit().createCustomCursor(new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB),new Point(0,0),""));
 			} else setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
@@ -230,7 +270,7 @@ public class SquareCanvas extends JPanel {
 		public void mouseExited(MouseEvent e) {
 			super.mouseExited(e);
 			if (mainFrame.getWithCursor()) {
-				g2D.drawImage(bi_overlay, 0, 0, null);
+				g2D_cursor.clearRect(0, 0, width, height);
 				repaint();
 			}
 			

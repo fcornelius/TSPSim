@@ -147,7 +147,7 @@ public class gWindow {
 //		mysql = new MySQLConnection();
 //		mysql.getTestVerbindungZuTestTable();
 		initialize();
-		tspImport = new TSPLibIndex(this);
+		
 		
 		
 	}
@@ -619,7 +619,6 @@ public class gWindow {
 		menuBar.add(mnExtras);
 		
 		JMenuItem mntmGrafikUntermalen = new JMenuItem("Grafik untermalen...");
-		mntmGrafikUntermalen.setEnabled(false);
 		mntmGrafikUntermalen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -671,7 +670,8 @@ public class gWindow {
 	class ImportListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
-			tspImport.setVisible(true);
+			if (tspImport != null) tspImport.setVisible(true);
+			else tspImport = new TSPLibIndex(gWindow.this);
 			
 		}
 		
@@ -698,7 +698,7 @@ public class gWindow {
 		
 		list.setModel(blank);
 		
-		canvas.flushGraphics(true);
+		canvas.flushGraphics(true,true);
 		btnNext.setEnabled(false);
 		btnAuflsen.setEnabled(false);
 		
@@ -898,6 +898,8 @@ public class gWindow {
 			while (!tspLine.trim().equals("EOF") && tspLine.trim().length() > 0) {
 				
 				coordLine = (tspLine.trim().split(" +"));
+				if (coordLine.length == 1) coordLine = (tspLine.trim().split("\t"));
+				
 				try {
 				preCoords.get(0).add(Double.parseDouble(coordLine[1]));
 				preCoords.get(1).add(Double.parseDouble(coordLine[2]));
@@ -905,6 +907,7 @@ public class gWindow {
 					logLine("Fehler beim Lesen der Datei!");
 				}
 				tspLine = br.readLine();
+				
 				
 			}	
 		} catch (FileNotFoundException e) {

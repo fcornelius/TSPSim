@@ -540,7 +540,7 @@
     <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.p654.tsp.gif</img>
     <size>18329</size>
   </TSPInstance>
-  <TSPInstance name="Pa561.tsp">
+  <TSPInstance name="Pa561">
     <description>561-city problem (Kleinschmidt)</description>
     <knots>561</knots>
     <type>TSP</type>

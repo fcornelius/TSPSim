@@ -37,11 +37,26 @@ import javax.swing.JCheckBox;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.image.BufferedImage;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 
 public class ImageDialog extends JDialog {
 
 	private JPanel contentPane;
+	private JRadioButton rdbtnVoreinstellung;
+	private JRadioButton rdbtnEigeneGrafik;
+	private JRadioButton rdbtnZentriert;
+	private JRadioButton rdbtnUrsprung;
+	private JRadioButton rdbtnAnpassen;
+	private JRadioButton rdbtnProzent;
+	private JSpinner spnSkalieren;
+	private JSpinner spnOffsetX;
+	private JSpinner spnOffsetY;
+	private JSpinner spnAlpha;
+	private JCheckBox chckbxVorschau;
+
+
 	private JTextField txtImagepath;
 	private JComboBox<String> comboBox; 
 	private ImagePanel thumbImage;
@@ -51,17 +66,25 @@ public class ImageDialog extends JDialog {
 	private File[] presets;
 	private File presetDir;
 
+	private float scale;
+	private int offsetX;
+	private int offsetY;
+	private float alpha;
+
+
 	/**
 	 * Create the frame.
 	 */
 	public ImageDialog(SquareCanvas canvas) {
 
 		this.canvas = canvas;
-		
+
 		initializeGUI();
 		loadPresets();
 		setVisible(true);
 		
+		image = new BufferedImage(0, 0, BufferedImage.TYPE_BYTE_INDEXED);
+
 	}
 
 	private void loadPresets() {
@@ -73,9 +96,68 @@ public class ImageDialog extends JDialog {
 			comboBox.addItem(p.getName().substring(0, p.getName().lastIndexOf(".")).replace("_", " "));
 		}
 	}
+
+	private void updateBackground() {
+
+		int id = comboBox.getSelectedIndex() - 1;
+		int drawWidth = SquareCanvas.pixelWidth + 2*SquareCanvas.spacing;
+		int drawHeight = SquareCanvas.pixelHeight + 2*SquareCanvas.spacing;
+		if (id > -1) { 
+			try {
+
+				image = ImageIO.read(ImageDialog.class.getResource("/PresetImages/" + presets[id].getName()));
+
+				if (rdbtnAnpassen.isSelected()) {
+
+					if ((((float)drawWidth)/image.getWidth(null)) * image.getHeight(null) >  drawHeight) {
+						scale = ((float)drawHeight)/image.getHeight(null);
+					} else {
+						scale = ((float)drawWidth)/image.getWidth(null);
+					}
+					spnSkalieren.setValue((int)(scale*100));
+				} else {
+					scale = ((int)spnSkalieren.getValue())/100.0f;
+				}
+
+				if(rdbtnZentriert.isSelected()) {
+
+					offsetX = (int)(drawWidth/2.0 - ((image.getWidth(null) * scale)/2));
+					offsetY = (int)(drawHeight/2.0 - ((image.getHeight(null) * scale)/2));
+				} else {
+					offsetX = 0;
+					offsetY = 0;
+				}
+
+				offsetX += (int)spnOffsetX.getValue();
+				offsetY += (int)spnOffsetY.getValue();
+
+				alpha = ((int)spnAlpha.getValue())/100.0f;
+
+				canvas.setBackground(image, scale, offsetX, offsetY,alpha);
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				System.out.println(ex.getMessage());
+			}
+		}
+	}
+	
+	private void ResetUI() {
+		
+		comboBox.setSelectedIndex(0);
+		rdbtnVoreinstellung.setSelected(true);
+		rdbtnZentriert.setSelected(true);
+		rdbtnAnpassen.setSelected(true);
+		spnSkalieren.setValue(0);
+		spnOffsetX.setValue(0);
+		spnOffsetY.setValue(0);
+		spnAlpha.setValue(50);
+		
+	}
 	private void initializeGUI() {
 
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
+		setModal(true);
 		setBounds(100, 100, 561, 318);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -92,7 +174,12 @@ public class ImageDialog extends JDialog {
 		panel.setBorder(titleBorder1);
 		contentPane.add(panel);
 
-		JRadioButton rdbtnVoreinstellung = new JRadioButton("Voreinstellung:",true);
+		chckbxVorschau = new JCheckBox("Vorschau");
+		chckbxVorschau.setSelected(true);
+		chckbxVorschau.setBounds(412, 120, 113, 25);
+		contentPane.add(chckbxVorschau);
+
+		rdbtnVoreinstellung = new JRadioButton("Voreinstellung:",true);
 		rdbtnVoreinstellung.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				txtImagepath.setEnabled(false);
@@ -108,7 +195,7 @@ public class ImageDialog extends JDialog {
 		comboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				int id;
-				
+
 				if (presets != null) {
 					id = comboBox.getSelectedIndex() - 1;
 					if (id > -1) {
@@ -118,18 +205,20 @@ public class ImageDialog extends JDialog {
 						thumbImage.setMode(ImagePanel.CENTER);
 						thumbImage.setImage("Icons/empty_64.png");
 					}
+					if (chckbxVorschau.isSelected())
+						updateBackground();
 				}
 
 
-		}
-	});
+			}
+		});
 		comboBox.setPreferredSize(new Dimension(180, 23));
 		comboBox.addItem("Grafik wählen...");
 		panel.add(comboBox);
 
 
 
-		JRadioButton rdbtnEigeneGrafik = new JRadioButton("Eigene Grafik:");
+		rdbtnEigeneGrafik = new JRadioButton("Eigene Grafik:");
 		rdbtnEigeneGrafik.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				txtImagepath.setEnabled(true);
@@ -164,11 +253,16 @@ public class ImageDialog extends JDialog {
 		lblAusrichten.setPreferredSize(new Dimension(85, 16));
 		panel_1.add(lblAusrichten);
 
-		JRadioButton rdbtnZentriert = new JRadioButton("Zentriert");
+		ButtonGroup ausrichtenButtons = new ButtonGroup();
+		rdbtnZentriert = new JRadioButton("Zentriert");
+		rdbtnZentriert.addChangeListener(new UpdateListener());
 		rdbtnZentriert.setSelected(true);
+		ausrichtenButtons.add(rdbtnZentriert);
 		panel_1.add(rdbtnZentriert);
 
-		JRadioButton rdbtnUrsprung = new JRadioButton("Ursprung");
+		rdbtnUrsprung = new JRadioButton("Ursprung");
+		rdbtnUrsprung.addChangeListener(new UpdateListener());
+		ausrichtenButtons.add(rdbtnUrsprung);
 		panel_1.add(rdbtnUrsprung);
 
 		JLabel lblSpace = new JLabel("");
@@ -179,35 +273,52 @@ public class ImageDialog extends JDialog {
 		lblSkalieren.setPreferredSize(new Dimension(85, 16));
 		panel_1.add(lblSkalieren);
 
-		JRadioButton rdbtnAnpassen = new JRadioButton("Anpassen");
+		ButtonGroup skalierenButtons = new ButtonGroup();
+		rdbtnAnpassen = new JRadioButton("Anpassen");
+		rdbtnAnpassen.addChangeListener(new UpdateListener());
 		rdbtnAnpassen.setSelected(true);
+		skalierenButtons.add(rdbtnAnpassen);
 		panel_1.add(rdbtnAnpassen);
 
-		JRadioButton rdbtnProzent = new JRadioButton("Prozent:");
+		rdbtnProzent = new JRadioButton("Prozent:");
+		rdbtnProzent.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				spnSkalieren.setEnabled(rdbtnProzent.isSelected());
+				
+				if (chckbxVorschau.isSelected()) 
+					updateBackground();
+			}
+		});
+
+
+		skalierenButtons.add(rdbtnProzent);
 		panel_1.add(rdbtnProzent);
 
-		JSpinner spinner = new JSpinner();
-		spinner.setEnabled(false);
-		spinner.setPreferredSize(new Dimension(43, 22));
-		panel_1.add(spinner);
-		spinner.setModel(new SpinnerNumberModel(100, 1, 100, 1));
+		spnSkalieren = new JSpinner();
+		spnSkalieren.addChangeListener(new UpdateListener());
+		spnSkalieren.setEnabled(false);
+		spnSkalieren.setPreferredSize(new Dimension(43, 22));
+		panel_1.add(spnSkalieren);
+		spnSkalieren.setModel(new SpinnerNumberModel(100, 1, 100, 1));
 
 		JLabel lblverschieben = new JLabel("Verschiebung:");
 		lblverschieben.setPreferredSize(new Dimension(90,16));
 		panel_1.add(lblverschieben);
 
-		JSpinner spinner_1 = new JSpinner();
-		spinner_1.setModel(new SpinnerNumberModel(0, 0, 999, 1));
-		spinner_1.setPreferredSize(new Dimension(43, 22));
-		panel_1.add(spinner_1);
+		spnOffsetX = new JSpinner();
+		spnOffsetX.addChangeListener(new UpdateListener());
+		spnOffsetX.setModel(new SpinnerNumberModel(0, -999, 999, 1));
+		spnOffsetX.setPreferredSize(new Dimension(43, 22));
+		panel_1.add(spnOffsetX);
 
 		JLabel lblX = new JLabel("X Pixel");
 		panel_1.add(lblX);
 
-		JSpinner spinner_2 = new JSpinner();
-		spinner_2.setModel(new SpinnerNumberModel(0, 0, 999, 1));
-		spinner_2.setPreferredSize(new Dimension(43, 22));
-		panel_1.add(spinner_2);
+		spnOffsetY = new JSpinner();
+		spnOffsetY.addChangeListener(new UpdateListener());
+		spnOffsetY.setModel(new SpinnerNumberModel(0, -999, 999, 1));
+		spnOffsetY.setPreferredSize(new Dimension(43, 22));
+		panel_1.add(spnOffsetY);
 
 		JLabel lblY = new JLabel("Y Pixel");
 		panel_1.add(lblY);
@@ -216,20 +327,23 @@ public class ImageDialog extends JDialog {
 		lblAlpha.setPreferredSize(new Dimension(90,16));
 		panel_1.add(lblAlpha);
 
-		JSpinner spinner_3 = new JSpinner();
-		spinner_3.setModel(new SpinnerNumberModel(new Integer(50), null, null, new Integer(1)));
-		spinner_3.setPreferredSize(new Dimension(43, 22));
-		panel_1.add(spinner_3);
+		spnAlpha = new JSpinner();
+		spnAlpha.addChangeListener(new UpdateListener());
+		spnAlpha.setModel(new SpinnerNumberModel(new Integer(50), null, null, new Integer(1)));
+		spnAlpha.setPreferredSize(new Dimension(43, 22));
+		panel_1.add(spnAlpha);
 
 		JLabel lblProzent = new JLabel("Prozent");
 		panel_1.add(lblProzent);
 
+		Border thumbBorder = BorderFactory.createLineBorder(Color.lightGray, 2);
 		thumbImage = new ImagePanel("Icons/empty_64.png", ImagePanel.CENTER, Color.white);
 		thumbImage.setBackground(Color.WHITE);
+		thumbImage.setBorder(thumbBorder);
 		FlowLayout fl_thumbImage = (FlowLayout) thumbImage.getLayout();
 		fl_thumbImage.setVgap(1);
 		fl_thumbImage.setHgap(1);
-		thumbImage.setBounds(407, 150, 108, 108);
+		thumbImage.setBounds(406, 150, 108, 108);
 		contentPane.add(thumbImage);
 
 
@@ -244,41 +358,59 @@ public class ImageDialog extends JDialog {
 		JButton btnbernehmen = new JButton("\u00DCbernehmen");
 		btnbernehmen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int id = comboBox.getSelectedIndex() - 1;
-				
-				try {
-					image = ImageIO.read(ImageDialog.class.getResource("/PresetImages/" + presets[id].getName()));
-					canvas.setBackground(image);
-					canvas.flushGraphics(false);
-				} catch (Exception ex) {}
+
+				if (!chckbxVorschau.isSelected()) updateBackground();
+				setVisible(false);
 			}
 		});
 		btnbernehmen.setBounds(402, 26, 113, 25);
 		contentPane.add(btnbernehmen);
 
 		JButton btnZurcksetzen = new JButton("Zur\u00FCcksetzen");
+		btnZurcksetzen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ResetUI();
+				canvas.setBackground(image, 1, 0, 0, 0);
+				
+			}
+		});
 		btnZurcksetzen.setBounds(402, 53, 113, 25);
 		contentPane.add(btnZurcksetzen);
 
 		JButton btnAbbrechen = new JButton("Abbrechen");
+		btnAbbrechen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ResetUI();
+				setVisible(false);
+			}
+		});
 		btnAbbrechen.setBounds(402, 88, 113, 25);
 		contentPane.add(btnAbbrechen);
 
-		JCheckBox chckbxVorschau = new JCheckBox("Vorschau");
-		chckbxVorschau.setSelected(true);
-		chckbxVorschau.setBounds(412, 120, 113, 25);
-		contentPane.add(chckbxVorschau);
+
 
 		//		panel_1.setComponentsEnabled(false);
-}
-
-class SmartJPanel extends JPanel {
-
-	private static final long serialVersionUID = 1L;
-
-	public void setComponentsEnabled(boolean enable) {
-		Component[] childs = this.getComponents();
-		for (Component c : childs) c.setEnabled(enable);
 	}
-}
+
+	class UpdateListener implements ChangeListener {
+
+		@Override
+		public void stateChanged(ChangeEvent e) {
+
+			
+			if (chckbxVorschau.isSelected())
+				updateBackground();
+
+		}
+
+	}
+	class SmartJPanel extends JPanel {
+
+		private static final long serialVersionUID = 1L;
+
+		public void setComponentsEnabled(boolean enable) {
+			Component[] childs = this.getComponents();
+			for (Component c : childs) c.setEnabled(enable);
+		}
+	}
 }

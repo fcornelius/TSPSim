@@ -51,21 +51,15 @@ public class TSPLibIndex extends JDialog {
 	private gWindow owner;
 
 	public TSPLibIndex(gWindow owner) {
-//		addComponentListener(new ComponentAdapter() {
-//			@Override
-//			public void componentShown(ComponentEvent e) {
-//				TSPLibIndex.this.setLocationRelativeTo(owner.getFrame());
-//			}
-//			
-//		});
+
 
 		this.owner = owner;
 
 		initializeGUI();
 		readIndexToList();
-
+		
 		list.setSelectedIndex(0);
-
+		setVisible(true);
 
 	}
 
