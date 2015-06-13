@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +27,8 @@ public class ImagePanel extends JPanel {
 	private double scale;
 	private int centerX;
 	private int centerY;
+	
+	private File imagefile;
 	
 	public ImagePanel(String img) {
 		this(img,ImagePanel.AS_IS,Color.white);
@@ -50,6 +54,7 @@ public class ImagePanel extends JPanel {
 		}
 		repaint();
 	}
+	
 	
 	public void setMode(int mode) {
 		this.mode = mode;
@@ -92,15 +97,13 @@ public class ImagePanel extends JPanel {
 		case ImagePanel.AS_IS:
 			g.setColor(back);
 			g.fillRect(0, 0, getWidth(), getHeight());
-//			g.drawImage(backimg, centerX, centerY, 
-//					(int)(scale * backimg.getWidth(null)),
-//					(int)(scale * backimg.getHeight(null)), 
-//					null);
-			if (mode==ImagePanel.FIT_CENTER)
+
+			if (mode==ImagePanel.FIT_CENTER) 
 				backimg = backimg.getScaledInstance(
 						(int)(scale * backimg.getWidth(null)), 
 						(int)(scale * backimg.getHeight(null)), 
-						Image.SCALE_SMOOTH);
+						Image.SCALE_SMOOTH); 
+				
 			
 			g.drawImage(backimg,centerX, centerY,null);
 			

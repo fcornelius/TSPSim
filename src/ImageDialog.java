@@ -27,6 +27,7 @@ import javax.swing.SpinnerNumberModel;
 
 import java.awt.Color;
 import java.io.File;
+import java.io.FileFilter;
 
 import javax.swing.ImageIcon;
 import javax.swing.JSeparator;
@@ -37,6 +38,7 @@ import javax.swing.JCheckBox;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.image.BufferedImage;
+
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 
@@ -71,6 +73,7 @@ public class ImageDialog extends JDialog {
 	private int offsetY;
 	private float alpha;
 
+	private FileFilter imageFilter;
 
 	/**
 	 * Create the frame.
@@ -78,19 +81,28 @@ public class ImageDialog extends JDialog {
 	public ImageDialog(SquareCanvas canvas) {
 
 		this.canvas = canvas;
-
+		
+		imageFilter = new FileFilter() {
+			public boolean accept(File pathname) {
+				if (pathname.getName().endsWith(".gif")) return true;
+				else return false;
+			}
+		};
+		
 		initializeGUI();
 		loadPresets();
 		setVisible(true);
 		
-		image = new BufferedImage(0, 0, BufferedImage.TYPE_BYTE_INDEXED);
+		
+		
+		image = new BufferedImage(1, 1, BufferedImage.TYPE_BYTE_INDEXED);
 
 	}
 
 	private void loadPresets() {
 
 		presetDir = new File("ressources/PresetImages").getAbsoluteFile();
-		presets = presetDir.listFiles();
+		presets = presetDir.listFiles(imageFilter);
 
 		for (File p : presets) {
 			comboBox.addItem(p.getName().substring(0, p.getName().lastIndexOf(".")).replace("_", " "));
@@ -199,12 +211,13 @@ public class ImageDialog extends JDialog {
 				if (presets != null) {
 					id = comboBox.getSelectedIndex() - 1;
 					if (id > -1) {
-						thumbImage.setMode(ImagePanel.FIT_CENTER);
-						thumbImage.setImage("PresetImages/" + presets[id].getName());
+						thumbImage.setMode(ImagePanel.CENTER);
+						thumbImage.setImage("thumbs/" + presets[id].getName() + ".png");
 					} else {
 						thumbImage.setMode(ImagePanel.CENTER);
 						thumbImage.setImage("Icons/empty_64.png");
 					}
+					
 					if (chckbxVorschau.isSelected())
 						updateBackground();
 				}

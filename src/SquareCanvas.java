@@ -160,6 +160,8 @@ public class SquareCanvas extends JPanel {
 		
 		g2DBack.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                 RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g2DBack.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
+		g2DBack.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		g2DBack.fillRect(0, 0, width, height);
 		g2DBack.drawImage(back,  offsetX, offsetY, 
