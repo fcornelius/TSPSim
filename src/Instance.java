@@ -26,6 +26,8 @@ public class Instance {
 	private double wayLength;
 	private double calcTime;
 	private double permutTime;
+	private double[][] cache;
+	private ArrayList<ArrayList<Integer>> powerSets;
 	
 	public Interval stopWatch;
 	
@@ -186,6 +188,50 @@ public class Instance {
 		
 		wayLength = minTour;
 		canvas.drawRoute(this, minRoute);
+	}
+	
+	public void dynProgrammingSolve(SquareCanvas canvas) {
+		
+		stopWatch.start();
+		cache = new double[1 << (this.knots.size()-1)][this.knots.size()];
+		PowerSetBuilder psb = new PowerSetBuilder(this.knots.size());
+		powerSets = PowerSetBuilder.buildPowerSet(psb.getSet());
+		
+		for(int i = 0; i < this.knots.size(); i++) {
+			cache[0][i] = this.knots.get(0).getDistance(this.knots.get(i));
+		}	
+		rek(1, powerSets);
+				
+		stopWatch.stop();
+		calcTime = stopWatch.getMills();
+		stopWatch.reset();
+		
+		canvas.drawRoute(this, minRoute);
+	}
+	
+	private double rek(int iStartKnot, ArrayList<ArrayList<Integer>> set) {
+		
+		if(set.size() == 1 && set.get(0).isEmpty()) {
+			return cache[0][iStartKnot-1];
+		}
+		
+		for(int i = 1; i <= (this.knots.size()-1); i++) {
+			for(ArrayList<Integer> subSet : PowerSetBuilder.getSubSets(set, i)) {
+				for(int j = 0; j <= (this.knots.size()-1); j++) {
+					for(Integer element : subSet) {
+						if(!subSet.contains(j+1)){
+							iStartKnot = Integer.valueOf(element);
+							ArrayList<Integer> tmpList = new ArrayList<Integer>(subSet.subList(0, subSet.indexOf(element)));
+							tmpList.addAll(subSet.subList(subSet.indexOf(element)+1, subSet.size()));							//neue Liste, in der element nicht mehr vorkommt
+							if(cache[i][j] == 0.0) { cache[i][j] = Double.MAX_VALUE; }
+							cache[i][j] = Math.min(cache[i][j], (this.knots.get(j).getDistance(this.knots.get(element-1)) + rek(iStartKnot, PowerSetBuilder.buildPowerSet(tmpList))));	//Array wird noch nicht korrekt durchlaufen
+						}
+					}
+				}
+			}
+		}
+		
+		return 0.0;	
 	}
 	/**
 	 * Gibt den Knoten zurück der am nähesten zum übergebenen {@link rootKnot} ist und zeichnet deren Verbindung.

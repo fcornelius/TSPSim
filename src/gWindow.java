@@ -353,10 +353,11 @@ public class gWindow {
 		
 		comboBoxMode.setPreferredSize(new Dimension(156, 27));
 		comboBoxMode.addItem("BruteForce");
+		comboBoxMode.addItem("Dynamische Programmierung");
 		comboBoxMode.addItem("NearestNeighbour");
 		comboBoxMode.addItem("Best NearestNeighbour");
 		comboBoxMode.addItem("MST-Transform");
-		comboBoxMode.setSelectedIndex(1);
+		comboBoxMode.setSelectedIndex(0);
 		
 		//   Nächster NN Button
 		btnNext = new JButton("N\u00E4chster");
@@ -375,11 +376,14 @@ public class gWindow {
 		 			bruteForce(instanz);
 		 			break;
 		 		case 1:
-		 			NN_Solve(instanz);
+		 			dynProgramming(instanz);
 		 			break;
 		 		case 2:
-		 			bestNN(instanz);
+		 			NN_Solve(instanz);
+		 			break;
 		 		case 3:
+		 			bestNN(instanz);
+		 		case 4:
 		 			
 		 		}
 		 		
@@ -463,10 +467,10 @@ public class gWindow {
 		btnNext.addActionListener(new ActionListener() {
 		   	public void actionPerformed(ActionEvent e) {
 		   		switch (comboBoxMode.getSelectedIndex()) {
-		 		case 1:
+		 		case 2:
 		 			NN_Next(instanz);
 		 			break;
-		 		case 3: 
+		 		case 4: 
 		 			MST(instanz);
 		 			break;
 		   		}
@@ -482,14 +486,18 @@ public class gWindow {
 					btnNext.setText("Nächster");
 					break;
 				case 1: 
-					btnNext.setEnabled(true);
-					btnNext.setText("Nächster");
-					break;
-				case 2:
 					btnNext.setEnabled(false);
 					btnNext.setText("Nächster");
 					break;
+				case 2: 
+					btnNext.setEnabled(true);
+					btnNext.setText("Nächster");
+					break;
 				case 3:
+					btnNext.setEnabled(false);
+					btnNext.setText("Nächster");
+					break;
+				case 4:
 					btnNext.setText("MST");
 					btnNext.setEnabled(true);
 					btnAuflsen.setEnabled(false);
@@ -737,6 +745,13 @@ public class gWindow {
 	private void bruteForce(Instance inst) {
 		
 		inst.bruteForceSolve(canvas);
+		canvas.repaint();
+		logResult(inst);
+	}
+	
+	private void dynProgramming(Instance inst) {
+		
+		inst.dynProgrammingSolve(canvas);
 		canvas.repaint();
 		logResult(inst);
 	}
