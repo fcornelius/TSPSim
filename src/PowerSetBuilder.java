@@ -10,7 +10,7 @@ public class PowerSetBuilder {
 			this.set.add(i+1);
 	}
 	
-	public ArrayList<Integer> getSet() {
+	public ArrayList<Integer> getSetWithoutEmptySet() {
 		return new ArrayList<Integer>(this.set.subList(1, this.set.size()));
 	}
 	
