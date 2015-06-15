@@ -15,6 +15,8 @@ public class Instance {
 	private ArrayList<Knot> knots;
 	private ArrayList<Knot> neighbours;
 	private ArrayList<Knot> spanningTreeKnots;
+	private ArrayList<Edge> spanningTreeEdges;
+	public ArrayList<Knot> mstRoute;
 	private ArrayList<Edge> completeGraph;
 	private ArrayList<Edge> edges;
 	private ArrayList<Integer> minRoute;
@@ -40,6 +42,8 @@ public class Instance {
 		neighbours = new ArrayList<Knot>();
 		furthestKnots = new Knot[2];
 		spanningTreeKnots = new ArrayList<Knot>();
+		spanningTreeEdges = new ArrayList<Edge>();
+		mstRoute = new ArrayList<Knot>();
 		completeGraph = new ArrayList<Edge>();
 		edges = new ArrayList<Edge>();
 		stopWatch = new Interval();
@@ -103,6 +107,10 @@ public class Instance {
 	 */
 	public boolean isReady() {
 		return (knots.size()==neighbours.size());
+	}
+	
+	public boolean hasMST() {
+		return (spanningTreeKnots.size() > 0);
 	}
 	/**
 	 * Gibt an ob die Instanz vollständig gelöst wurde, also ob alle Neighbours entfernt wurden.
@@ -173,13 +181,13 @@ public class Instance {
 		PermutationBuilder pb = new PermutationBuilder();
 		routes = pb.BuildList(getCount()-1,true);
 		minRoute = routes.get(0);							// Route: Der Pfad des Weges (die Permutation)
-		double minTour = getTour(routes.get(0));      	    // Tour:  Die Länge einer Route
+		double minTour = getIndexedTour(routes.get(0));      	    // Tour:  Die Länge einer Route
 		double thisTour;
 		permutTime = stopWatch.getMills();
 		
 		for (ArrayList<Integer> thisRoute : routes) {
 			
-			thisTour = getTour(thisRoute);
+			thisTour = getIndexedTour(thisRoute);
 			if (thisTour < minTour) { minTour = thisTour; minRoute = thisRoute; }
 		}
 		stopWatch.stop();
@@ -187,7 +195,7 @@ public class Instance {
 		stopWatch.reset();
 		
 		wayLength = minTour;
-		canvas.drawRoute(this, minRoute);
+		canvas.drawIndexedRoute(this, minRoute);
 	}
 	
 	public void dynProgrammingSolve(SquareCanvas canvas) {
@@ -206,7 +214,7 @@ public class Instance {
 		calcTime = stopWatch.getMills();
 		stopWatch.reset();
 		
-		canvas.drawRoute(this, minRoute);
+//		canvas.drawRoute(this, minRoute);
 	}
 	
 	private double rek(int iStartKnot, ArrayList<ArrayList<Integer>> set) {
@@ -311,11 +319,15 @@ public class Instance {
 			for (Edge thisEdge : completeGraph) {
 				if (spanningTreeKnots.contains(thisEdge.getStart()) ^ spanningTreeKnots.contains(thisEdge.getEnd())) {
 					canvas.drawEdge(thisEdge);
+					
+					
+					
 					addEdgeToTree(thisEdge);
 					break;
 				} 
 			}
 		}
+		
 		stopWatch.stop();
 		calcTime = stopWatch.getMills();
 		stopWatch.reset();
@@ -325,9 +337,32 @@ public class Instance {
 		if (!spanningTreeKnots.contains(e.getStart())) spanningTreeKnots.add(e.getStart());
 		if (!spanningTreeKnots.contains(e.getEnd())) spanningTreeKnots.add(e.getEnd());
 		completeGraph.remove(e);
+		spanningTreeEdges.add(e);
+		
+		e.getStart().addAjacentKnot(e.getEnd());
+		e.getEnd().addAjacentKnot(e.getStart());
 	}
 	
-	public double getTour(ArrayList<Integer> route) {
+	public void nextKnotfromTree(Knot thisKnot) {
+		
+		if (mstRoute.contains(thisKnot)) return;
+		
+		mstRoute.add(thisKnot);
+		for (Knot ak : thisKnot.getAdjacentKnots()) nextKnotfromTree(ak);
+	}
+	
+	public void showMSTwithTSP(SquareCanvas canvas) {
+		
+		canvas.redraw(SquareCanvas.REDRAW_KNOTS, SquareCanvas.CLEAR_EDGES);
+		canvas.setOverlayBack();
+		for (Edge e : spanningTreeEdges) canvas.drawEdge(e);
+		canvas.setOverlayFront();
+		canvas.drawRoute(this, mstRoute);
+		
+		
+	}
+	
+	public double getIndexedTour(ArrayList<Integer> route) {
 		
 		double tourLength = getKnot(0).getDistance(getKnot(route.get(0)));
 		for (int i=0; i<route.size(); i++) {
@@ -335,6 +370,15 @@ public class Instance {
 			else tourLength += getKnot(route.get(i)).getDistance(getKnot(0));
 		} return tourLength;
 	}
+	
+	public double getTour(ArrayList<Knot> route) {
+		double tourLength = 0;
+		for (int i=0; i<route.size(); i++) {
+			if (i < route.size()-1) tourLength += route.get(i).getDistance(route.get(i+1));
+			else tourLength += route.get(i).getDistance(route.get(0));
+		} return tourLength;
+	}
+	
 	
 	public String getResult(int mode) {
 		
@@ -346,17 +390,17 @@ public class Instance {
 					"Das entspricht einer durchschnittlichen Rechenzeit von %.2f µs pro Route", 
 					wayLength, routes.indexOf(minRoute), routes.size(), permutTime, calcTime-permutTime, calcTime, ((calcTime)/(double)routes.size()) * 1000); 
 			break;
-		case 1: 
+		case 2: 
 			result += String.format("Nearest-Neighbour Verfahren.\n" +
 					"Länge des Weges: %.5f Gewählter Startknoten: %s Längste Teilstrecke zwischen: %s und %s, %.5f\nRechenzeit: %.2f ms", 
 					wayLength, knots.get(startKnot), furthestKnots[0], furthestKnots[1], maxDist,calcTime);
 			break;
-		case 2: 
+		case 3: 
 			result += String.format("Best-Nearest-Neighbour Verfahren.\n" +
 					"Länge des Weges: %.5f Bester Startknoten: %s Längste Teilstrecke zwischen: %s und %s, %.5f\nRechenzeit: %.2f ms", 
 					wayLength, knots.get(startKnot), furthestKnots[0], furthestKnots[1], maxDist,calcTime);
 			break;
-		case 3:
+		case 4:
 			result += String.format("Minimum-Spanning-Tree Verfahren.\n" +
 					"Rechenzeit: %.2f ms", calcTime);
 			break;

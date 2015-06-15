@@ -32,6 +32,9 @@ public class SquareCanvas extends JPanel {
 	
 	public static final int REDRAW_ALL = 0;
 	public static final int REDRAW_KNOTS = 1;
+	public static final int CLEAR_ALL = 0;
+	public static final int CLEAR_EDGES = 1;
+	public static final int KEEP_BUFFER = 2;
 	
 	private BufferedImage bi;
 	private BufferedImage bi_overlay;
@@ -78,7 +81,7 @@ public class SquareCanvas extends JPanel {
 		g2D_cursor.setColor(Color.lightGray);
 		g2D_cursor.setBackground(new Color(0,true));
 		
-		flushGraphics(false,true); 
+		flushGraphics(KEEP_BUFFER,true); 
 	}
 	
 	public BufferedImage getImage() {
@@ -116,11 +119,11 @@ public class SquareCanvas extends JPanel {
 		drawEdge(new Edge(start, end));
 	}
 	
-	public void redraw(int mode) {
+	public void redraw(int drawMode, int clearMode) {
 		
-		flushGraphics(false,false);
+		flushGraphics(clearMode,false);
 		
-		switch (mode) {
+		switch (drawMode) {
 		case REDRAW_ALL:
 			redrawEdges();
 		case REDRAW_KNOTS:
@@ -142,14 +145,29 @@ public class SquareCanvas extends JPanel {
 		for (Edge e : edgeBuffer) drawEdge(e);
 	}
 	
-	public void drawRoute(Instance inst, ArrayList<Integer> route) {
+	public void drawIndexedRoute(Instance inst, ArrayList<Integer> route) {
 		
 		drawEdge(inst.getKnot(0),inst.getKnot(route.get(0)));
-		
 		for (int i=0; i<route.size(); i++) {
 			if (i < route.size()-1) drawEdge(inst.getKnot(route.get(i)), inst.getKnot(route.get(i+1)));
 			else drawEdge(inst.getKnot(route.get(i)), inst.getKnot(0));
 		}
+	}
+	public void drawRoute(Instance inst, ArrayList<Knot> route) {
+
+		for (int i=0; i<route.size(); i++) {
+			if (i < route.size()-1) drawEdge((route.get(i)), route.get(i+1));
+			else drawEdge(route.get(i), route.get(0));
+		}
+	}
+	
+	public void setOverlayBack() {
+		g2D.setStroke(new BasicStroke(4));
+		g2D.setColor(Color.cyan);
+	}
+	public void setOverlayFront() {
+		g2D.setStroke(new BasicStroke(1));
+		g2D.setColor(Color.blue);
 	}
 	
 	public void setBackground(BufferedImage back, float scale, int offsetX, int offsetY, float alpha) {
@@ -178,7 +196,7 @@ public class SquareCanvas extends JPanel {
 		
 	}
 	
-	public void flushGraphics(boolean clearBuffer, boolean clearBack) {
+	public void flushGraphics(int clearMode, boolean clearBack) {
 		
 		
 		g2D.clearRect(0, 0,width, height);
@@ -193,7 +211,14 @@ public class SquareCanvas extends JPanel {
 		
 //		g2D.setColor(Colors.colors[mainFrame.comboBox.getSelectedIndex()]); //TODO Getter
 		
-		if (clearBuffer) { knotBuffer.clear(); edgeBuffer.clear(); }
+		switch (clearMode) {
+		case CLEAR_ALL:
+			knotBuffer.clear();
+		case CLEAR_EDGES:
+			edgeBuffer.clear();
+			break;
+		}
+		
 		updateGraphics();
 		repaint();
 	}

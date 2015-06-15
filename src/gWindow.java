@@ -181,7 +181,7 @@ public class gWindow {
 		frame.getContentPane().add(panel_1);
 		
 		//   Linie Label
-		lblLinie = new JLabel("Linienstärke: ");
+		lblLinie = new JLabel("LinienstÃ¤rke: ");
 		panel_1.add(lblLinie);
 		
 		//   Linie ComboBox mit Items 1 bis 4
@@ -257,8 +257,8 @@ public class gWindow {
 		list.setBounds(243, 240, 59, 81);
 		
 		blank = new DefaultListModel<String>();
-		blank.addElement("Über 'Neue Instanz'");
-		blank.addElement("Knoten hinzufügen.");
+		blank.addElement("Ãœber 'Neue Instanz'");
+		blank.addElement("Knoten hinzufÃ¼gen.");
 		list.setModel(blank);
 		
 		sp_knots = new JScrollPane(list);
@@ -321,7 +321,7 @@ public class gWindow {
 		lblFh.setVerticalAlignment(SwingConstants.BOTTOM);
 		lblFh.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		
-		lblFhKln = new JLabel("FH Köln");
+		lblFhKln = new JLabel("FH KÃ¶ln");
 		lblFhKln.setForeground(Color.DARK_GRAY);
 		lblFhKln.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panelLogo.add(lblFhKln);
@@ -351,24 +351,27 @@ public class gWindow {
 		comboBoxMode = new JComboBox<String>();
 		panel_3.add(comboBoxMode);
 		
-		comboBoxMode.setPreferredSize(new Dimension(156, 27));
-		comboBoxMode.addItem("BruteForce");
-		comboBoxMode.addItem("Dynamische Programmierung");
-		comboBoxMode.addItem("NearestNeighbour");
-		comboBoxMode.addItem("Best NearestNeighbour");
-		comboBoxMode.addItem("MST-Transform");
+		
+		comboBoxMode.setPreferredSize(new Dimension(180, 27));
+		comboBoxMode.addItem("<html><b style='color: blue;'>[E]</b> BruteForce</html>");
+		comboBoxMode.addItem("<html><b style='color: blue;'>[E]</b> Dyn. Programmierung</html>");
+		comboBoxMode.addItem("<html><b style='color: green;'>[H]</b> NearestNeighbour</html>");
+		comboBoxMode.addItem("<html><b style='color: green;'>[H]</b> Best NearestNeighbour</html>");
+		comboBoxMode.addItem("<html><b style='color: green;'>[H]</b> MST-Transform</html>");
+		comboBoxMode.addItem("<html><b style='color: green;'>[H]</b> Best MST-Transform</html>");
 		comboBoxMode.setSelectedIndex(0);
 		
-		//   Nächster NN Button
+		//   NÃ¤chster NN Button
 		btnNext = new JButton("N\u00E4chster");
 		panel_3.add(btnNext);
-		btnNext.setPreferredSize(new Dimension(85, 27));
+		btnNext.setMinimumSize(new Dimension(85, 27));
 		btnNext.setEnabled(false);
+		btnNext.setVisible(false);
 		
-		//   Auflösen Button
+		//   AuflÃ¶sen Button
 		 btnAuflsen = new JButton("L\u00F6sen");
 		 panel_3.add(btnAuflsen);
-		 btnAuflsen.setPreferredSize(new Dimension(70, 27));
+		 btnAuflsen.setMinimumSize(new Dimension(70, 27));
 		 btnAuflsen.addActionListener(new ActionListener() {
 		 	public void actionPerformed(ActionEvent e) {
 		 		switch (comboBoxMode.getSelectedIndex()) {
@@ -383,8 +386,13 @@ public class gWindow {
 		 			break;
 		 		case 3:
 		 			bestNN(instanz);
+		 			break;
 		 		case 4:
-		 			
+		 			transformMST(instanz);
+		 			break;
+		 		case 5:
+		 			bestMST(instanz);
+		 			break;
 		 		}
 		 		
 		 	}
@@ -402,7 +410,7 @@ public class gWindow {
 		  chckbxGeschlossen.setOpaque(false);
 		  chckbxGeschlossen.setSelected(true);
 		  
-		//   Debug Checkbox mit Changehandler, ändert Framehöhe
+		//   Debug Checkbox mit Changehandler, Ã¤ndert FramehÃ¶he
 		chckbxDebug = new JCheckBox("Stats");
 		panel_3.add(chckbxDebug);
 		chckbxDebug.setOpaque(false);
@@ -473,6 +481,9 @@ public class gWindow {
 		 		case 4: 
 		 			MST(instanz);
 		 			break;
+		 		case 5: 
+		 			MST(instanz);
+		 			break;
 		   		}
 		   	}
 		   });
@@ -482,25 +493,34 @@ public class gWindow {
 			public void itemStateChanged(ItemEvent e) {
 				switch (comboBoxMode.getSelectedIndex()) {
 				case 0: 
-					btnNext.setEnabled(false);
-					btnNext.setText("Nächster");
+					btnNext.setVisible(false);
+					btnAuflsen.setText("LÃ¶sen");
 					break;
 				case 1: 
-					btnNext.setEnabled(false);
-					btnNext.setText("Nächster");
+					btnNext.setVisible(false);
+					btnAuflsen.setText("LÃ¶sen");
 					break;
 				case 2: 
-					btnNext.setEnabled(true);
-					btnNext.setText("Nächster");
+					btnNext.setVisible(true);
+					btnNext.setText("NÃ¤chster");
+					btnAuflsen.setText("LÃ¶sen");
 					break;
 				case 3:
-					btnNext.setEnabled(false);
-					btnNext.setText("Nächster");
+					btnNext.setVisible(false);
+					btnAuflsen.setText("LÃ¶sen");
 					break;
 				case 4:
-					btnNext.setText("MST");
-					btnNext.setEnabled(true);
-					btnAuflsen.setEnabled(false);
+					btnNext.setVisible(true);
+					btnNext.setText("MST berechnen");
+					if (instanz != null) btnAuflsen.setEnabled(instanz.hasMST());
+					btnAuflsen.setText("Transformieren");
+					break;
+				case 5:
+					btnNext.setVisible(true);
+					btnNext.setText("MST berechnen");
+					if (instanz != null) btnAuflsen.setEnabled(instanz.hasMST());
+					btnAuflsen.setText("Transformieren");
+					break;
 				
 				}
 			}
@@ -618,7 +638,7 @@ public class gWindow {
 		mntmZurcksetzen = new JMenuItem("Zur\u00FCcksetzen");
 		mntmZurcksetzen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				canvas.redraw(SquareCanvas.REDRAW_KNOTS);
+				canvas.redraw(SquareCanvas.REDRAW_KNOTS, SquareCanvas.CLEAR_EDGES);
 			}
 		});
 		mnInstanz.add(mntmZurcksetzen);
@@ -647,13 +667,13 @@ public class gWindow {
 		@Override
 		public void itemStateChanged(ItemEvent e) {
 			
-			if (chckbxAutoupdate.isSelected()) canvas.redraw(SquareCanvas.REDRAW_ALL);
+			if (chckbxAutoupdate.isSelected()) canvas.redraw(SquareCanvas.REDRAW_ALL, SquareCanvas.KEEP_BUFFER);
 			else canvas.updateGraphics();
 		}
 		@Override
 		public void stateChanged(ChangeEvent e) {
 
-			if (chckbxAutoupdate.isSelected()) canvas.redraw(SquareCanvas.REDRAW_ALL);
+			if (chckbxAutoupdate.isSelected()) canvas.redraw(SquareCanvas.REDRAW_ALL, SquareCanvas.KEEP_BUFFER);
 			else canvas.updateGraphics();
 		}
 	}
@@ -697,25 +717,25 @@ public class gWindow {
 	}
 	
 	/**
-	 * Setzt sowohl die Instanz als auch das Canvas zurück:
-	 * Knotenliste wird überschrieben, Canvas wird mit weißem Rechteck übermalt (flushCanvas()),
-	 * Steuerelemente werden zurückgesetzt: Knotenliste wieder in voller Höhe, Lösen-Buttons deaktiviert,
+	 * Setzt sowohl die Instanz als auch das Canvas zurÃ¼ck:
+	 * Knotenliste wird Ã¼berschrieben, Canvas wird mit weiÃŸem Rechteck Ã¼bermalt (flushCanvas()),
+	 * Steuerelemente werden zurÃ¼ckgesetzt: Knotenliste wieder in voller HÃ¶he, LÃ¶sen-Buttons deaktiviert,
 	 * Weiderholen-Button und Ergebnis-Label als unsichtbar gesetzt
 	 */
 	private void Reset() {
 		
 		list.setModel(blank);
 		
-		canvas.flushGraphics(true,true);
+		canvas.flushGraphics(SquareCanvas.CLEAR_ALL,true);
 		btnNext.setEnabled(false);
 		btnAuflsen.setEnabled(false);
 		
 	}
 
 	/**
-	 * Erzeugt ein neues Objekt der Klasse Instance und fügt diesem dei festgelegte Anzahl der Knoten hinzu.<br>
-	 * Jeder Knoten wird über das DefaultListModel in die JList aufgenommen und mit {@link  drawPoint} auf das 
-	 * BufferedImage, das zu g gehört gezeichnet. Das BufferedImage wird anschließend dem CanvasLabel zugeordnet.
+	 * Erzeugt ein neues Objekt der Klasse Instance und fÃ¼gt diesem dei festgelegte Anzahl der Knoten hinzu.<br>
+	 * Jeder Knoten wird Ã¼ber das DefaultListModel in die JList aufgenommen und mit {@link  drawPoint} auf das 
+	 * BufferedImage, das zu g gehÃ¶rt gezeichnet. Das BufferedImage wird anschlieÃŸend dem CanvasLabel zugeordnet.
 	 * 
 	 * @return den Verweis auf die erstellte Instanz
 	 */
@@ -729,7 +749,7 @@ public class gWindow {
 		for (int i = 0; i<count; i++) {
 			Knot n = new Knot(i);
 			inst.addKnot(n);
-			knotenlist.addElement(n.toString()); //TODO Setter von Instance-Klasse aus wäre schöner, dann erstellen der Instanz über new Instance(count)
+			knotenlist.addElement(n.toString()); //TODO Setter von Instance-Klasse aus wÃ¤re schÃ¶ner, dann erstellen der Instanz Ã¼ber new Instance(count)
 			canvas.drawKnot(n);
 		}
 		
@@ -757,19 +777,19 @@ public class gWindow {
 	}
 
 	/**
-	 * Zeigt den nächstgelenen Knoten zum ausgewählten in der JList an.
-	 * Über nearestNeighbour wird dieser auf das Graphics-Objekt g gezeichnet, 
-	 * welches anschließend durch drawToCanvas auf die Zeichenfläche angewandt wird
+	 * Zeigt den nÃ¤chstgelenen Knoten zum ausgewÃ¤hlten in der JList an.
+	 * Ãœber nearestNeighbour wird dieser auf das Graphics-Objekt g gezeichnet, 
+	 * welches anschlieÃŸend durch drawToCanvas auf die ZeichenflÃ¤che angewandt wird
 	 * <br>Bedingunen:<br>
-	 * Ein Knoten ist ausgewählt und die Instanz ist bereit, also es wurde noch kein Neighbour der Liste entfernt.
+	 * Ein Knoten ist ausgewÃ¤hlt und die Instanz ist bereit, also es wurde noch kein Neighbour der Liste entfernt.
 	 * @see isReady
 	 * @see nearestNeighbour
 	 * 
-	 * @param inst der Verweis auf die zu lösende Instanz
+	 * @param inst der Verweis auf die zu lÃ¶sende Instanz
 	 */
-	private void NN_Next(Instance inst) {     //TODO NN Next und Solve zusammenführen, über Parameter step steuern
+	private void NN_Next(Instance inst) {     //TODO NN Next und Solve zusammenfÃ¼hren, Ã¼ber Parameter step steuern
 		
-		if (list.getSelectedIndex() == -1) JOptionPane.showMessageDialog(null, "Zuerst einen Startknoten in der Liste auswählen");
+		if (list.getSelectedIndex() == -1) JOptionPane.showMessageDialog(null, "Zuerst einen Startknoten in der Liste auswÃ¤hlen");
 		else {
 			boolean closed = chckbxGeschlossen.isSelected();
 			if (inst.isReady()) inst.setStart(list.getSelectedIndex());
@@ -780,14 +800,14 @@ public class gWindow {
 			canvas.repaint();
 		}
 		if (inst.isFinished()) {
-			btnNext.setEnabled(false);
+			
 			logResult(inst);
 		}
 	}
 	
 	private void NN_Solve(Instance inst) {
 		
-		if (list.getSelectedIndex() == -1) JOptionPane.showMessageDialog(null, "Zuerst einen Startknoten in der Liste auswählen");
+		if (list.getSelectedIndex() == -1) JOptionPane.showMessageDialog(null, "Zuerst einen Startknoten in der Liste auswÃ¤hlen");
 		else {
 			boolean closed = chckbxGeschlossen.isSelected();
 			if (inst.isReady()) inst.setStart(list.getSelectedIndex());
@@ -836,6 +856,53 @@ public class gWindow {
 		inst.makeMST(canvas);
 		canvas.repaint();
 		logResult(inst);
+		btnAuflsen.setEnabled(true);
+	}
+	
+	private void transformMST(Instance inst) {
+		
+		if (!inst.hasMST()) JOptionPane.showMessageDialog(null, "Zuerst MST berechnen!");
+		if (list.getSelectedIndex() == -1) JOptionPane.showMessageDialog(null, "Zuerst einen Startknoten in der Liste auswÃ¤hlen");
+		else {
+			 Knot start = inst.getKnot(list.getSelectedIndex());
+			 inst.mstRoute = new ArrayList<Knot>();
+			 
+			 inst.nextKnotfromTree(start);
+			 inst.showMSTwithTSP(canvas);
+			 
+			 System.out.println("LÃ¤nge: " + inst.getTour(inst.mstRoute));
+			 canvas.updateGraphics();
+			 canvas.repaint();
+		}
+	}
+	
+	private void bestMST(Instance inst) {
+		
+		if (!inst.hasMST()) JOptionPane.showMessageDialog(null, "Zuerst MST berechnen!");
+		
+		double minTour = 0;
+		double thisTour;
+		Knot bestStart = null;
+		
+		for (int i = 0; i<inst.getCount();i++) {
+			
+			inst.mstRoute = new ArrayList<Knot>();
+			inst.nextKnotfromTree(inst.getKnot(i));
+			thisTour = inst.getTour(inst.mstRoute);
+			
+			if ((i==0) || thisTour < minTour) {
+				minTour = thisTour;
+				bestStart = inst.getKnot(i);
+			}
+		}
+		
+		inst.mstRoute = new ArrayList<Knot>();
+		inst.nextKnotfromTree(bestStart);
+		inst.showMSTwithTSP(canvas);
+		 
+		 System.out.println("LÃ¤nge: " + inst.getTour(inst.mstRoute) + "Bester Start: " + bestStart);
+		 canvas.updateGraphics();
+		 canvas.repaint();
 	}
 	
 	
@@ -867,8 +934,8 @@ public class gWindow {
 			logLine("Konnte keine Verbindung aufbauen zu " + e.getMessage());
 			logLine(e.getClass() +" in " +  e.getStackTrace()[0]); 
 			JOptionPane.showMessageDialog(null, "Konnte keine Verbindung zu TSPLib aufbauen.\n"
-					+ "Prüfen Sie ob eine Netzwerkverbindung besteht und TSPSim über lokale Firewalls freigegeben ist.\n"
-					+ "Für Details Log einsehen");}
+					+ "PrÃ¼fen Sie ob eine Netzwerkverbindung besteht und TSPSim Ã¼ber lokale Firewalls freigegeben ist.\n"
+					+ "FÃ¼r Details Log einsehen");}
 		
 	}
 	
@@ -899,7 +966,7 @@ public class gWindow {
 			} 
 			
 			if (tspLine.trim().equals("EOF") || (tspLine.trim().length() == 0)) {
-					JOptionPane.showMessageDialog(null, "Fehler beim Laden der TSP Datei. Für Details Log einsehen.");
+					JOptionPane.showMessageDialog(null, "Fehler beim Laden der TSP Datei. FÃ¼r Details Log einsehen.");
 					logLine("Fehler beim Laden von " + name + ".tsp");
 					logLine("  Es wurde keine Koordinatenliste gefunden (NODE_COORD_SECTION/DISPLAY_DATA_SECTION)");
 					logLine("  Vermutlich handelt es sich um eine Entfernungsdefinierte Instanz (EDGE_WEIGHT_SECTION)");
