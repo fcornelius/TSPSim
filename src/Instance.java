@@ -203,7 +203,7 @@ public class Instance {
 		stopWatch.start();
 		cache = new double[1 << (this.knots.size()-1)][this.knots.size()];
 		PowerSetBuilder psb = new PowerSetBuilder(this.knots.size());
-		powerSets = PowerSetBuilder.buildPowerSet(psb.getSet());
+//		powerSets = PowerSetBuilder.buildPowerSet(psb.getSet());
 		
 		for(int i = 0; i < this.knots.size(); i++) {
 			cache[0][i] = this.knots.get(0).getDistance(this.knots.get(i));
