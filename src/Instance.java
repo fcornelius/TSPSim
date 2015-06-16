@@ -34,7 +34,8 @@ public class Instance {
 	private int startKnot;
 	private double maxDist;
 	private Knot[] furthestKnots;
-	private double wayLength;
+	public Knot MSTbestStart;
+	public double wayLength;
 	private double calcTime;
 	private double permutTime;
 	private double[][] cache;
@@ -416,26 +417,28 @@ public class Instance {
 		case 2: 
 			result += String.format("Nearest-Neighbour Verfahren.\n" +
 					"Länge des Weges: %.5f Gewählter Startknoten: %s Längste Teilstrecke zwischen: %s und %s, %.5f\nRechenzeit: %.2f ms", 
-					wayLength, knots.get(startKnot), furthestKnots[0], furthestKnots[1], maxDist,calcTime);
+					wayLength, knots.get(startKnot), furthestKnots[0], furthestKnots[1], maxDist,stopWatch.getMills());
 			break;
 		case 3: 
 			result += String.format("Best-Nearest-Neighbour Verfahren.\n" +
 					"Länge des Weges: %.5f Bester Startknoten: %s Längste Teilstrecke zwischen: %s und %s, %.5f\nRechenzeit: %.2f ms", 
-					wayLength, knots.get(startKnot), furthestKnots[0], furthestKnots[1], maxDist,calcTime);
+					wayLength, knots.get(startKnot), furthestKnots[0], furthestKnots[1], maxDist,stopWatch.getMills());
 			break;
 		case 4:
 			result += String.format("Minimum-Spanning-Tree Verfahren. (Berechnung des Spanning-Trees)\n" +
-					"Rechenzeit: %.2f ms", calcTime);
+					"Rechenzeit: %.2f ms Kanten im Spanning-Tree: %d", calcTime,spanningTreeEdges.size());
 			break;
 		case 5:
 			result += String.format("Minimum-Spanning-Tree Transformation\n" +
-					"Länge des Weges: %.5f Rechenzeit: %.2f ms", wayLength, calcTime);
+					"Länge des Weges: %.5f Rechenzeit: %.2f ms", getTour(mstRoute), stopWatch.getMills());
 			break;
 		case 6:
 			result += String.format("Best Minimum-Spanning-Tree Transformation\n" +
-					"Länge des Weges: %.5f Bester Startknoten: %s Rechenzeit: %.2f ms", wayLength, calcTime);
+					"Länge des Weges: %.5f Bester Startknoten: %s Rechenzeit: %.2f ms", getTour(mstRoute), MSTbestStart, stopWatch.getMills());
 			break;
 		}
+		
+		stopWatch.reset();
 		return result;
 	}
 }

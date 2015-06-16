@@ -771,14 +771,14 @@ public class gWindow {
 		
 		inst.bruteForceSolve(canvas);
 		canvas.repaint();
-		logResult(inst);
+		logResult(inst, Instance.MODE_BRUTEFORCE);
 	}
 	
 	private void dynProgramming(Instance inst) {
 		
 		inst.dynProgrammingSolve(canvas);
 		canvas.repaint();
-		logResult(inst);
+		logResult(inst, Instance.MODE_DYNPROG);
 	}
 
 	/**
@@ -806,7 +806,7 @@ public class gWindow {
 		}
 		if (inst.isFinished()) {
 			
-			logResult(inst);
+			
 		}
 	}
 	
@@ -818,11 +818,12 @@ public class gWindow {
 			if (inst.isReady()) inst.setStart(list.getSelectedIndex());
 			
 			Knot knot = inst.getKnot(list.getSelectedIndex());
+			inst.stopWatch.start();
 			while (!inst.isFinished()) knot = inst.nearestNeighbour(knot, closed, false, true, canvas, null);
-
+			inst.stopWatch.stop();
 			
 			canvas.repaint();
-			logResult(inst);
+			logResult(inst, Instance.MODE_NN);
 		}
 	
 	}
@@ -834,6 +835,7 @@ public class gWindow {
 		Knot bestStart = null;
 		boolean closed = chckbxGeschlossen.isSelected();
 		
+		inst.stopWatch.start();
 		for (int i = 0; i<inst.getCount();i++) {
 			
 			if (inst.isReady()) inst.setStart(i);
@@ -850,17 +852,17 @@ public class gWindow {
 		if (inst.isReady()) inst.setStart(bestStart.getId());
 		list.setSelectedIndex(bestStart.getId());
 		while (!inst.isFinished()) bestStart = inst.nearestNeighbour(bestStart, closed, false, true, canvas, null);
-		
+		inst.stopWatch.stop();
 		
 		canvas.repaint();
-		logResult(inst);
+		logResult(inst, Instance.MODE_BESTNN);
 	}
 	
 	private void MST(Instance inst) {
 		
 		inst.makeMST(canvas);
 		canvas.repaint();
-		logResult(inst);
+		logResult(inst, Instance.MODE_MSTBUILD);
 		btnAuflsen.setEnabled(true);
 	}
 	
@@ -869,15 +871,18 @@ public class gWindow {
 		if (!inst.hasMST()) JOptionPane.showMessageDialog(null, "Zuerst MST berechnen!");
 		if (list.getSelectedIndex() == -1) JOptionPane.showMessageDialog(null, "Zuerst einen Startknoten in der Liste auswählen");
 		else {
+			 inst.stopWatch.start();
 			 Knot start = inst.getKnot(list.getSelectedIndex());
 			 inst.mstRoute = new ArrayList<Knot>();
 			 
 			 inst.nextKnotfromTree(start);
+			 inst.stopWatch.stop();
 			 inst.showMSTwithTSP(canvas);
 			 
 			 System.out.println("Länge: " + inst.getTour(inst.mstRoute));
 
 			 canvas.repaint();
+			 logResult(inst, Instance.MODE_MSTTRANSFORM);
 		}
 	}
 	
@@ -885,6 +890,7 @@ public class gWindow {
 		
 		if (!inst.hasMST()) JOptionPane.showMessageDialog(null, "Zuerst MST berechnen!");
 		
+		inst.stopWatch.start();
 		double minTour = 0;
 		double thisTour;
 		bestStart = null;
@@ -900,14 +906,16 @@ public class gWindow {
 				bestStart = inst.getKnot(i);
 			}
 		}
-		
+		inst.MSTbestStart = bestStart;
 		inst.mstRoute = new ArrayList<Knot>();
 		inst.nextKnotfromTree(bestStart);
+		inst.stopWatch.stop();
 		inst.showMSTwithTSP(canvas);
 		 
 		 System.out.println("Länge: " + inst.getTour(inst.mstRoute) + "Bester Start: " + bestStart);
 		 canvas.updateGraphics();
 		 canvas.repaint();
+		 logResult(inst, Instance.MODE_BESTMST);
 	}
 	
 	
@@ -1059,8 +1067,8 @@ public class gWindow {
 		}
 	}
 	
-	public void logResult(Instance inst) {
-		int mode = comboBoxMode.getSelectedIndex();
+	public void logResult(Instance inst, int mode) {
+		
 		String result = inst.getResult(mode);
 		
 		txtDebug.setText(txtDebug.getText() + result + "\n\n");
