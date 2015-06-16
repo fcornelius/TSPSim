@@ -240,6 +240,7 @@ public class SquareCanvas extends JPanel {
 	private void drawCanvasBorder() {
 		int x1=0;
 		
+		g2D.setStroke(new BasicStroke(1));
 		g2D.setColor(Color.lightGray);
 		
 		g2D.drawLine(0, border+spacing, width, border+spacing);

@@ -12,6 +12,15 @@ public class Instance {
 	
 	private static final int floatingPointPrecision = 10;
 	
+	public static final int MODE_BRUTEFORCE = 0;
+	public static final int MODE_DYNPROG = 1;
+	public static final int MODE_NN = 2;
+	public static final int MODE_BESTNN = 3;
+	public static final int MODE_MSTBUILD = 4;
+	public static final int MODE_MSTTRANSFORM = 5;
+	public static final int MODE_BESTMST = 6;
+	
+	
 	private ArrayList<Knot> knots;
 	private ArrayList<Knot> neighbours;
 	private ArrayList<Knot> spanningTreeKnots;
@@ -58,6 +67,11 @@ public class Instance {
 	 * Weglänge ({@link wayLength}) und größte Teilstrecke ({@link maxDist}) werden zurückgesetzt.
 	 */
 	public void resetInstance() {
+		
+		spanningTreeEdges.clear();
+		spanningTreeKnots.clear();
+		mstRoute.clear();
+		edges.clear();
 		neighbours.clear();
 		for (Knot k : knots) neighbours.add(k);
 		maxDist = 0;
@@ -129,6 +143,10 @@ public class Instance {
 	}
 	public Knot getStartKnot() {
 		return knots.get(startKnot);
+	}
+	
+	public void mirrorKnots(int mode) {
+		
 	}
 	
 	public ArrayList<Knot> transformCoordinates(ArrayList<ArrayList<Double>> coords) {
@@ -390,6 +408,11 @@ public class Instance {
 					"Das entspricht einer durchschnittlichen Rechenzeit von %.2f µs pro Route", 
 					wayLength, routes.indexOf(minRoute), routes.size(), permutTime, calcTime-permutTime, calcTime, ((calcTime)/(double)routes.size()) * 1000); 
 			break;
+		case 1:
+			result += String.format("Dynamischer Programierung.\n" +
+					"Kürzeste Tour ist %.5f PE lang\nRechenzeit: %.2f ms\n",
+					wayLength, calcTime); 
+			break;
 		case 2: 
 			result += String.format("Nearest-Neighbour Verfahren.\n" +
 					"Länge des Weges: %.5f Gewählter Startknoten: %s Längste Teilstrecke zwischen: %s und %s, %.5f\nRechenzeit: %.2f ms", 
@@ -401,8 +424,16 @@ public class Instance {
 					wayLength, knots.get(startKnot), furthestKnots[0], furthestKnots[1], maxDist,calcTime);
 			break;
 		case 4:
-			result += String.format("Minimum-Spanning-Tree Verfahren.\n" +
+			result += String.format("Minimum-Spanning-Tree Verfahren. (Berechnung des Spanning-Trees)\n" +
 					"Rechenzeit: %.2f ms", calcTime);
+			break;
+		case 5:
+			result += String.format("Minimum-Spanning-Tree Transformation\n" +
+					"Länge des Weges: %.5f Rechenzeit: %.2f ms", wayLength, calcTime);
+			break;
+		case 6:
+			result += String.format("Best Minimum-Spanning-Tree Transformation\n" +
+					"Länge des Weges: %.5f Bester Startknoten: %s Rechenzeit: %.2f ms", wayLength, calcTime);
 			break;
 		}
 		return result;

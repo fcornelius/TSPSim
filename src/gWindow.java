@@ -112,6 +112,8 @@ public class gWindow {
 	private JMenuItem mntmDrehen;
 	private JMenuItem mntmZurcksetzen;
 	
+	public Knot bestStart;  //TODO in Instance Klasse verlagern!
+	
 	private int frameHeightPx;
 	private int frameHeightDebugPx;
 	private int canvasWidth;
@@ -162,6 +164,8 @@ public class gWindow {
 		} catch (Exception exp) { /* Fallback auf Metal LAF */ }
 		
 		//Forms-Komponenten von Oben nach Unten
+		
+		
 		
 		//   Frame
 		frame = new JFrame();
@@ -638,6 +642,7 @@ public class gWindow {
 		mntmZurcksetzen = new JMenuItem("Zur\u00FCcksetzen");
 		mntmZurcksetzen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (instanz != null) instanz.resetInstance();
 				canvas.redraw(SquareCanvas.REDRAW_KNOTS, SquareCanvas.CLEAR_EDGES);
 			}
 		});
@@ -871,7 +876,7 @@ public class gWindow {
 			 inst.showMSTwithTSP(canvas);
 			 
 			 System.out.println("Länge: " + inst.getTour(inst.mstRoute));
-			 canvas.updateGraphics();
+
 			 canvas.repaint();
 		}
 	}
@@ -882,7 +887,7 @@ public class gWindow {
 		
 		double minTour = 0;
 		double thisTour;
-		Knot bestStart = null;
+		bestStart = null;
 		
 		for (int i = 0; i<inst.getCount();i++) {
 			

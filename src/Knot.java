@@ -24,6 +24,7 @@ public class Knot {
 		this.x = x;
 		this.y = y;
 		this.id = id;
+		adjKnots = new ArrayList<Knot>();
 	}
 	
 	private int newXCoordinate() {
