@@ -11,15 +11,21 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 
@@ -55,16 +61,17 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JSeparator;
 
 import java.awt.SystemColor;
+import java.awt.BorderLayout;
+import java.awt.event.MouseAdapter;
 
 
 public class gWindow {
-	
+
 	public Instance instanz;
-		
+
 	private JFrame frame;
 
 	private JButton btnPoints;
-	private JTextField txtPoints;
 	public JCheckBox chckbxAntia;
 	private JButton btnReset;
 	public JComboBox<Integer> comboBox_linie;
@@ -111,9 +118,9 @@ public class gWindow {
 	private JMenuItem mntmZentrieren;
 	private JMenuItem mntmDrehen;
 	private JMenuItem mntmZurcksetzen;
-	
+
 	public Knot bestStart;  //TODO in Instance Klasse verlagern!
-	
+
 	private int frameHeightPx;
 	private int frameHeightDebugPx;
 	private int canvasWidth;
@@ -122,22 +129,32 @@ public class gWindow {
 	private int canvasPxHeight;
 	private int canvasSpacing;
 	private  int canvasBorder;
-	
+
+	private String tspName,tspType,tspComment;
+
 	private TSPLibIndex tspImport; 
-	
+	private ImageDialog imgDialog;
+	private Timer optTimer;
+
 	private MySQLConnection mysql;
-	
+	private JPanel pnlSpacer;
+	private JButton btnEditmode;
+	private JCheckBox chckbxDragmode;
+	private JButton btnLoad;
+	private JButton btnSave;
+	private JPanel pnlButtons;
+
 	/**
 	 * Launch the application. // Generiert durch WindowManager
 	 */
 	public static void main(String[] args) {
-		
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					gWindow window = new gWindow();
 					window.frame.setVisible(true);
-					
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -146,27 +163,25 @@ public class gWindow {
 	}
 
 	public gWindow() {
-//		mysql = new MySQLConnection();
-//		mysql.getTestVerbindungZuTestTable();
+		//		mysql = new MySQLConnection();
+		//		mysql.getTestVerbindungZuTestTable();
 		initialize();
-		
-		
-		
+
+
+
 	}
 
-	/**
-	 * Initialize the contents of the frame. //Generiert durch WindowManager
-	 */
+
 	private void initialize() {
 		try
 		{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception exp) { /* Fallback auf Metal LAF */ }
-		
+
 		//Forms-Komponenten von Oben nach Unten
-		
-		
-		
+
+
+
 		//   Frame
 		frame = new JFrame();
 		frame.setResizable(false);
@@ -183,22 +198,22 @@ public class gWindow {
 		flowLayout_1.setAlignment(FlowLayout.LEFT);
 		panel_1.setBounds(0, 50, 1209, 44);
 		frame.getContentPane().add(panel_1);
-		
+
 		//   Linie Label
 		lblLinie = new JLabel("Linienstärke: ");
 		panel_1.add(lblLinie);
-		
+
 		//   Linie ComboBox mit Items 1 bis 4
 		comboBox_linie = new JComboBox<Integer>();
 		comboBox_linie.setPreferredSize(new Dimension(40, 25));
 		for (int i = 1; i <= 4; i++) comboBox_linie.addItem(i);
 		comboBox_linie.addItemListener(new OptionListener());
 		panel_1.add(comboBox_linie);
-		
+
 		//   Punkt Label
 		lblPunkt = new JLabel("Punktradius: ");
 		panel_1.add(lblPunkt);
-		
+
 		//   Punkt ComboBox
 		comboBox_punkt = new JComboBox<Integer>();
 		comboBox_punkt.setPreferredSize(new Dimension(40, 25));
@@ -206,40 +221,72 @@ public class gWindow {
 		comboBox_punkt.setSelectedItem(comboBox_punkt.getItemAt(4));
 		comboBox_punkt.addItemListener(new OptionListener());
 		panel_1.add(comboBox_punkt);
-		
+
 		//   Color ComboBox mit Items aus Colors enum
 		comboBox = new JComboBox<String>();
 		comboBox.setPreferredSize(new Dimension(80, 25));
 		for (Colors.ColorNames c : Colors.ColorNames.values()) comboBox.addItem(c.toString());
 		comboBox.setSelectedItem(comboBox.getItemAt(12));
 		comboBox.addItemListener(new OptionListener());
-		
+
 		lblFarbe = new JLabel("Farbe:");
 		panel_1.add(lblFarbe);
 		panel_1.add(comboBox);
-		
+
 		chckbxAutoupdate = new JCheckBox("AutoUpdate");
+		chckbxAutoupdate.setFocusPainted(false);
 		chckbxAutoupdate.setSelected(true);
 		chckbxAutoupdate.setOpaque(false);
 		panel_1.add(chckbxAutoupdate);
-		
-		
+
+
 		//   AntiAliasing Checkbox
 		chckbxAntia = new JCheckBox("AntiAliasing");
+		chckbxAntia.setFocusPainted(false);
 		chckbxAntia.setOpaque(false);
 		panel_1.add(chckbxAntia);
 		chckbxAntia.setSelected(true);
-		
+
 		chckbxNummern = new JCheckBox("Nummern");
+		chckbxNummern.setFocusPainted(false);
 		chckbxNummern.setOpaque(false);
 		chckbxNummern.setSelected(true);
 		chckbxNummern.addChangeListener(new OptionListener());
 		panel_1.add(chckbxNummern);
+		
+		pnlSpacer = new JPanel();
+		pnlSpacer.setPreferredSize(new Dimension(270, 0));
+		panel_1.add(pnlSpacer);
+		
+		chckbxDragmode = new JCheckBox("dragMode");
+		chckbxDragmode.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				canvas.setDragMode(chckbxDragmode.isSelected());
+			}
+		});
+		chckbxDragmode.setVisible(false);
+		chckbxDragmode.setOpaque(false);
+		panel_1.add(chckbxDragmode);
+		
+		btnEditmode = new JButton("Eingabe beenden");
+		btnEditmode.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				canvas.stopEditMode();
+				mouseInstance();
+				
+				mouseMode(false);
+			}
+		});
+		btnEditmode.setVisible(false);
+		btnEditmode.setPreferredSize(new Dimension(130, 25));
+		panel_1.add(btnEditmode);
 		chckbxAntia.addChangeListener(new OptionListener());
-		
- 
-		
-	
+
+
+
+
 		//   Debug Textpane
 		txtDebug = new JTextPane();
 		txtDebug.setFont(new Font("Segoe UI", Font.PLAIN, 16));
@@ -247,30 +294,30 @@ public class gWindow {
 
 		//   Debug Scrollbar
 		JScrollPane sp = new JScrollPane(txtDebug,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-	    
-	    sp.setBounds(0, 742, 1209, 141);
-	    frame.getContentPane().add(sp);
-		
+
+		sp.setBounds(0, 742, 1209, 141);
+		frame.getContentPane().add(sp);
+
 		list = new JList<String>();
 		list.addListSelectionListener(new SelectionListener());
-			
-		
+
+
 		list.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		list.setBackground(Color.WHITE);
 		list.setBounds(243, 240, 59, 81);
-		
+
 		blank = new DefaultListModel<String>();
 		blank.addElement("Über 'Neue Instanz'");
 		blank.addElement("Knoten hinzufügen.");
 		list.setModel(blank);
-		
+
 		sp_knots = new JScrollPane(list);
 		sp_knots.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		sp_knots.setBounds(0, 96, 190, 584);
 		frame.getContentPane().add(sp_knots);
-		
-		
+
+
 		JPanel panel = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
 		flowLayout.setAlignment(FlowLayout.LEFT);
@@ -278,27 +325,27 @@ public class gWindow {
 		flowLayout.setHgap(0);
 		panel.setBounds(191, 96, 1001, 600);
 		frame.getContentPane().add(panel);
-		
+
 		canvasPxWidth = 1000;
 		canvasPxHeight = 600;
 		canvasSpacing = 6;
 		canvasBorder = 3;
 		canvasWidth = canvasPxWidth + 2*(canvasSpacing + canvasBorder);
 		canvasHeight = canvasPxHeight + 2*(canvasSpacing + canvasBorder);
-		
+
 		canvas = new SquareCanvas(canvasPxWidth, canvasPxHeight, canvasSpacing, canvasBorder, this);
-	
+
 		canvas.setPreferredSize(new Dimension(canvasWidth,canvasHeight));
 		panel.add(canvas);
 		panel.setBounds(panel.getX(), panel.getY(), canvasWidth, canvasHeight);
 		canvas.setBorder(BorderFactory.createLineBorder(Color.gray, canvasBorder));
-		
+
 		JPanel toolbar = new ImagePanel("UIElements/topbar.png");
 		FlowLayout flowLayout_5 = (FlowLayout) toolbar.getLayout();
 		flowLayout_5.setAlignment(FlowLayout.LEFT);
 		toolbar.setBounds(0, 0, 1209, 50);
 		frame.getContentPane().add(toolbar);
-		
+
 		panelLogo = new JPanel();
 		toolbar.add(panelLogo);
 		panelLogo.setOpaque(false);
@@ -307,55 +354,102 @@ public class gWindow {
 		flowLayout_2.setAlignOnBaseline(true);
 		flowLayout_2.setVgap(2);
 		flowLayout_2.setAlignment(FlowLayout.LEFT);
-		
+
 		lblLogo = new JLabel("TSPSim  ");
 		panelLogo.add(lblLogo);
 		lblLogo.setForeground(new Color(128, 0, 0));
 		lblLogo.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 18));
-		
+
 		lblVersion = new JLabel("v0.5");
 		lblVersion.setForeground(Color.GRAY);
 		lblVersion.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblVersion.setVerticalAlignment(SwingConstants.BOTTOM);
 		panelLogo.add(lblVersion);
-		
+
 		lblFh = new JLabel("MA2 Projekt SoSe '15");
 		lblFh.setForeground(Color.DARK_GRAY);
 		panelLogo.add(lblFh);
 		lblFh.setVerticalAlignment(SwingConstants.BOTTOM);
 		lblFh.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		
+
 		lblFhKln = new JLabel("FH Köln");
 		lblFhKln.setForeground(Color.DARK_GRAY);
 		lblFhKln.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panelLogo.add(lblFhKln);
 		
+		pnlButtons = new JPanel();
+		FlowLayout flowLayout_7 = (FlowLayout) pnlButtons.getLayout();
+		flowLayout_7.setHgap(0);
+		pnlButtons.setOpaque(false);
+		toolbar.add(pnlButtons);
+
 		//   Punkte Button
 		btnPoints = new JButton("Neue Instanz");
+		btnPoints.setFocusPainted(false);
+		pnlButtons.add(btnPoints);
+		btnPoints.setIcon(new ImageIcon(gWindow.class.getResource("/Icons/new_16.png")));
 		btnPoints.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnPoints.setPreferredSize(new Dimension(140, 35));
-		toolbar.add(btnPoints);
+		btnPoints.setPreferredSize(new Dimension(140, 30));
 		
-		//   Punkte Anzahl
-		txtPoints = new JTextField("10");
-		toolbar.add(txtPoints);
-		txtPoints.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtPoints.setPreferredSize(new Dimension(35, 30));
+		btnLoad = new JButton("");
+		btnLoad.setFocusPainted(false);
+		pnlButtons.add(btnLoad);
+		btnLoad.setBorderPainted(false);
+		btnLoad.setContentAreaFilled(false);
+		btnLoad.setPreferredSize(new Dimension(30, 30));
+		btnLoad.setIcon(new ImageIcon(gWindow.class.getResource("/Icons/load_16.png")));
+		btnLoad.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnLoad.setContentAreaFilled(true);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnLoad.setContentAreaFilled(false);
+			}
+		});
 		
+		btnSave = new JButton("");
+		btnSave.setFocusPainted(false);
+		pnlButtons.add(btnSave);
+		btnSave.setIcon(new ImageIcon(gWindow.class.getResource("/Icons/save_16_2.png")));
+		btnSave.setPreferredSize(new Dimension(30, 30));
+		btnSave.setBorderPainted(false);
+		btnSave.setContentAreaFilled(false);
+		
+		btnSave.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnSave.setContentAreaFilled(true);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnSave.setContentAreaFilled(false);
+			}
+		});
+		
+				btnPoints.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						InstAssist instDialog = new InstAssist(gWindow.this, canvas);
+		//				instanz = randInstance();
+					}
+				});
+
 		panel_3 = new JPanel();
 		FlowLayout flowLayout_3 = (FlowLayout) panel_3.getLayout();
 		flowLayout_3.setAlignment(FlowLayout.RIGHT);
 		panel_3.setPreferredSize(new Dimension(780, 38));
 		panel_3.setOpaque(false);
 		toolbar.add(panel_3);
-		
+
 		JLabel lblVerfahren = new JLabel("Verfahren:");
 		panel_3.add(lblVerfahren);
-		
+
 		comboBoxMode = new JComboBox<String>();
+		comboBoxMode.setFocusable(false);
 		panel_3.add(comboBoxMode);
-		
-		
+
+
 		comboBoxMode.setPreferredSize(new Dimension(180, 27));
 		comboBoxMode.addItem("<html><b style='color: blue;'>[E]</b> BruteForce</html>");
 		comboBoxMode.addItem("<html><b style='color: blue;'>[E]</b> Dyn. Programmierung</html>");
@@ -363,79 +457,85 @@ public class gWindow {
 		comboBoxMode.addItem("<html><b style='color: green;'>[H]</b> Best NearestNeighbour</html>");
 		comboBoxMode.addItem("<html><b style='color: green;'>[H]</b> MST-Transform</html>");
 		comboBoxMode.addItem("<html><b style='color: green;'>[H]</b> Best MST-Transform</html>");
+		comboBoxMode.addItem("<html><b style='color: gray;'>[V]</b> k-Opt</html>");
 		comboBoxMode.setSelectedIndex(0);
-		
+
 		//   Nächster NN Button
 		btnNext = new JButton("N\u00E4chster");
 		panel_3.add(btnNext);
 		btnNext.setMinimumSize(new Dimension(85, 27));
 		btnNext.setEnabled(false);
 		btnNext.setVisible(false);
-		
+
 		//   Auflösen Button
-		 btnAuflsen = new JButton("L\u00F6sen");
-		 panel_3.add(btnAuflsen);
-		 btnAuflsen.setMinimumSize(new Dimension(70, 27));
-		 btnAuflsen.addActionListener(new ActionListener() {
-		 	public void actionPerformed(ActionEvent e) {
-		 		switch (comboBoxMode.getSelectedIndex()) {
-		 		case 0:
-		 			bruteForce(instanz);
-		 			break;
-		 		case 1:
-		 			dynProgramming(instanz);
-		 			break;
-		 		case 2:
-		 			NN_Solve(instanz);
-		 			break;
-		 		case 3:
-		 			bestNN(instanz);
-		 			break;
-		 		case 4:
-		 			transformMST(instanz);
-		 			break;
-		 		case 5:
-		 			bestMST(instanz);
-		 			break;
-		 		}
-		 		
-		 	}
-		 });
-		 btnAuflsen.setEnabled(false);
-		 
-		 //   Reset Button
-		 btnReset = new JButton("Reset");
-		 panel_3.add(btnReset);
-		 btnReset.setPreferredSize(new Dimension(70, 27));
-		 
-		 //   geschlossen Checkbox
-		  chckbxGeschlossen = new JCheckBox("geschlossen");
-		  panel_3.add(chckbxGeschlossen);
-		  chckbxGeschlossen.setOpaque(false);
-		  chckbxGeschlossen.setSelected(true);
-		  
+		btnAuflsen = new JButton("L\u00F6sen");
+		btnAuflsen.setFocusPainted(false);
+		panel_3.add(btnAuflsen);
+		btnAuflsen.setMinimumSize(new Dimension(70, 27));
+		btnAuflsen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				switch (comboBoxMode.getSelectedIndex()) {
+				case 0:
+					bruteForce(instanz);
+					break;
+				case 1:
+					dynProgramming(instanz);
+					break;
+				case 2:
+					NN_Solve(instanz);
+					break;
+				case 3:
+					bestNN(instanz);
+					break;
+				case 4:
+					transformMST(instanz);
+					break;
+				case 5:
+					bestMST(instanz);
+					break;
+				case 6: 
+					optTimer(instanz);
+				}
+
+			}
+		});
+		btnAuflsen.setEnabled(false);
+
+		//   Reset Button
+		btnReset = new JButton("Reset");
+		btnReset.setFocusPainted(false);
+		panel_3.add(btnReset);
+		btnReset.setPreferredSize(new Dimension(70, 27));
+
+		//   geschlossen Checkbox
+		chckbxGeschlossen = new JCheckBox("geschlossen");
+		panel_3.add(chckbxGeschlossen);
+		chckbxGeschlossen.setOpaque(false);
+		chckbxGeschlossen.setSelected(true);
+
 		//   Debug Checkbox mit Changehandler, ändert Framehöhe
 		chckbxDebug = new JCheckBox("Stats");
+		chckbxDebug.setFocusPainted(false);
 		panel_3.add(chckbxDebug);
 		chckbxDebug.setOpaque(false);
-		
+
 		JPanel panel_2 = new ImagePanel("UIElements/subbar.png");
-		
+
 		FlowLayout flowLayout_4 = (FlowLayout) panel_2.getLayout();
 		flowLayout_4.setVgap(3);
 		flowLayout_4.setHgap(8);
 		flowLayout_4.setAlignment(FlowLayout.RIGHT);
 		panel_2.setBounds(0, 715, 1209, 25);
 		frame.getContentPane().add(panel_2);
-		
+
 		lblMouseX = new JLabel("");
 		lblMouseX.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		panel_2.add(lblMouseX);
-		
+
 		lblMouseY = new JLabel("");
 		lblMouseY.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		panel_2.add(lblMouseY);
-		
+
 		JPanel panel_4 = new JPanel();
 		FlowLayout flowLayout_6 = (FlowLayout) panel_4.getLayout();
 		flowLayout_6.setAlignment(FlowLayout.LEFT);
@@ -443,55 +543,56 @@ public class gWindow {
 		flowLayout_6.setHgap(-1);
 		panel_4.setBounds(0, 680, 191, 35);
 		frame.getContentPane().add(panel_4);
-		
+
 		JButton btnAddknot = new JButton("");
 		btnAddknot.setToolTipText("Knoten hinzuf\u00FCgen");
 		btnAddknot.setIcon(new ImageIcon(gWindow.class.getResource("/Icons/add_24.png")));
 		panel_4.add(btnAddknot);
 		btnAddknot.setPreferredSize(new Dimension(64, 35));
-		
+
 		btnEdit = new JButton("");
 		btnEdit.setEnabled(false);
 		btnEdit.setToolTipText("Knoten bearbeiten");
 		btnEdit.setIcon(new ImageIcon(gWindow.class.getResource("/Icons/edit_24.png")));
 		btnEdit.setPreferredSize(new Dimension(65, 35));
 		panel_4.add(btnEdit);
-		
+
 		btnRemove = new JButton("");
 		btnRemove.setEnabled(false);
 		btnRemove.setToolTipText("Knoten l\u00F6schen");
 		btnRemove.setIcon(new ImageIcon(gWindow.class.getResource("/Icons/delete_24.png")));
 		btnRemove.setPreferredSize(new Dimension(65, 35));
-//		button_1.setIcon(arg0);
+		//		button_1.setIcon(arg0);
 		panel_4.add(btnRemove);
-		
+
 		chckbxDebug.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				if (chckbxDebug.isSelected()) frame.setBounds(frame.getX(), frame.getY(), frame.getWidth(), frameHeightDebugPx);
 				else frame.setBounds(frame.getX(), frame.getY(), frame.getWidth(), frameHeightPx);
 			}
 		});
-		 btnReset.addActionListener(new ActionListener() {
-		 	public void actionPerformed(ActionEvent e) {
-		 		Reset();
-		 	}
-		 });
+		btnReset.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Reset();
+			}
+		});
 		btnNext.addActionListener(new ActionListener() {
-		   	public void actionPerformed(ActionEvent e) {
-		   		switch (comboBoxMode.getSelectedIndex()) {
-		 		case 2:
-		 			NN_Next(instanz);
-		 			break;
-		 		case 4: 
-		 			MST(instanz);
-		 			break;
-		 		case 5: 
-		 			MST(instanz);
-		 			break;
-		   		}
-		   	}
-		   });
-		
+			public void actionPerformed(ActionEvent e) {
+				switch (comboBoxMode.getSelectedIndex()) {
+				case 2:
+					NN_Next(instanz);
+					break;
+				case 4: 
+					MST(instanz);
+					break;
+				case 5: 
+					MST(instanz);
+					break;
+				case 6: nextkOpt(instanz);
+				}
+			}
+		});
+
 		// Verfahren ComboBox Listeners
 		comboBoxMode.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -525,48 +626,47 @@ public class gWindow {
 					if (instanz != null) btnAuflsen.setEnabled(instanz.hasMST());
 					btnAuflsen.setText("Transformieren");
 					break;
-				
+				case 6: 
+					btnNext.setVisible(true);
+					btnNext.setText("Nächste k-Opt");
+					btnAuflsen.setText("Alle k-Opts");
 				}
 			}
 		});
-		
-		
-		btnPoints.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				instanz = createInstance();
-			}
-		});
-		
+
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
-		
+
 		JMenu mnDatei = new JMenu("Datei");
 		menuBar.add(mnDatei);
-		
+
 		JMenuItem mntmNeueInstanz = new JMenuItem("Neue Instanz...");
+		mntmNeueInstanz.setIcon(new ImageIcon(gWindow.class.getResource("/Icons/new_16.png")));
 		mntmNeueInstanz.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				instanz = createInstance();
+			btnPoints.doClick();	
+
 			}
 		});
 		mnDatei.add(mntmNeueInstanz);
-		
-		JMenuItem mntmffnen = new JMenuItem("\u00D6ffnen...");
-		mntmffnen.setEnabled(false);
+
+		JMenuItem mntmffnen = new JMenuItem("Laden...");
+		mntmffnen.setIcon(new ImageIcon(gWindow.class.getResource("/Icons/load_16.png")));
 		mnDatei.add(mntmffnen);
-		
+
 		JMenuItem mntmSpeichern = new JMenuItem("Speichern");
-		mntmSpeichern.setEnabled(false);
+		mntmSpeichern.setIcon(new ImageIcon(gWindow.class.getResource("/Icons/save_16_2.png")));
 		mnDatei.add(mntmSpeichern);
-		
+
 		separator_1 = new JSeparator();
 		separator_1.setForeground(SystemColor.controlHighlight);
 		mnDatei.add(separator_1);
-		
-		
+
+
 		mnImportieren = new JMenu("Importieren");
+		mnImportieren.setIcon(new ImageIcon(gWindow.class.getResource("/Icons/import.png")));
 		mnDatei.add(mnImportieren);
-		
+
 		JMenuItem mntmLokaleTspDatei = new JMenuItem("lokale TSP Datei...");
 		mntmLokaleTspDatei.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -574,30 +674,35 @@ public class gWindow {
 			}
 		});
 		mnImportieren.add(mntmLokaleTspDatei);
-		
+
 		JMenuItem mntmAusTsplib = new JMenuItem("aus TSPLib...");
 		mntmAusTsplib.addActionListener(new ImportListener());
 		mnImportieren.add(mntmAusTsplib);
-		
+
 		mnExportieren = new JMenu("Exportieren");
+		mnExportieren.setIcon(new ImageIcon(gWindow.class.getResource("/Icons/export.png")));
 		mnDatei.add(mnExportieren);
-		
+
 		mntmGrafikAlsPng = new JMenuItem("Grafik als PNG...");
 		mnExportieren.add(mntmGrafikAlsPng);
-		
-		JMenuItem mntmKnotenLokal = new JMenuItem("Knoten lokal...");
-		mntmKnotenLokal.setEnabled(false);
+
+		JMenuItem mntmKnotenLokal = new JMenuItem("TSP lokal...");
+		mntmKnotenLokal.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ExportAssist exp = new ExportAssist(instanz, tspName, tspComment, tspType, instanz.getCount(), gWindow.this);
+			}
+		});
 		mnExportieren.add(mntmKnotenLokal);
-		
+
 		JMenuItem mntmInstanzVerffentlichen = new JMenuItem("Instanz ver\u00F6ffentlichen...");
 		mntmInstanzVerffentlichen.setEnabled(false);
 		mnExportieren.add(mntmInstanzVerffentlichen);
-		
+
 		JSeparator separator = new JSeparator();
 		separator.setForeground(SystemColor.controlHighlight);
-		
+
 		mnDatei.add(separator);
-		
+
 		JMenuItem mntmBeenden = new JMenuItem("Beenden");
 		mntmBeenden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -608,37 +713,37 @@ public class gWindow {
 		mntmGrafikAlsPng.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { ExportPNG(); }
 		});
-		
+
 		mnAnzeigen = new JMenu("Anzeigen");
 		menuBar.add(mnAnzeigen);
-		
+
 		chckbxmntmLineale = new JCheckBoxMenuItem("Lineale");
 		chckbxmntmLineale.setSelected(true);
 		chckbxmntmLineale.addItemListener(new OptionListener());
 		mnAnzeigen.add(chckbxmntmLineale);
-		
+
 		chckbxmntmKreuzcursor = new JCheckBoxMenuItem("Kreuz-Cursor");
 		chckbxmntmKreuzcursor.setSelected(true);
 		mnAnzeigen.add(chckbxmntmKreuzcursor);
-		
+
 		mnInstanz = new JMenu("Instanz");
 		menuBar.add(mnInstanz);
-		
+
 		mnTransformieren = new JMenu("Transformieren");
 		mnInstanz.add(mnTransformieren);
-		
+
 		mntmGreAnpassen = new JMenuItem("Gr\u00F6\u00DFe anpassen");
 		mntmGreAnpassen.setEnabled(false);
 		mnTransformieren.add(mntmGreAnpassen);
-		
+
 		mntmZentrieren = new JMenuItem("Zentrieren");
 		mntmZentrieren.setEnabled(false);
 		mnTransformieren.add(mntmZentrieren);
-		
+
 		mntmDrehen = new JMenuItem("Drehen...");
 		mntmDrehen.setEnabled(false);
 		mnTransformieren.add(mntmDrehen);
-		
+
 		mntmZurcksetzen = new JMenuItem("Zur\u00FCcksetzen");
 		mntmZurcksetzen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -647,31 +752,32 @@ public class gWindow {
 			}
 		});
 		mnInstanz.add(mntmZurcksetzen);
-		
+
 		JMenu mnExtras = new JMenu("Extras");
 		menuBar.add(mnExtras);
-		
+
 		JMenuItem mntmGrafikUntermalen = new JMenuItem("Grafik untermalen...");
 		mntmGrafikUntermalen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				ImageDialog im = new ImageDialog(canvas);
-				
+
+				if (imgDialog != null) imgDialog.setVisible(true);
+				else imgDialog = new ImageDialog(canvas);
+
 			}
 		});
 		mnExtras.add(mntmGrafikUntermalen);
-		
+
 		JMenuItem mntmImporteinstellungen = new JMenuItem("Import-Einstellungen...");
 		mntmImporteinstellungen.setEnabled(false);
 		mnExtras.add(mntmImporteinstellungen);
 
 	}
-	
+
 	class OptionListener implements ItemListener, ChangeListener {
 
 		@Override
 		public void itemStateChanged(ItemEvent e) {
-			
+
 			if (chckbxAutoupdate.isSelected()) canvas.redraw(SquareCanvas.REDRAW_ALL, SquareCanvas.KEEP_BUFFER);
 			else canvas.updateGraphics();
 		}
@@ -682,13 +788,13 @@ public class gWindow {
 			else canvas.updateGraphics();
 		}
 	}
-	
-	
+
+
 	class SelectionListener implements ListSelectionListener {
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
-			
+
 			if (list.getSelectedIndex() == -1) {
 				btnEdit.setEnabled(false);
 				btnRemove.setEnabled(false);
@@ -697,19 +803,19 @@ public class gWindow {
 				btnRemove.setEnabled(true);
 			}
 		}
-		
+
 	}
-	
+
 	class ImportListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
 			if (tspImport != null) tspImport.setVisible(true);
 			else tspImport = new TSPLibIndex(gWindow.this);
-			
+
 		}
-		
+
 	}
-	
+
 	public JFrame getFrame() {
 		return frame;
 	}
@@ -720,21 +826,21 @@ public class gWindow {
 	public boolean getWithCursor() {
 		return chckbxmntmKreuzcursor.isSelected();
 	}
-	
+
 	/**
 	 * Setzt sowohl die Instanz als auch das Canvas zurück:
 	 * Knotenliste wird überschrieben, Canvas wird mit weißem Rechteck übermalt (flushCanvas()),
 	 * Steuerelemente werden zurückgesetzt: Knotenliste wieder in voller Höhe, Lösen-Buttons deaktiviert,
 	 * Weiderholen-Button und Ergebnis-Label als unsichtbar gesetzt
 	 */
-	private void Reset() {
-		
+	public void Reset() {
+
 		list.setModel(blank);
-		
-		canvas.flushGraphics(SquareCanvas.CLEAR_ALL,true);
+
+		canvas.flushGraphics(SquareCanvas.CLEAR_ALL,false);
 		btnNext.setEnabled(false);
 		btnAuflsen.setEnabled(false);
-		
+
 	}
 
 	/**
@@ -744,11 +850,11 @@ public class gWindow {
 	 * 
 	 * @return den Verweis auf die erstellte Instanz
 	 */
-	private Instance createInstance() {
-		
+	public void randInstance(int knots) {
+
 		Reset();
 		Instance inst = new Instance();
-		int count = Integer.parseInt(txtPoints.getText());
+		int count = knots;
 		knotenlist = new DefaultListModel<String>();
 
 		for (int i = 0; i<count; i++) {
@@ -757,25 +863,53 @@ public class gWindow {
 			knotenlist.addElement(n.toString()); //TODO Setter von Instance-Klasse aus wäre schöner, dann erstellen der Instanz über new Instance(count)
 			canvas.drawKnot(n);
 		}
-		
+
 		canvas.repaint();
 		list.setModel(knotenlist);
 		btnNext.setEnabled(true);
 		btnAuflsen.setEnabled(true);
-		
-		return inst;
+
+		instanz = inst;
 	}
 	
-	
-	private void bruteForce(Instance inst) {
+	private void mouseInstance() {
 		
+		Instance inst = new Instance();
+		ArrayList<Knot> knots = canvas.getMouseKnots();
+		for (Knot k : knots) inst.addKnot(k);
+		
+		btnNext.setEnabled(true);
+		btnAuflsen.setEnabled(true);
+
+		instanz = inst;
+	}
+	
+	public void mouseMode(boolean mode) {
+		chckbxDragmode.setVisible(mode);
+		btnEditmode.setVisible(mode);
+	}
+	
+	public void newList() {
+		
+		knotenlist = new DefaultListModel<String>();
+	}
+	
+	public void addToList(String item) {
+		
+		knotenlist.addElement(item);
+		list.setModel(knotenlist);
+	}
+
+
+	private void bruteForce(Instance inst) {
+
 		inst.bruteForceSolve(canvas);
 		canvas.repaint();
 		logResult(inst, Instance.MODE_BRUTEFORCE);
 	}
-	
+
 	private void dynProgramming(Instance inst) {
-		
+
 		inst.dynProgrammingSolve(canvas);
 		canvas.repaint();
 		logResult(inst, Instance.MODE_DYNPROG);
@@ -793,7 +927,7 @@ public class gWindow {
 	 * @param inst der Verweis auf die zu lösende Instanz
 	 */
 	private void NN_Next(Instance inst) {     //TODO NN Next und Solve zusammenführen, über Parameter step steuern
-		
+
 		if (list.getSelectedIndex() == -1) JOptionPane.showMessageDialog(null, "Zuerst einen Startknoten in der Liste auswählen");
 		else {
 			boolean closed = chckbxGeschlossen.isSelected();
@@ -801,46 +935,47 @@ public class gWindow {
 
 			Knot nearest = inst.nearestNeighbour(inst.getKnot(list.getSelectedIndex()), closed, true, true, canvas, txtDebug);
 			if (nearest != null) list.setSelectedIndex((nearest.getId()));
-			
+
 			canvas.repaint();
 		}
 		if (inst.isFinished()) {
-			
-			
+
+
 		}
 	}
-	
+
 	private void NN_Solve(Instance inst) {
-		
+
 		if (list.getSelectedIndex() == -1) JOptionPane.showMessageDialog(null, "Zuerst einen Startknoten in der Liste auswählen");
 		else {
 			boolean closed = chckbxGeschlossen.isSelected();
 			if (inst.isReady()) inst.setStart(list.getSelectedIndex());
-			
+
 			Knot knot = inst.getKnot(list.getSelectedIndex());
 			inst.stopWatch.start();
 			while (!inst.isFinished()) knot = inst.nearestNeighbour(knot, closed, false, true, canvas, null);
 			inst.stopWatch.stop();
+
 			
 			canvas.repaint();
 			logResult(inst, Instance.MODE_NN);
 		}
-	
+
 	}
-	
+
 	private void bestNN(Instance inst) {
-		
+
 		Knot thisknot;
 		double thisLenghth = 0;
 		Knot bestStart = null;
 		boolean closed = chckbxGeschlossen.isSelected();
-		
+
 		inst.stopWatch.start();
 		for (int i = 0; i<inst.getCount();i++) {
-			
+
 			if (inst.isReady()) inst.setStart(i);
 			thisknot = inst.getKnot(i);
-			
+
 			while (!inst.isFinished()) thisknot = inst.nearestNeighbour(thisknot, closed, false, false, null, null);
 			if ((i==0) || (inst.getWaylength() < thisLenghth)) {
 				thisLenghth = inst.getWaylength();
@@ -848,77 +983,110 @@ public class gWindow {
 			}
 			inst.resetInstance();
 		}
-		
+
 		if (inst.isReady()) inst.setStart(bestStart.getId());
 		list.setSelectedIndex(bestStart.getId());
 		while (!inst.isFinished()) bestStart = inst.nearestNeighbour(bestStart, closed, false, true, canvas, null);
 		inst.stopWatch.stop();
-		
+
+		System.out.println(inst.edges);
 		canvas.repaint();
 		logResult(inst, Instance.MODE_BESTNN);
 	}
-	
+
 	private void MST(Instance inst) {
-		
+
 		inst.makeMST(canvas);
 		canvas.repaint();
 		logResult(inst, Instance.MODE_MSTBUILD);
 		btnAuflsen.setEnabled(true);
 	}
-	
+
 	private void transformMST(Instance inst) {
-		
+
 		if (!inst.hasMST()) JOptionPane.showMessageDialog(null, "Zuerst MST berechnen!");
 		if (list.getSelectedIndex() == -1) JOptionPane.showMessageDialog(null, "Zuerst einen Startknoten in der Liste auswählen");
 		else {
-			 inst.stopWatch.start();
-			 Knot start = inst.getKnot(list.getSelectedIndex());
-			 inst.mstRoute = new ArrayList<Knot>();
-			 
-			 inst.nextKnotfromTree(start);
-			 inst.stopWatch.stop();
-			 inst.showMSTwithTSP(canvas);
-			 
-			 System.out.println("Länge: " + inst.getTour(inst.mstRoute));
+			inst.stopWatch.start();
+			Knot start = inst.getKnot(list.getSelectedIndex());
+			inst.mstRoute = new ArrayList<Knot>();
 
-			 canvas.repaint();
-			 logResult(inst, Instance.MODE_MSTTRANSFORM);
+			inst.nextKnotfromTree(start);
+			inst.stopWatch.stop();
+			inst.edges.add(new Edge(
+					inst.mstRoute.get(inst.mstRoute.size()-1),
+					start));
+			inst.showMSTwithTSP(canvas);
+
+			System.out.println("Länge: " + inst.getTour(inst.mstRoute));
+
+			canvas.repaint();
+			logResult(inst, Instance.MODE_MSTTRANSFORM);
 		}
 	}
-	
+
 	private void bestMST(Instance inst) {
-		
+
 		if (!inst.hasMST()) JOptionPane.showMessageDialog(null, "Zuerst MST berechnen!");
-		
+
 		inst.stopWatch.start();
 		double minTour = 0;
 		double thisTour;
 		bestStart = null;
-		
+
 		for (int i = 0; i<inst.getCount();i++) {
-			
+
 			inst.mstRoute = new ArrayList<Knot>();
 			inst.nextKnotfromTree(inst.getKnot(i));
-			thisTour = inst.getTour(inst.mstRoute);
 			
+			thisTour = inst.getTour(inst.mstRoute);
+
 			if ((i==0) || thisTour < minTour) {
 				minTour = thisTour;
 				bestStart = inst.getKnot(i);
 			}
+			inst.resetInstance();
 		}
 		inst.MSTbestStart = bestStart;
 		inst.mstRoute = new ArrayList<Knot>();
 		inst.nextKnotfromTree(bestStart);
+		
+		inst.edges.add(new Edge(
+				inst.mstRoute.get(inst.mstRoute.size()-1),
+				bestStart));
+			
+			System.out.println(inst.edges);
+			
 		inst.stopWatch.stop();
 		inst.showMSTwithTSP(canvas);
-		 
-		 System.out.println("Länge: " + inst.getTour(inst.mstRoute) + "Bester Start: " + bestStart);
-		 canvas.updateGraphics();
-		 canvas.repaint();
-		 logResult(inst, Instance.MODE_BESTMST);
+
+		System.out.println("Länge: " + inst.getTour(inst.mstRoute) + "Bester Start: " + bestStart);
+		canvas.updateGraphics();
+		canvas.repaint();
+		logResult(inst, Instance.MODE_BESTMST);
+	}
+
+	private void nextkOpt(Instance inst) {
+		inst.kOpt(2);
+		canvas.redraw(SquareCanvas.REDRAW_KNOTS, SquareCanvas.CLEAR_EDGES);
+		for (Edge e : inst.edges) canvas.drawEdge(e);
+		
+		logResult(inst, Instance.MODE_KOPT);
 	}
 	
-	
+	private void optTimer(Instance inst) {
+		
+		optTimer = new Timer();
+		optTimer.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
+				nextkOpt(inst);
+				if (inst.iskOptDone()) this.cancel();
+				}
+		}, 0,130);
+	}
+
 	private void loadTSPFromFile() {
 		File tspFile=null;
 		dirDialog = new JFileChooser();
@@ -926,37 +1094,40 @@ public class gWindow {
 		dirDialog.addChoosableFileFilter(new FileNameExtensionFilter("TSP-Datei", "TSP"));
 		dirDialog.setDialogTitle("TSP Instanz laden...");
 		dirDialog.setCurrentDirectory(new File("~"));
-		
-		if (dirDialog.showOpenDialog(mnExportieren) == JFileChooser.APPROVE_OPTION)
+
+		if (dirDialog.showOpenDialog(mnExportieren) == JFileChooser.APPROVE_OPTION) {
+			
 			tspFile = dirDialog.getSelectedFile();
 			logLine(String.format("Lade lokale TSP-Datei '%s' (%s) ...", tspFile.getName(),tspFile));
-		try {
-			instanz = newInstanceFromTSP(new FileInputStream(tspFile));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			try {
+				instanz = newInstanceFromTSP(new FileInputStream(tspFile));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
-		
+
 	}
-	
+
 	public void loadTSPFromLib(URL url) {
 		try {
 			InputStream tspStream = url.openStream();
 			instanz = newInstanceFromTSP(tspStream);
-			
+
 		} catch (Exception e) { 
 			logLine("Konnte keine Verbindung aufbauen zu " + e.getMessage());
 			logLine(e.getClass() +" in " +  e.getStackTrace()[0]); 
 			JOptionPane.showMessageDialog(null, "Konnte keine Verbindung zu TSPLib aufbauen.\n"
 					+ "Prüfen Sie ob eine Netzwerkverbindung besteht und TSPSim über lokale Firewalls freigegeben ist.\n"
 					+ "Für Details Log einsehen");}
-		
+
 	}
-	
+
 	public Instance newInstanceFromTSP(InputStream stream) {
-		
-		String tspLine="",name="",comment="",dim="",type="";
+
+		String tspLine="",dim="";
+		tspComment = "";
 		String[] coordLine;
-		
+
 		Reset();
 		Instance inst = new Instance();
 		knotenlist = new DefaultListModel<String>();
@@ -964,46 +1135,46 @@ public class gWindow {
 		ArrayList<Knot> knots;
 		preCoords.add(new ArrayList<Double>());
 		preCoords.add(new ArrayList<Double>());
-		
+
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(stream));
 
 			while (!tspLine.trim().equals("EOF")) {
 				tspLine = br.readLine();
-				     if (tspLine.startsWith("NAME")) name = tspLine.substring(6);
-				else if (tspLine.startsWith("TYPE")) type = tspLine.substring(6);
-				else if (tspLine.startsWith("COMMENT")) comment += tspLine.substring(9)+" ";
-				else if (tspLine.startsWith("DIMENSION")) dim = tspLine.substring(11);
+				if (tspLine.startsWith("NAME")) tspName = tspLine.substring(6).trim();
+				else if (tspLine.startsWith("TYPE")) tspType = tspLine.substring(6).trim();
+				else if (tspLine.startsWith("COMMENT")) tspComment += tspLine.substring(9).trim()+" ";
+				else if (tspLine.startsWith("DIMENSION")) dim = tspLine.substring(11).trim();
 				else if (tspLine.startsWith("NODE_COORD_SECTION")) break;
 				else if (tspLine.startsWith("DISPLAY_DATA_SECTION")) break;    
 			} 
-			
+
 			if (tspLine.trim().equals("EOF") || (tspLine.trim().length() == 0)) {
-					JOptionPane.showMessageDialog(null, "Fehler beim Laden der TSP Datei. Für Details Log einsehen.");
-					logLine("Fehler beim Laden von " + name + ".tsp");
-					logLine("  Es wurde keine Koordinatenliste gefunden (NODE_COORD_SECTION/DISPLAY_DATA_SECTION)");
-					logLine("  Vermutlich handelt es sich um eine Entfernungsdefinierte Instanz (EDGE_WEIGHT_SECTION)");
-					logLine("  Der Import dieser Art von TSP ist nicht imlementiert.\n");
-					return null;
+				JOptionPane.showMessageDialog(null, "Fehler beim Laden der TSP Datei. Für Details Log einsehen.");
+				logLine("Fehler beim Laden von " + tspName + ".tsp");
+				logLine("  Es wurde keine Koordinatenliste gefunden (NODE_COORD_SECTION/DISPLAY_DATA_SECTION)");
+				logLine("  Vermutlich handelt es sich um eine Entfernungsdefinierte Instanz (EDGE_WEIGHT_SECTION)");
+				logLine("  Der Import dieser Art von TSP ist nicht imlementiert.\n");
+				return null;
 			}
-			
-			System.out.println(name+"\n"+comment+"\n"+type+"\n"+dim);
+
+
 			tspLine = br.readLine();
-			
+
 			while (!tspLine.trim().equals("EOF") && tspLine.trim().length() > 0) {
-				
+
 				coordLine = (tspLine.trim().split(" +"));
 				if (coordLine.length == 1) coordLine = (tspLine.trim().split("\t"));
-				
+
 				try {
-				preCoords.get(0).add(Double.parseDouble(coordLine[1]));
-				preCoords.get(1).add(Double.parseDouble(coordLine[2]));
+					preCoords.get(0).add(Double.parseDouble(coordLine[1]));
+					preCoords.get(1).add(Double.parseDouble(coordLine[2]) /* * -1 */);
 				} catch (Exception e) {
 					logLine("Fehler beim Lesen der Datei!");
 				}
 				tspLine = br.readLine();
-				
-				
+
+
 			}	
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -1015,41 +1186,42 @@ public class gWindow {
 			e.printStackTrace();
 			logLine(e.getMessage());
 		}
-		
+
 		knots = inst.transformCoordinates(preCoords);
-		
+
 		if (knots.size() > 300) chckbxNummern.setSelected(false);
 		else chckbxNummern.setSelected(true);
-		
+
 		if ((knots.size() > 400) && knots.size() <= 600) comboBox_punkt.setSelectedIndex(3);
 		else if ((knots.size() > 600) && knots.size() <= 2000) comboBox_punkt.setSelectedIndex(2);
 		else if (knots.size() > 2000) comboBox_punkt.setSelectedIndex(1);
 		else comboBox_punkt.setSelectedIndex(4);
-		
-		
+
+
 		for (Knot k : knots) {
 			knotenlist.addElement(k.toString());
 			canvas.drawKnot(k);
 		}
-		
+
 		canvas.repaint();
-		
-		logLine(String.format("%s wurde erfolgreich importiert und transformiert. (%s Knoten)",name,dim));
-		logLine(String.format("Beschreibung: %s, Typ: %s\n",comment,type));
-		
+
+		logLine(String.format("%s wurde erfolgreich importiert und transformiert. (%s Knoten)",tspName,dim));
+		logLine(String.format("Beschreibung: %s, Typ: %s\n",tspComment,tspType));
+
 		list.setModel(knotenlist);
 		btnNext.setEnabled(true);
 		btnAuflsen.setEnabled(true);
-		
+
 		return inst;
-		
+
 	}
+
 	
 	private void ExportPNG() {
-		
+
 		File exp = new File("TSPSim_k" + instanz.getCount() + "_" + 
 				new SimpleDateFormat("dd-MM-YY_HH-mm-ss").format(new Date()));
-		
+
 		dirDialog = new JFileChooser();
 		dirDialog.setSelectedFile(exp);
 		dirDialog.setAcceptAllFileFilterUsed(false);
@@ -1059,21 +1231,21 @@ public class gWindow {
 		if (dirDialog.showSaveDialog(mnExportieren) == JFileChooser.APPROVE_OPTION)
 			exp = dirDialog.getSelectedFile();
 		if (!exp.toString().endsWith(".png")) exp = new File(exp + ".png");
-		
+
 		try {
 			ImageIO.write(canvas.getImage(), "png", exp);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void logResult(Instance inst, int mode) {
-		
+
 		String result = inst.getResult(mode);
-		
+
 		txtDebug.setText(txtDebug.getText() + result + "\n\n");
 	}
-	
+
 	public void logLine(String l) {
 		txtDebug.setText(txtDebug.getText() + "["+LocalDateTime.now()+"]    "+l + "\n");
 	}

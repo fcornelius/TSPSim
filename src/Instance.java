@@ -9,9 +9,9 @@ import javax.swing.JTextPane;
 
 
 public class Instance {
-	
+
 	private static final int floatingPointPrecision = 10;
-	
+
 	public static final int MODE_BRUTEFORCE = 0;
 	public static final int MODE_DYNPROG = 1;
 	public static final int MODE_NN = 2;
@@ -19,18 +19,20 @@ public class Instance {
 	public static final int MODE_MSTBUILD = 4;
 	public static final int MODE_MSTTRANSFORM = 5;
 	public static final int MODE_BESTMST = 6;
-	
-	
+	public static final int MODE_KOPT = 7;
+
+
 	private ArrayList<Knot> knots;
 	private ArrayList<Knot> neighbours;
 	private ArrayList<Knot> spanningTreeKnots;
 	private ArrayList<Edge> spanningTreeEdges;
 	public ArrayList<Knot> mstRoute;
+	public ArrayList<Knot> route;
 	private ArrayList<Edge> completeGraph;
-	private ArrayList<Edge> edges;
+	public ArrayList<Edge> edges;
 	private ArrayList<Integer> minRoute;
 	private ArrayList<ArrayList<Integer>> routes;
-	
+
 	private int startKnot;
 	private double maxDist;
 	private Knot[] furthestKnots;
@@ -40,9 +42,10 @@ public class Instance {
 	private double permutTime;
 	private double[][] cache;
 	private ArrayList<ArrayList<Integer>> powerSets;
-	
+
+	private boolean kOptDone;
 	public Interval stopWatch;
-	
+
 	/**
 	 * Konstruktor
 	 * Legt Knotenliste und Neighbourliste an
@@ -54,6 +57,7 @@ public class Instance {
 		spanningTreeKnots = new ArrayList<Knot>();
 		spanningTreeEdges = new ArrayList<Edge>();
 		mstRoute = new ArrayList<Knot>();
+		route = new ArrayList<Knot>();
 		completeGraph = new ArrayList<Edge>();
 		edges = new ArrayList<Edge>();
 		stopWatch = new Interval();
@@ -68,10 +72,11 @@ public class Instance {
 	 * Weglänge ({@link wayLength}) und größte Teilstrecke ({@link maxDist}) werden zurückgesetzt.
 	 */
 	public void resetInstance() {
-		
+
 		spanningTreeEdges.clear();
 		spanningTreeKnots.clear();
 		mstRoute.clear();
+		route.clear();
 		edges.clear();
 		neighbours.clear();
 		for (Knot k : knots) neighbours.add(k);
@@ -85,7 +90,7 @@ public class Instance {
 	 * @param withNumber true/false ob Nummern zu Punkten gezeichnet werden
 	 */
 	public void redrawInstance(Graphics2D g, int radius, boolean withNumber) {
-//		for (Knot k : knots) k.drawPoint(g, radius, withNumber);
+		//		for (Knot k : knots) k.drawPoint(g, radius, withNumber);
 	}
 	/**
 	 * Fügt einer Instanz einen bestehenden Knoten hinzu.<br>
@@ -96,7 +101,7 @@ public class Instance {
 		knots.add(k);
 		neighbours.add(k);
 	}
-	
+
 	public void addEdge(Edge e) {
 		edges.add(e);
 	}
@@ -108,7 +113,7 @@ public class Instance {
 	public Knot getKnot(int index) {
 		return knots.get(index);
 	}
-	
+
 	public int getCount() {
 		return knots.size();
 	}
@@ -123,7 +128,7 @@ public class Instance {
 	public boolean isReady() {
 		return (knots.size()==neighbours.size());
 	}
-	
+
 	public boolean hasMST() {
 		return (spanningTreeKnots.size() > 0);
 	}
@@ -145,15 +150,15 @@ public class Instance {
 	public Knot getStartKnot() {
 		return knots.get(startKnot);
 	}
-	
+
 	public void mirrorKnots(int mode) {
-		
+
 	}
-	
+
 	public ArrayList<Knot> transformCoordinates(ArrayList<ArrayList<Double>> coords) {
-		
+
 		int offset = 10; // Oberer linker Rand zum Ursprung	
-		
+
 		int width = SquareCanvas.pixelWidth;
 		int height = SquareCanvas.pixelHeight;
 		int x,y;
@@ -161,41 +166,44 @@ public class Instance {
 		double maxX,maxY;
 		double xFactor,yFactor;
 		double xShift,yShift;
-		
+
 		ArrayList<Double> xList = coords.get(0);
 		ArrayList<Double> yList = coords.get(1);
 		ArrayList<Double> xsort = new ArrayList<Double>();
 		ArrayList<Double> ysort = new ArrayList<Double>();
 		xsort.addAll(xList); ysort.addAll(yList);
-		
+
 		Collections.sort(xsort);
 		Collections.sort(ysort);
-		
+
 		maxX = xsort.get((xList.size()-1));
 		maxY = ysort.get((yList.size()-1));
 		xShift = xsort.get(0);
 		yShift = ysort.get(0);
-	
+
 		xFactor = (width - 2*offset) / (maxX - xShift);
 		yFactor = (height -2*offset) / (maxY - yShift);
 		double factor = Math.min(xFactor, yFactor);
-		
+
 		xCentre = (int)((width - 2*offset - (maxX - xShift)*factor) / 2);
 		yCentre = (int)((height - 2*offset - (maxY - yShift)*factor) / 2);
-		
+
 		for (int i=0;i<xList.size();i++) {
 			x = (int) ((xList.get(i) - xShift) * factor) + offset + xCentre;
 			y = (int) ((yList.get(i) - yShift) * factor) + offset + yCentre;
-			
+
+			//			x = (int) (xList.get(i)/2000);
+			//			y = (int) (yList.get(i)/2000);
+
 			addKnot(new Knot(i,x,y));
 		}
-		
+
 		return knots;
 	}
-	
-	
+
+
 	public void bruteForceSolve(SquareCanvas canvas) {
-		
+
 		stopWatch.start();
 		PermutationBuilder pb = new PermutationBuilder();
 		routes = pb.BuildList(getCount()-1,true);
@@ -203,45 +211,45 @@ public class Instance {
 		double minTour = getIndexedTour(routes.get(0));      	    // Tour:  Die Länge einer Route
 		double thisTour;
 		permutTime = stopWatch.getMills();
-		
+
 		for (ArrayList<Integer> thisRoute : routes) {
-			
+
 			thisTour = getIndexedTour(thisRoute);
 			if (thisTour < minTour) { minTour = thisTour; minRoute = thisRoute; }
 		}
 		stopWatch.stop();
 		calcTime = stopWatch.getMills();
 		stopWatch.reset();
-		
+
 		wayLength = minTour;
 		canvas.drawIndexedRoute(this, minRoute);
 	}
-	
+
 	public void dynProgrammingSolve(SquareCanvas canvas) {
-		
+
 		stopWatch.start();
 		cache = new double[1 << (this.knots.size()-1)][this.knots.size()];
 		PowerSetBuilder psb = new PowerSetBuilder(this.knots.size());
-//		powerSets = PowerSetBuilder.buildPowerSet(psb.getSet());
-		
+		//		powerSets = PowerSetBuilder.buildPowerSet(psb.getSet());
+
 		for(int i = 0; i < this.knots.size(); i++) {
 			cache[0][i] = this.knots.get(0).getDistance(this.knots.get(i));
 		}	
 		rek(1, powerSets);
-				
+
 		stopWatch.stop();
 		calcTime = stopWatch.getMills();
 		stopWatch.reset();
-		
-//		canvas.drawRoute(this, minRoute);
+
+		//		canvas.drawRoute(this, minRoute);
 	}
-	
+
 	private double rek(int iStartKnot, ArrayList<ArrayList<Integer>> set) {
-		
+
 		if(set.size() == 1 && set.get(0).isEmpty()) {
 			return cache[0][iStartKnot-1];
 		}
-		
+
 		for(int i = 1; i <= (this.knots.size()-1); i++) {
 			for(ArrayList<Integer> subSet : PowerSetBuilder.getSubSets(set, i)) {
 				for(int j = 0; j <= (this.knots.size()-1); j++) {
@@ -257,7 +265,7 @@ public class Instance {
 				}
 			}
 		}
-		
+
 		return 0.0;	
 	}
 	/**
@@ -303,22 +311,24 @@ public class Instance {
 					}
 				}
 				if (debug) debugPane.setText(debugPane.getText() +  String.format("knotId: %d rootKnot: %s thisKnot: %s thisDist: %f minDist: %f nearest: %s \n", 
-							knotId, rootKnot, thisKnot, thisDist, minDist, nearest));
+						knotId, rootKnot, thisKnot, thisDist, minDist, nearest));
 				knotId++;
 			}
 		}
 		wayLength += minDist;
 		if (minDist > maxDist) { maxDist = minDist; furthestKnots = new Knot[]{rootKnot, nearest}; }
-		
+
+		edges.add(new Edge(rootKnot, nearest));
+		route.add(rootKnot);
 		if (draw) canvas.drawEdge(rootKnot, nearest);
 		return nearest;
 	}
-	
+
 	public void makeMST(SquareCanvas canvas) {   //TODO MST Step-Verfahren wie bei NN implementieren (in selber Methode)
 
 		int n = knots.size();
 		stopWatch.start();
-		
+
 		for (int i = 0; i < n; i++) {
 			for (int j = 1; j < n-i; j++) {
 				completeGraph.add(new Edge(getKnot(i), getKnot(i+j)));
@@ -329,67 +339,134 @@ public class Instance {
 				return (int)((e1.getCost() - e2.getCost()) * Math.pow(10, floatingPointPrecision)); //Ab ... NKS kein eindeutiger Vergleich mehr möglich
 			}
 		});
-		
+
 		canvas.drawEdge(completeGraph.get(0));
 		addEdgeToTree(completeGraph.get(0));
-		
+
 		while (spanningTreeKnots.size() < n) {
 
 			for (Edge thisEdge : completeGraph) {
 				if (spanningTreeKnots.contains(thisEdge.getStart()) ^ spanningTreeKnots.contains(thisEdge.getEnd())) {
 					canvas.drawEdge(thisEdge);
-					
-					
-					
+
+
+
 					addEdgeToTree(thisEdge);
 					break;
 				} 
 			}
 		}
-		
+
 		stopWatch.stop();
 		calcTime = stopWatch.getMills();
 		stopWatch.reset();
 	}
-	
+
 	public void addEdgeToTree(Edge e) {
 		if (!spanningTreeKnots.contains(e.getStart())) spanningTreeKnots.add(e.getStart());
 		if (!spanningTreeKnots.contains(e.getEnd())) spanningTreeKnots.add(e.getEnd());
 		completeGraph.remove(e);
 		spanningTreeEdges.add(e);
-		
+
 		e.getStart().addAjacentKnot(e.getEnd());
 		e.getEnd().addAjacentKnot(e.getStart());
 	}
-	
+
 	public void nextKnotfromTree(Knot thisKnot) {
-		
+
 		if (mstRoute.contains(thisKnot)) return;
-		
+
+		if (mstRoute.size() > 0) 
+			edges.add(new Edge(mstRoute.get(mstRoute.size()-1), thisKnot));
 		mstRoute.add(thisKnot);
+		route.add(thisKnot);
 		for (Knot ak : thisKnot.getAdjacentKnots()) nextKnotfromTree(ak);
 	}
-	
+
 	public void showMSTwithTSP(SquareCanvas canvas) {
-		
+
 		canvas.redraw(SquareCanvas.REDRAW_KNOTS, SquareCanvas.CLEAR_EDGES);
 		canvas.setOverlayBack();
 		for (Edge e : spanningTreeEdges) canvas.drawEdge(e);
 		canvas.setOverlayFront();
 		canvas.drawRoute(this, mstRoute);
-		
-		
 	}
-	
-	public double getIndexedTour(ArrayList<Integer> route) {
+
+	public boolean iskOptDone() {
 		
+		return kOptDone;
+	}
+
+	public void kOpt(int k) {
+
+		outer:	for (int i=0; i<edges.size() - 1; i++) {
+			for (int j=i+1; j<edges.size(); j++) {
+
+				double routeDist = 
+						edges.get(i).getCost() + edges.get(j).getCost();
+				double swapDist = 
+						edges.get(i).getStart().getDistance(edges.get(j).getStart()) + 
+						edges.get(i).getEnd().getDistance(edges.get(j).getEnd());
+
+				if (swapDist < routeDist) {
+
+					kOptDone = false;
+					ArrayList<Knot> newRoute = new ArrayList<Knot>();
+
+					for (int l=0; l<=i; l++) newRoute.add(route.get(l));
+					for (int m=j; m>i; m--) newRoute.add(route.get(m));
+					for (int n=j+1; n<route.size(); n++) newRoute.add(route.get(n));
+
+					route = newRoute;
+
+					for (int e=i; e<=j; e++) {
+						if (i>0) edges.get(e).setStart(edges.get(e-1).getEnd());
+						if (e < edges.size() -1) edges.get(e).setEnd(route.get(e+1));
+						else edges.get(e).setEnd(route.get(0));
+					}
+
+					break outer;
+
+				} else kOptDone = true;
+
+
+
+
+
+
+				//						if (edges.get(i+1).getStart() == edges.get(i).getEnd()) {
+					//							for (int s = i+1; s<j; s++) {
+				//								if (s == (i+1)) edges.get(s).swap();
+				//								else {
+				//									edges.get(s).setStart(edges.get(s).getEnd());
+				//									edges.get(s).setEnd(edges.get(s-1).getStart());
+				//								}
+				//							}
+				//						} else {
+				//							
+				//						}
+				//						
+				//						edges.add(new Edge(edges.get(i).getStart(), edges.get(j).getStart()));
+				//						edges.add(new Edge(edges.get(i).getEnd(), edges.get(j).getEnd()));
+				//
+				//						edges.remove(Math.max(i,j));
+				//						edges.remove(Math.min(i,j));
+				//
+				//						break outer;
+			}
+		}
+	}
+
+
+	public double getIndexedTour(ArrayList<Integer> route) {
+
 		double tourLength = getKnot(0).getDistance(getKnot(route.get(0)));
 		for (int i=0; i<route.size(); i++) {
 			if (i < route.size()-1) tourLength += getKnot(route.get(i)).getDistance(getKnot(route.get(i+1)));
 			else tourLength += getKnot(route.get(i)).getDistance(getKnot(0));
 		} return tourLength;
 	}
-	
+
 	public double getTour(ArrayList<Knot> route) {
 		double tourLength = 0;
 		for (int i=0; i<route.size(); i++) {
@@ -397,10 +474,10 @@ public class Instance {
 			else tourLength += route.get(i).getDistance(route.get(0));
 		} return tourLength;
 	}
-	
-	
+
+
 	public String getResult(int mode) {
-		
+
 		String result = String.format("[%s] Testinstanz mit %d Knoten wurde berechnet mittels ", LocalDateTime.now(), getCount());
 		switch (mode) {
 		case 0:
@@ -436,8 +513,13 @@ public class Instance {
 			result += String.format("Best Minimum-Spanning-Tree Transformation\n" +
 					"Länge des Weges: %.5f Bester Startknoten: %s Rechenzeit: %.2f ms", getTour(mstRoute), MSTbestStart, stopWatch.getMills());
 			break;
+		case 7:
+			result += String.format("2-Opt Verbesserung\n" +
+					"Neue länge des Weges: %.5f Insgesamt verbessert um: %.2f", getTour(route), 
+					100 - (getTour(route) / ((wayLength > 0) ? wayLength : getTour(mstRoute))) * 100 ) + "%";
+			break;
 		}
-		
+
 		stopWatch.reset();
 		return result;
 	}

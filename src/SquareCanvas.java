@@ -50,6 +50,10 @@ public class SquareCanvas extends JPanel {
 	private int width;
 	private int height;
 	
+	private boolean editMode;
+	private boolean dragMode;
+	private ArrayList<Knot> mouseKnots;
+	
 	private ArrayList<Knot> knotBuffer;
 	private ArrayList<Edge> edgeBuffer;
 	
@@ -82,6 +86,23 @@ public class SquareCanvas extends JPanel {
 		g2D_cursor.setBackground(new Color(0,true));
 		
 		flushGraphics(KEEP_BUFFER,true); 
+	}
+	
+	public void startEditMode() {
+		editMode = true;
+		mouseKnots = new ArrayList<Knot>();
+		mainFrame.newList();
+	}
+	
+	public void stopEditMode() {
+		editMode = false;
+	}
+	
+	public void setDragMode(boolean mode) {
+		dragMode = mode;
+	}
+	public ArrayList<Knot> getMouseKnots() {
+		return mouseKnots;
 	}
 	
 	public BufferedImage getImage() {
@@ -160,6 +181,8 @@ public class SquareCanvas extends JPanel {
 			else drawEdge(route.get(i), route.get(0));
 		}
 	}
+	
+	
 	
 	public void setOverlayBack() {
 		g2D.setStroke(new BasicStroke(4));
@@ -281,6 +304,8 @@ public class SquareCanvas extends JPanel {
 		@Override
 		public void mouseDragged(MouseEvent e) {
 			mouseMoved(e);
+			
+			if (editMode && dragMode) newMouseKnot(e.getX(),e.getY());
 		}
 	}
 	
@@ -303,6 +328,22 @@ public class SquareCanvas extends JPanel {
 			}
 			
 		}
+		
+		@Override
+		public void mousePressed(MouseEvent e) {
+			
+			if (editMode) newMouseKnot(e.getX(),e.getY());
+		}
+
+	}
+	
+	private void newMouseKnot(int x, int y) {
+		
+		Knot mouseAdd = new Knot(mouseKnots.size(), x - spacing - border, y - spacing - border);
+		drawKnot(mouseAdd);
+		mouseKnots.add(mouseAdd);
+		mainFrame.addToList(mouseAdd.toString());
+		repaint();
 	}
 	
 	

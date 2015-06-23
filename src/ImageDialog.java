@@ -171,6 +171,7 @@ public class ImageDialog extends JDialog {
 		setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
 		setModal(true);
 		setBounds(100, 100, 561, 318);
+		setLocationRelativeTo(canvas);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

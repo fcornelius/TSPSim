@@ -20,6 +20,20 @@ public class Edge {
 		return k2;
 	}
 	
+	public void swap() {
+		Knot tmp = k1;
+		k1 = k2;
+		k2 = tmp;
+	}
+	
+	public void setStart(Knot s) {
+		k1 = s;
+	}
+	
+	public void setEnd(Knot e) {
+		k2 = e;
+	}
+	
 	public String toString() {
 		return (k1 + "—" + k2);
 	}

@@ -144,6 +144,15 @@
     <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.d15112.tsp.gif</img>
     <size>247044</size>
   </TSPInstance>
+  <TSPInstance name="D15112_m">
+    <description>Deutschland-Problem (A.Rohe), y korregiert</description>
+    <knots>15112</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/d15112_m.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.d15112_m.tsp.gif</img>
+    <size>214391</size>
+  </TSPInstance>
   <TSPInstance name="D1655">
     <description>Drilling problem (Reinelt)</description>
     <knots>1655</knots>
@@ -161,6 +170,15 @@
     <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/d18512.tsp</url>
     <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.d18512.tsp.gif</img>
     <size>407423</size>
+  </TSPInstance>
+  <TSPInstance name="D18512_m">
+    <description>Bundesrepublik Deutschland (mit Ex-DDR) (Bachem/Wottawa), y korregiert</description>
+    <knots>18512</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/d18512_m.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.d18512_m.tsp.gif</img>
+    <size>265364</size>
   </TSPInstance>
   <TSPInstance name="D198">
     <description>Drilling problem (Reinelt)</description>
@@ -531,6 +549,15 @@
     <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.nrw1379.tsp.gif</img>
     <size>30490</size>
   </TSPInstance>
+  <TSPInstance name="Nrw1379_m">
+    <description>1379 Orte in Nordrhein-Westfalen (Bachem/Wottawa), y korregiert</description>
+    <knots>1379</knots>
+    <type>TSP</type>
+    <source>TSPLIB Heidelberg</source>
+    <url>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/nrw1379_m.tsp</url>
+    <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.nrw1379_m.tsp.gif</img>
+    <size>18256</size>
+  </TSPInstance>
   <TSPInstance name="P654">
     <description>Drilling problem (Reinelt)</description>
     <knots>654</knots>
@@ -540,7 +567,7 @@
     <img>http://tsplib.felixcornelius.de/TSPLIB-Heidelberg/TSP-Format/symmetrisch/.p654.tsp.gif</img>
     <size>18329</size>
   </TSPInstance>
-  <TSPInstance name="Pa561">
+  <TSPInstance name="Pa561.tsp">
     <description>561-city problem (Kleinschmidt)</description>
     <knots>561</knots>
     <type>TSP</type>
