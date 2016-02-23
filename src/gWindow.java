@@ -3,24 +3,18 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,7 +39,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
@@ -61,7 +54,6 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JSeparator;
 
 import java.awt.SystemColor;
-import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 
 
@@ -185,7 +177,7 @@ public class gWindow {
 		//   Frame
 		frame = new JFrame();
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 1215, 804);
+		frame.setBounds(100, 100, 1209, 760);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frameHeightPx = frame.getHeight();
@@ -205,7 +197,7 @@ public class gWindow {
 
 		//   Linie ComboBox mit Items 1 bis 4
 		comboBox_linie = new JComboBox<Integer>();
-		comboBox_linie.setPreferredSize(new Dimension(40, 25));
+		comboBox_linie.setPreferredSize(new Dimension(55, 25));
 		for (int i = 1; i <= 4; i++) comboBox_linie.addItem(i);
 		comboBox_linie.addItemListener(new OptionListener());
 		panel_1.add(comboBox_linie);
@@ -216,7 +208,7 @@ public class gWindow {
 
 		//   Punkt ComboBox
 		comboBox_punkt = new JComboBox<Integer>();
-		comboBox_punkt.setPreferredSize(new Dimension(40, 25));
+		comboBox_punkt.setPreferredSize(new Dimension(55, 25));
 		for (int i = 0; i <= 10; i++) comboBox_punkt.addItem(i);
 		comboBox_punkt.setSelectedItem(comboBox_punkt.getItemAt(4));
 		comboBox_punkt.addItemListener(new OptionListener());
@@ -255,7 +247,7 @@ public class gWindow {
 		panel_1.add(chckbxNummern);
 		
 		pnlSpacer = new JPanel();
-		pnlSpacer.setPreferredSize(new Dimension(270, 0));
+		pnlSpacer.setPreferredSize(new Dimension(100, 0));
 		panel_1.add(pnlSpacer);
 		
 		chckbxDragmode = new JCheckBox("dragMode");
@@ -280,7 +272,7 @@ public class gWindow {
 			}
 		});
 		btnEditmode.setVisible(false);
-		btnEditmode.setPreferredSize(new Dimension(130, 25));
+		btnEditmode.setPreferredSize(new Dimension(150, 25));
 		panel_1.add(btnEditmode);
 		chckbxAntia.addChangeListener(new OptionListener());
 
@@ -388,7 +380,7 @@ public class gWindow {
 		btnPoints.setFocusPainted(false);
 		pnlButtons.add(btnPoints);
 		btnPoints.setIcon(new ImageIcon(gWindow.class.getResource("/Icons/new_16.png")));
-		btnPoints.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		//btnPoints.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnPoints.setPreferredSize(new Dimension(140, 30));
 		
 		btnLoad = new JButton("");
@@ -938,10 +930,10 @@ public class gWindow {
 
 			canvas.repaint();
 		}
-		if (inst.isFinished()) {
+		/* if (inst.isFinished()) {
 
 
-		}
+		} */
 	}
 
 	private void NN_Solve(Instance inst) {

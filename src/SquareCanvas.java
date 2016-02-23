@@ -248,7 +248,7 @@ public class SquareCanvas extends JPanel {
 	
 	public void updateGraphics() {
 		
-		int stroke = (int) mainFrame.comboBox_linie.getSelectedItem(); //TODO Getters in gWindow wären besser...
+		int stroke = (int) mainFrame.comboBox_linie.getSelectedItem(); //TODO Getters in gWindow wï¿½ren besser...
 		Color clr = Colors.colors[mainFrame.comboBox.getSelectedIndex()];
 		pointRadius = (int) mainFrame.comboBox_punkt.getSelectedItem();
 		withNumbers = mainFrame.chckbxNummern.isSelected();
@@ -316,7 +316,7 @@ public class SquareCanvas extends JPanel {
 			super.mouseEntered(e);
 			if (mainFrame.getWithCursor()) {
 				
-				setCursor(getToolkit().createCustomCursor(new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB),new Point(0,0),""));
+				//setCursor(getToolkit().createCustomCursor(new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB),new Point(0,0),""));
 			} else setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
 		@Override

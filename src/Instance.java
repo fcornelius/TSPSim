@@ -67,9 +67,9 @@ public class Instance {
 		calcTime = 0;
 	}
 	/**
-	 * Löscht alle verbeibenden Neighbour und füllt Neighbourliste neu mit Knoten aus knots
-	 * für Wiederholung der Instanz.<br>
-	 * Weglänge ({@link wayLength}) und größte Teilstrecke ({@link maxDist}) werden zurückgesetzt.
+	 * Lï¿½scht alle verbeibenden Neighbour und fï¿½llt Neighbourliste neu mit Knoten aus knots
+	 * fï¿½r Wiederholung der Instanz.<br>
+	 * Weglï¿½nge ({@link wayLength}) und grï¿½ï¿½te Teilstrecke ({@link maxDist}) werden zurï¿½ckgesetzt.
 	 */
 	public void resetInstance() {
 
@@ -93,9 +93,9 @@ public class Instance {
 		//		for (Knot k : knots) k.drawPoint(g, radius, withNumber);
 	}
 	/**
-	 * Fügt einer Instanz einen bestehenden Knoten hinzu.<br>
+	 * Fï¿½gt einer Instanz einen bestehenden Knoten hinzu.<br>
 	 * Knoten werden in Knotenliste ({@link knots}) und Neighbourliste ({@link neighbours}) abgelegt.
-	 * @param k Knoten zum hinzufügen
+	 * @param k Knoten zum hinzufï¿½gen
 	 */
 	public void addKnot(Knot k) {
 		knots.add(k);
@@ -121,9 +121,9 @@ public class Instance {
 		return wayLength;
 	}
 	/**
-	 * Gibt an ob die Instanz erstellt und noch nicht gelöst wurde.<br>
-	 * Sobald über 'Nächster' ein Schritt des Lösens erfolgt ist, gibt die Instanz <b>false</b> zurück.
-	 * @return <b>true</b> wenn Neighbourliste noch voll,<br> <b>false</b> wenn bereits Einträge entfernt wurden
+	 * Gibt an ob die Instanz erstellt und noch nicht gelï¿½st wurde.<br>
+	 * Sobald ï¿½ber 'Nï¿½chster' ein Schritt des Lï¿½sens erfolgt ist, gibt die Instanz <b>false</b> zurï¿½ck.
+	 * @return <b>true</b> wenn Neighbourliste noch voll,<br> <b>false</b> wenn bereits Eintrï¿½ge entfernt wurden
 	 */
 	public boolean isReady() {
 		return (knots.size()==neighbours.size());
@@ -133,7 +133,7 @@ public class Instance {
 		return (spanningTreeKnots.size() > 0);
 	}
 	/**
-	 * Gibt an ob die Instanz vollständig gelöst wurde, also ob alle Neighbours entfernt wurden.
+	 * Gibt an ob die Instanz vollstï¿½ndig gelï¿½st wurde, also ob alle Neighbours entfernt wurden.
 	 * @return <b>true</b> wenn Neighbourliste leer aber Knoten angelegt wurden,<br> <b>false</b> wenn noch Neighbours vorhanden sind
 	 */
 	public boolean isFinished() {
@@ -208,7 +208,7 @@ public class Instance {
 		PermutationBuilder pb = new PermutationBuilder();
 		routes = pb.BuildList(getCount()-1,true);
 		minRoute = routes.get(0);							// Route: Der Pfad des Weges (die Permutation)
-		double minTour = getIndexedTour(routes.get(0));      	    // Tour:  Die Länge einer Route
+		double minTour = getIndexedTour(routes.get(0));      	    // Tour:  Die Lï¿½nge einer Route
 		double thisTour;
 		permutTime = stopWatch.getMills();
 
@@ -269,21 +269,21 @@ public class Instance {
 		return 0.0;	
 	}
 	/**
-	 * Gibt den Knoten zurück der am nähesten zum übergebenen {@link rootKnot} ist und zeichnet deren Verbindung.
-	 * <li> Der übergebene Knoten {@link rootKnot} wird aus der Liste möglicher NN entfernt.
-	 * <li> Für jeden der verbliebenden Knoten wird die Entfernung zum {@link rootKnot} in {@link thisDist} zwischen gespeichert.
-	 * <li> Der erste Knoten im Durchlauf wird als nähester ({@link nearest}) festgelegt und seine Entfernung zum {@link rootKnot} als kürzeste ({@link minDist})
-	 * <li> Wenn ein nachfolgender Knoten eine kürzere Entfernung zum {@link rootKnot} hat, gilt dieser als nähester.
-	 * <li> Bei geschlossendem Kreis wird für den letzten Knoten im Durchlauf der Startknoten als nähester zurück gegeben, bei offenem Kreis wird null zurückgegeben.
-	 * Die kürzesten Entfernungen werden in {@link wayLength} aufakkumuliert.<br>
-	 * Beim ersten Neighbour gilt maxDist=minDist, also die längste Teilstrecke ist die Entfernung vom Ausgangsknoten zum ersten Neighbour.
-	 * Danach werden rootKnot und nearest in {@link furthestKnots} abgelegt wenn ihre Entfernung größer ist als die bisher größte Teilstrecke ({@link maxDist})
+	 * Gibt den Knoten zurï¿½ck der am nï¿½hesten zum ï¿½bergebenen {@link rootKnot} ist und zeichnet deren Verbindung.
+	 * <li> Der ï¿½bergebene Knoten {@link rootKnot} wird aus der Liste mï¿½glicher NN entfernt.
+	 * <li> Fï¿½r jeden der verbliebenden Knoten wird die Entfernung zum {@link rootKnot} in {@link thisDist} zwischen gespeichert.
+	 * <li> Der erste Knoten im Durchlauf wird als nï¿½hester ({@link nearest}) festgelegt und seine Entfernung zum {@link rootKnot} als kï¿½rzeste ({@link minDist})
+	 * <li> Wenn ein nachfolgender Knoten eine kï¿½rzere Entfernung zum {@link rootKnot} hat, gilt dieser als nï¿½hester.
+	 * <li> Bei geschlossendem Kreis wird fï¿½r den letzten Knoten im Durchlauf der Startknoten als nï¿½hester zurï¿½ck gegeben, bei offenem Kreis wird null zurï¿½ckgegeben.
+	 * Die kï¿½rzesten Entfernungen werden in {@link wayLength} aufakkumuliert.<br>
+	 * Beim ersten Neighbour gilt maxDist=minDist, also die lï¿½ngste Teilstrecke ist die Entfernung vom Ausgangsknoten zum ersten Neighbour.
+	 * Danach werden rootKnot und nearest in {@link furthestKnots} abgelegt wenn ihre Entfernung grï¿½ï¿½er ist als die bisher grï¿½ï¿½te Teilstrecke ({@link maxDist})
 	 * @param rootKnot Der Ausgangsknoten
 	 * @param closed true/false ob geschlossener Kreis
 	 * @param debug true/false ob Zwischenergebnisse geloggt werden
 	 * @param g das zum zeichnen verwendete Graphics-Objekt
-	 * @param debugPane Ausgabe für den Debug-Log
-	 * @return nähester Knoten
+	 * @param debugPane Ausgabe fï¿½r den Debug-Log
+	 * @return nï¿½hester Knoten
 	 */
 	public Knot nearestNeighbour(Knot rootKnot, boolean closed, boolean debug, boolean draw, SquareCanvas canvas, JTextPane debugPane) {
 		int knotId = 0;
@@ -336,7 +336,7 @@ public class Instance {
 		}
 		Collections.sort(completeGraph, new Comparator<Edge>() {
 			public int compare(Edge e1, Edge e2) {
-				return (int)((e1.getCost() - e2.getCost()) * Math.pow(10, floatingPointPrecision)); //Ab ... NKS kein eindeutiger Vergleich mehr möglich
+				return (int)((e1.getCost() - e2.getCost()) * Math.pow(10, floatingPointPrecision)); //Ab ... NKS kein eindeutiger Vergleich mehr mï¿½glich
 			}
 		});
 
@@ -482,23 +482,23 @@ public class Instance {
 		switch (mode) {
 		case 0:
 			result += String.format("Brute-Force Verfahren.\n" +
-					"Kürzeste Tour ist %.5f PE lang (Route %d von möglichen %d)\nRechenzeit: Permutationen %.2f ms, Routenlänge %.2f ms, Gesamt %.2f ms\n" + 
-					"Das entspricht einer durchschnittlichen Rechenzeit von %.2f µs pro Route", 
+					"KÃ¼rzeste Tour ist %.5f PE lang (Route %d von mÃ¶glichen %d)\nRechenzeit: Permutationen %.2f ms, RoutenlÃ¤nge %.2f ms, Gesamt %.2f ms\n" +
+					"Das entspricht einer durchschnittlichen Rechenzeit von %.2f Âµs pro Route",
 					wayLength, routes.indexOf(minRoute), routes.size(), permutTime, calcTime-permutTime, calcTime, ((calcTime)/(double)routes.size()) * 1000); 
 			break;
 		case 1:
 			result += String.format("Dynamischer Programierung.\n" +
-					"Kürzeste Tour ist %.5f PE lang\nRechenzeit: %.2f ms\n",
+					"KÃ¼rzeste Tour ist %.5f PE lang\nRechenzeit: %.2f ms\n",
 					wayLength, calcTime); 
 			break;
 		case 2: 
 			result += String.format("Nearest-Neighbour Verfahren.\n" +
-					"Länge des Weges: %.5f Gewählter Startknoten: %s Längste Teilstrecke zwischen: %s und %s, %.5f\nRechenzeit: %.2f ms", 
+					"LÃ¤nge des Weges: %.5f GewÃ¤hlter Startknoten: %s LÃ¤ngste Teilstrecke zwischen: %s und %s, %.5f\nRechenzeit: %.2f ms",
 					wayLength, knots.get(startKnot), furthestKnots[0], furthestKnots[1], maxDist,stopWatch.getMills());
 			break;
 		case 3: 
 			result += String.format("Best-Nearest-Neighbour Verfahren.\n" +
-					"Länge des Weges: %.5f Bester Startknoten: %s Längste Teilstrecke zwischen: %s und %s, %.5f\nRechenzeit: %.2f ms", 
+					"LÃ¤nge des Weges: %.5f Bester Startknoten: %s LÃ¤ngste Teilstrecke zwischen: %s und %s, %.5f\nRechenzeit: %.2f ms",
 					wayLength, knots.get(startKnot), furthestKnots[0], furthestKnots[1], maxDist,stopWatch.getMills());
 			break;
 		case 4:
@@ -507,15 +507,15 @@ public class Instance {
 			break;
 		case 5:
 			result += String.format("Minimum-Spanning-Tree Transformation\n" +
-					"Länge des Weges: %.5f Rechenzeit: %.2f ms", getTour(mstRoute), stopWatch.getMills());
+					"LÃ¤nge des Weges: %.5f Rechenzeit: %.2f ms", getTour(mstRoute), stopWatch.getMills());
 			break;
 		case 6:
 			result += String.format("Best Minimum-Spanning-Tree Transformation\n" +
-					"Länge des Weges: %.5f Bester Startknoten: %s Rechenzeit: %.2f ms", getTour(mstRoute), MSTbestStart, stopWatch.getMills());
+					"LÃ¤nge des Weges: %.5f Bester Startknoten: %s Rechenzeit: %.2f ms", getTour(mstRoute), MSTbestStart, stopWatch.getMills());
 			break;
 		case 7:
 			result += String.format("2-Opt Verbesserung\n" +
-					"Neue länge des Weges: %.5f Insgesamt verbessert um: %.2f", getTour(route), 
+					"Neue lÃ¤nge des Weges: %.5f Insgesamt verbessert um: %.2f", getTour(route),
 					100 - (getTour(route) / ((wayLength > 0) ? wayLength : getTour(mstRoute))) * 100 ) + "%";
 			break;
 		}

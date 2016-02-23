@@ -95,7 +95,7 @@ public class TSPLibIndex extends JDialog {
 				+ "<b>Knoten: </b>%s<br><br>"
 				+ "<b>Typ: </b>%s<br><br>"
 				+ "<b>Quelle: </b>%s<br><br>"
-				+ "<b>Größe (Byte): </b>%s<br><br>",
+				+ "<b>GrÃ¶ÃŸe (Byte): </b>%s<br><br>",
 				selectedInst.getAttributeValue("name") + ".tsp",
 				selectedInst.getChildText("description"),
 				selectedInst.getChildText("knots"),
