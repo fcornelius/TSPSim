@@ -1,7 +1,7 @@
 # TSPSim
 A GUI Simulation for the *Travelling Salesman Problem* ([TSP](https://en.wikipedia.org/wiki/Travelling_salesman_problem)) and solving/approximation algorithms in comparison
 
-<img src="https://github.com/phoelix/TSPSim/blob/master/ressources/gif/1.gif" width="1000">
+<img src="https://github.com/phoelix/TSPSim/blob/master/ressources/gif/1.gif?raw=true" width="1000">
 (english localization coming)
 
 The following algorithms are currently implemented:
@@ -29,7 +29,7 @@ A good practice strategy then would be to create a first tour with the Nearest n
 - Define a background image for any TSP instance.<br>
    (with basic image manipulation such as zoom, translation and opacity). A few maps are also included
 
-<img src="https://github.com/phoelix/TSPSim/blob/master/ressources/gif/2.gif" width="400">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://github.com/phoelix/TSPSim/blob/master/ressources/gif/3.gif" width="400">
+<img src="https://github.com/phoelix/TSPSim/blob/master/ressources/gif/2.gif?raw=true" width="400">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://github.com/phoelix/TSPSim/blob/master/ressources/gif/3.gif?raw=true" width="400">
 
 
 
