@@ -12,14 +12,14 @@ The following algorithms are currently implemented:
 - Heuristics for opening:
   - Nearest neighbour
   - Best nearest neighbour
-  -Minimum Spanning Tree (MST) Transform
+  - Minimum Spanning Tree (MST) Transform
 - Optimization:
   - k-Opt (currently only 2-opt)
 
 For testing and benchmarking purposes TSPSim is connected to a fork of Heidelberg's infamous TSP Library, allowing you to import any TSP File and make local changes to it. The Library is hosted at [tsplib.felixcornelius.de](http://tsplib.felixcornelius.de/)
 ### Creating a new instance
 You have 3 options to create a new TSP instance:
-Generation pseudo-random vertices of a given number, addingvertices by mouse input or entering a weighted adjacency matrix (experimental. very experimental.<br>
+Generation pseudo-random vertices of a given number, adding vertices by mouse input or entering a weighted adjacency matrix (experimental. very experimental.)<br>
 A good practice strategy then would be to create a first tour with the Nearest neighbour method (or Best nearest neighbour, which is just independent of a starting point) and compare it with the transformed MST tour (click the stats checkbox for detailed tour info). The better one (which is NN in about 90% of all cases) can then be optimized by identifying and reconnecting crossing edges of vertex 2-pairs (2-Opt method)
 
 ### Other features
@@ -34,7 +34,7 @@ A good practice strategy then would be to create a first tour with the Nearest n
 
 
 #### TODO
-   - [ ] English localizations
+   - [ ] English localization
    - [ ] Fix 2-Opt issues
    - [ ] 3-Opt implementation
-   - [ ] commandline version for speed
+   - [ ] Commandline version for speed
