@@ -33,7 +33,7 @@ A good practice strategy then would be to create a first tour with the Nearest n
 
 
 
-   #### TODO
+#### TODO
    - [ ] English localizations
    - [ ] Fix 2-Opt issues
    - [ ] 3-Opt implementation
