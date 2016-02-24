@@ -227,7 +227,7 @@ public class ImageDialog extends JDialog {
 			}
 		});
 		comboBox.setPreferredSize(new Dimension(180, 23));
-		comboBox.addItem("Grafik w‰hlen...");
+		comboBox.addItem("Grafik w√§hlen...");
 		panel.add(comboBox);
 
 
@@ -311,7 +311,7 @@ public class ImageDialog extends JDialog {
 		spnSkalieren = new JSpinner();
 		spnSkalieren.addChangeListener(new UpdateListener());
 		spnSkalieren.setEnabled(false);
-		spnSkalieren.setPreferredSize(new Dimension(43, 22));
+		spnSkalieren.setPreferredSize(new Dimension(60, 22));
 		panel_1.add(spnSkalieren);
 		spnSkalieren.setModel(new SpinnerNumberModel(100, 1, 100, 1));
 
@@ -322,7 +322,7 @@ public class ImageDialog extends JDialog {
 		spnOffsetX = new JSpinner();
 		spnOffsetX.addChangeListener(new UpdateListener());
 		spnOffsetX.setModel(new SpinnerNumberModel(0, -999, 999, 1));
-		spnOffsetX.setPreferredSize(new Dimension(43, 22));
+		spnOffsetX.setPreferredSize(new Dimension(55, 22));
 		panel_1.add(spnOffsetX);
 
 		JLabel lblX = new JLabel("X Pixel");
@@ -331,7 +331,7 @@ public class ImageDialog extends JDialog {
 		spnOffsetY = new JSpinner();
 		spnOffsetY.addChangeListener(new UpdateListener());
 		spnOffsetY.setModel(new SpinnerNumberModel(0, -999, 999, 1));
-		spnOffsetY.setPreferredSize(new Dimension(43, 22));
+		spnOffsetY.setPreferredSize(new Dimension(55, 22));
 		panel_1.add(spnOffsetY);
 
 		JLabel lblY = new JLabel("Y Pixel");
@@ -344,7 +344,7 @@ public class ImageDialog extends JDialog {
 		spnAlpha = new JSpinner();
 		spnAlpha.addChangeListener(new UpdateListener());
 		spnAlpha.setModel(new SpinnerNumberModel(new Integer(50), null, null, new Integer(1)));
-		spnAlpha.setPreferredSize(new Dimension(43, 22));
+		spnAlpha.setPreferredSize(new Dimension(60, 22));
 		panel_1.add(spnAlpha);
 
 		JLabel lblProzent = new JLabel("Prozent");

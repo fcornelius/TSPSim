@@ -52,6 +52,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JMenuItem;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JSeparator;
+import javax.swing.text.DefaultCaret;
 
 import java.awt.SystemColor;
 import java.awt.event.MouseAdapter;
@@ -177,7 +178,7 @@ public class gWindow {
 		//   Frame
 		frame = new JFrame();
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 1209, 760);
+		frame.setBounds(200, 200, 1209, 760);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frameHeightPx = frame.getHeight();
@@ -281,8 +282,10 @@ public class gWindow {
 
 		//   Debug Textpane
 		txtDebug = new JTextPane();
-		txtDebug.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		txtDebug.setFont(new Font("Ubuntu", Font.PLAIN, 16));
 		txtDebug.setBounds(168, 500, 258, 72);
+		DefaultCaret caret = (DefaultCaret)txtDebug.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
 		//   Debug Scrollbar
 		JScrollPane sp = new JScrollPane(txtDebug,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -294,7 +297,7 @@ public class gWindow {
 		list.addListSelectionListener(new SelectionListener());
 
 
-		list.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		list.setFont(new Font("Ubuntu", Font.PLAIN, 13));
 		list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		list.setBackground(Color.WHITE);
 		list.setBounds(243, 240, 59, 81);
@@ -1236,6 +1239,7 @@ public class gWindow {
 		String result = inst.getResult(mode);
 
 		txtDebug.setText(txtDebug.getText() + result + "\n\n");
+
 	}
 
 	public void logLine(String l) {

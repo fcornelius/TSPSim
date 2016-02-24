@@ -59,8 +59,8 @@ public class InstAssist extends JFrame {
 		} catch (Exception exp) { /* Fallback auf Metal LAF */ }
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 636, 474);
-		setBounds(100, 100, 400, 260);
+
+		setBounds(100, 100, 300, 260);
 		setLocationRelativeTo(owner.getFrame());
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -68,7 +68,7 @@ public class InstAssist extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblNeueInstanzErstellen = new JLabel("Neue Instanz erstellen");
-		lblNeueInstanzErstellen.setBounds(132, 13, 181, 16);
+		lblNeueInstanzErstellen.setBounds(82, 13, 181, 16);
 		contentPane.add(lblNeueInstanzErstellen);
 		
 		ButtonGroup optButtons = new ButtonGroup();
@@ -80,21 +80,22 @@ public class InstAssist extends JFrame {
 			}
 		});
 		rdbtnRandom.setSelected(true);
-		rdbtnRandom.setBounds(52, 57, 127, 25);
+		rdbtnRandom.setBounds(52, 57, 137, 25);
 		optButtons.add(rdbtnRandom);
 		contentPane.add(rdbtnRandom);
 		
 		txtKnotcount = new JTextField();
-		txtKnotcount.setText("10");
-		txtKnotcount.setBounds(182, 58, 51, 22);
+		txtKnotcount.setText("100");
+		txtKnotcount.setBounds(192, 58, 51, 22);
 		contentPane.add(txtKnotcount);
 		txtKnotcount.setColumns(10);
+		txtKnotcount.setBackground(Color.white);
 		
 		JRadioButton rdbtnMouse = new JRadioButton("Mit Maus eingeben");
 		rdbtnMouse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setVisible(false);
-				setSize(new Dimension(400,260));
+				//setSize(new Dimension(400,260));
 			}
 		});
 		rdbtnMouse.setBounds(52, 87, 181, 25);
@@ -109,7 +110,7 @@ public class InstAssist extends JFrame {
 				setSize(new Dimension(636,474));
 			}
 		});
-		rdbtnMatrix.setBounds(52, 117, 205, 25);
+		rdbtnMatrix.setBounds(52, 117, 225, 25);
 		optButtons.add(rdbtnMatrix);
 		contentPane.add(rdbtnMatrix);
 		
@@ -118,7 +119,7 @@ public class InstAssist extends JFrame {
 		flowLayout.setAlignment(FlowLayout.LEFT);
 		flowLayout.setVgap(10);
 		flowLayout.setHgap(0);
-		pnlTable.setBounds(52, 151, 520, 281);
+		pnlTable.setBounds(72, 151, 520, 281);
 		contentPane.add(pnlTable);
 		
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
